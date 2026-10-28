@@ -4,7 +4,8 @@ Meta Vibe Coding aims to help a non-expert choose, build, use, and maintain usef
 software. The intended outcome is a working solution the owner can understand
 and control. A paper, a new model, or a novel architecture is not a deliverable.
 We can reuse good ideas, existing products, and open-source components wherever
-that gives the owner a better result.
+that gives the owner a better result. The scope is general vibe coding across
+websites, applications, games, utilities, and automations.
 
 This is an internal product proposal, revised on 2026-10-28. The repository
 currently contains planning and collaboration documents; no prototype or user
@@ -17,7 +18,9 @@ conditional on what we learn from real use.
 A person may know what they want to accomplish without knowing what software it
 requires. A parent asking for a Kanji learning website may not have considered
 whether children need accounts, how lessons will be updated, or who will manage
-hosting. Turning the request directly into code can leave those decisions hidden.
+hosting. That example motivated this project; the solution is not a Kanji learning
+product. Turning any underspecified request directly into code can leave
+consequential decisions hidden.
 
 The proposed service makes consequential decisions visible before implementation
 and carries them through delivery and maintenance. It should help the owner
@@ -91,8 +94,8 @@ Idea → interpreted goal → consequential questions → recommendation
                      Owner View + Developer View
 ```
 
-Questions should change a decision. Ask whether progress must follow a child
-between devices when that affects storage and access. Do not ask an owner to choose
+Questions should change a decision. Ask whether saved information must follow a
+user between devices when that affects storage and access. Do not ask an owner to choose
 between databases to express that need. When an answer is unavailable, keep it
 unknown and explain whether a provisional recommendation is still useful.
 
@@ -115,24 +118,16 @@ The detailed contract belongs in [Level 0 scope](level-0.md#required-behavior).
 
 ## Examples that guide development
 
-For the **Kanji website**, first clarify whether the parent wants public lessons
-or persistent individual progress. Public lessons with no personal data may fit a
-static website. Progress across devices introduces different storage, access, and
-privacy decisions. Neither branch should be assumed from the initial request.
-Content rights, mobile use, and the owner's ability to update lessons also matter.
+Use varied software ideas to check general behavior. A public club website, local
+file automation, simple game, shared checklist, personal inventory, private document
+sharing, and password storage exercise different decisions. Their fictional inputs,
+clarifying facts, acceptable alternatives, and blocking failures are defined once
+in the [Level 0 acceptance cases](level-0.md#acceptance-cases).
 
-For the **family password and document vault**, recognize the sensitivity and
-recommend evaluating a specialized existing service. Explain the burden of owning
-a custom vault. Do not ask the owner to supply real passwords or private documents.
-Any specific service recommendation needs a current comparison of its suitability.
-
-For a **local photo-renaming utility**, focus on naming rules, previewing changes,
-and recovery from mistakes. Cloud hosting and accounts are irrelevant unless the
-owner's actual workflow introduces them. Include ordinary low-risk cases so the
-system is assessed on useful assistance as well as caution.
-
-These are development examples. A polished response to them does not establish
-that the product generalizes to new requests.
+The Kanji website remains a motivating illustration, not a required product demo
+or a domain-specific implementation target. New ideas should follow the same
+intent, clarification, and recommendation process. Successful development examples
+do not establish that every software domain is supported.
 
 ## How we will choose and validate the solution
 
@@ -143,8 +138,9 @@ Allow both to recommend an existing tool or no build. Record the exact prompts,
 model version or alias, dates, configuration, questions, answers, failures, latency,
 and token usage. Differences in model access or budget must remain visible.
 
-A developer will prepare fictional cases spanning public content, local utilities,
-shared planning, persistent personal data, document sharing, and sensitive secrets.
+The [acceptance plan](level-0.md#acceptance-cases) defines fictional cases spanning
+public content, local automation, games, shared planning, persistent personal data,
+document sharing, and sensitive secrets.
 Include unknown answers, changed requirements, and requests that need no new app.
 A reviewer should specify acceptable alternatives and serious mistakes before
 seeing outputs. Keep separate cases for tuning and final acceptance; paraphrases

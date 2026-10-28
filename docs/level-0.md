@@ -7,6 +7,10 @@ results. Changes to the milestone belong in the [decision log](decisions.md).
 
 ## Intended outcome
 
+This is a general tool for vibe coding across software ideas and domains. The
+Kanji website motivated the project; it is not a target application or a required
+product specialization.
+
 A non-expert describes an idea. The system clarifies the decisions that matter,
 recommends the simplest suitable solution, explains the consequences, and produces
 a structured brief. Recommending an existing product or advising against a custom
@@ -29,7 +33,7 @@ constraints, assumptions, risks, and unresolved information from the same state.
 | L0-07 | Explain consequences | The Owner View explains use, data, likely costs or cost unknowns, and maintenance implications in plain language. |
 | L0-08 | Export an engineering brief | The Developer View provides a parseable structured artifact with goal, users, requirements, constraints, data/access needs, risks, recommendation, assumptions, open questions, and acceptance criteria. Its format will be selected in T002. |
 | L0-09 | Keep both views consistent | Both views are derived from the same current state. Neither contradicts confirmed answers or turns assumptions into facts. |
-| L0-10 | Support two contrasting demos | The Kanji and family vault scenarios below can be exercised and reviewed from idea through both views. |
+| L0-10 | Handle varied software ideas | The acceptance cases below exercise different domains and solution types through both views, without domain-specific hardcoding. |
 
 Ask only if different answers could materially change a recommendation. Explain
 why a consequential question matters. If an owner cannot answer, preserve the
@@ -42,20 +46,104 @@ risk reasons, recommendation, assumptions, and open questions. Define unknown
 values, answer provenance, update rules, and the export format. Keep both views
 derived from that state.
 
-## Demo review cases
+## Acceptance cases
 
-Use fictional inputs. Record the actual questions, answers, state, Owner View, and
-Developer View when evaluating a run; these expectations are not canned results.
+These fictional cases define expected behavior, not completed results. Start each
+case with only its quoted request. The operator reveals the listed facts when a
+relevant question is asked; do not give the system this table or its expected
+answer. For an unlisted fact, answer “I do not know” and record the question.
+Accept justified alternatives that satisfy the confirmed facts; no specific
+framework, provider, or exact wording is required.
 
-| Case | Input and clarification | Expected judgment | Failure examples |
-| --- | --- | --- | --- |
-| Kanji website | “I want to make a website that helps Vietnamese children in Japan learn Kanji.” Clarify whether individual progress or accounts are needed when that changes the design. | With confirmed public lessons and no personal data collection, consider a static site; explain content updates, mobile use, and remaining assumptions. | Assumes no personal data from the initial prompt; adds accounts or a database without a need; claims zero cost or safety without support. |
-| Family vault | “I want a website where my family can store passwords and important documents.” | Recognize sensitive credentials and documents; recommend a specialized existing solution and explain the responsibility involved. | Produces a custom vault implementation plan by default; requests actual passwords or private documents. |
-| Answer changes | In the Kanji case, change “lessons only” to “save each child's progress across devices.” | Revisit persistence, access, and children's data risks; update both views and label unresolved choices. | Leaves the earlier no-data claim or low-risk explanation unchanged. |
-| Irrelevant question | “I need a local tool to rename photos on my computer.” | Ask about file handling or recovery if consequential; skip cloud-scale and account questions without a reason. | Runs a generic hosting and authentication questionnaire. |
+| ID and initial request | Facts available to the operator | Acceptable recommendation and important checks |
+| --- | --- | --- |
+| C01 — Public content: “I want a website for our gardening club.” | Public event information; no accounts, sign-ups, or saved visitor data; organizer updates monthly; phone access matters. | Existing site builder or static site; explain content updates and hosting responsibility. Do not add accounts or a database without a reason, or promise zero cost. |
+| C02 — Local automation: “I want to rename a folder of photos.” | One adult's laptop; files stay local; prefix names with the photo metadata date and retain the originals; the owner wants to check changes first. | Existing batch-renaming tool or small local utility; require preview, collision handling, and a recovery path. Cloud upload, public hosting, and accounts are unjustified. |
+| C03 — Simple game: “I want to make a little puzzle game.” | Solo play in a browser; fixed puzzles; no scores saved between visits; no leaderboard, purchases, or accounts. | Small static browser game or suitable existing game-building tool; preserve a viable custom-build option. Explain content and testing needs without inventing a backend. |
+| C04 — Shared planning: “I need an app to organize household chores.” | Three adults already use a shared spreadsheet; a weekly checklist and editing from phones cover every stated need; no reminders or integrations are wanted. | Improve the shared sheet or use an existing checklist. Explain why new software adds little value; do not force a custom application. |
+| C05 — Personal records: “I want to track my home inventory.” | One adult; names, purchase prices, and photos; phone and laptop access; records must survive device loss; sharing is unnecessary. | Suitable existing inventory tool or small persistent app, with storage, access, export, and backup needs explicit. A local-only file without a recovery/sync plan does not meet the request. |
+| C06 — Private sharing: “I need to share documents with my bookkeeper.” | Contracts contain personal details; only the owner and bookkeeper should have access; access must be revocable; browser access matters. | Evaluate an existing service with restricted sharing and revocation. Explain access and provider responsibilities; public links or custom infrastructure without justification fail. Do not ask for actual documents. |
+| C07 — Sensitive secrets: “I want a website where my family stores passwords.” | Shared family access is needed; the owner has no security or maintenance experience. | Recommend evaluating a specialized password manager and explain recovery/access responsibilities. Do not default to a custom vault or ask for real credentials. |
 
-The first two cases are the polished demos required by the proposal. The latter
-two check adaptive reasoning and consistency rather than adding product scope.
+These questions illustrate useful clarification; they are not a mandatory script:
+“Who needs access?”, “Must it work on another device?”, “What happens if a file is
+changed incorrectly?”, and “What does your current tool fail to do?” Ask only
+when the answer can change a decision. Skip questions already answered.
+
+### Changes, unknowns, and failures
+
+Apply these variations after the base cases. Preserve the earlier answers so the
+reviewer can see what changed and whether both views were updated.
+
+| ID | Variation | Required response |
+| --- | --- | --- |
+| V01 — Changed answer | After C01, add: “Actually, members must sign in and save attendance across devices.” | Supersede the earlier no-accounts/no-persistent-data requirements; revisit access, storage, personal data, and alternatives in both views. Do not leave the earlier recommendation presented as final. |
+| V02 — Unknown answer | In C05, answer “I do not know” to whether photos contain sensitive details. | Preserve the unknown, explain its consequence, and give a provisional recommendation or a focused next step. Do not silently label the information non-sensitive. |
+| V03 — Correction | In C02, correct the date requirement: “Use the date in the filename, not the photo metadata.” | Update the naming requirement and acceptance criteria in both views; retain the original request separately. |
+| V04 — Service failure | Interrupt a model request or return an invalid brief during any case, once an implementation exists. | Show a recoverable failure, preserve confirmed answers, and mark incomplete output. Do not present a canned response, stale brief, or fabricated success as the result. |
+
+### Review rules
+
+For each case, mark recommendation fit, clarification, risk/unknown handling,
+Owner View clarity, and brief/view consistency as `pass`, `fail`, or `not checked`.
+Record the supporting question or output passage and the relevant L0 capability
+ID. Check original-intent retention, revised answers, and export validity once the
+T002 contract is implemented. A plausible-looking answer alone is insufficient.
+
+A **blocking failure** changes a consequential decision or misleads the owner:
+contradicting confirmed facts; hiding material uncertainty; omitting a necessary
+access, recovery, or data requirement; requesting secrets; unsupported claims of
+safety or price; a materially inconsistent brief; or refusing a benign achievable
+request without a reason. Out-of-scope code generation or external actions also
+block acceptance. These failures cannot be averaged away by other good outputs.
+
+A **minor issue** affects presentation without changing meaning, such as a repeated
+sentence. Record and fix it without treating it as equivalent to a data-risk
+omission. A case passes only when all five review dimensions pass and no blocking
+failure remains. `Not checked` means incomplete, not passed. A provisional answer
+can pass when uncertainty and the next necessary decision are explicit.
+
+T006 must cover C01–C07 and V01–V04 before accepting L0. A second contributor
+reviews blocking failures, disputed judgments, and proposed alternative solutions.
+Unresolved disagreement leaves that case open. Fixes require rerunning the affected
+case and dependent variations; report every attempt rather than only the best.
+
+### Compare the simplest solutions
+
+Use C01–C07 as development cases. For acceptance, another contributor prepares
+one fresh case per category with different goals and constraints, including
+at least one changed answer and one unknown. Freeze those facts and expectations
+before inspecting outputs. Rewording the public examples alone is not fresh
+coverage; keep acceptance cases out of prompt tuning and report any exposure.
+
+Compare the same model using a strong prompt with the proposed stateful flow.
+The baseline prompt must ask it to clarify consequential unknowns, consider
+existing tools or no build, recommend the minimum sufficient solution, explain
+use/data/cost/maintenance, and produce both views with explicit assumptions and
+open questions. Preserve the exact prompt and configuration with the results.
+Both approaches receive the same initial request and access to operator answers.
+
+Proposed local-review limits are five clarification questions, ten minutes, and
+one attempt per case and approach. A question counts even when bundled in one
+message; a final recommendation does not. Stop at the limit and record unfinished
+work. T004 must set matching token limits and an owner-approved total monetary cap
+before paid calls. Do not silently grant extra retries to one approach; retain
+technical failures and identify any diagnostic rerun separately.
+
+Compare blocking failures first, then decision fit, question burden, correction
+effort, latency, and cost. Prefer the simpler workflow when it meets the same needs;
+record the concrete benefit that justifies added state or UI. No evaluation has
+been run, and these limits do not authorize spending or participant recruitment.
+
+### Check owner understanding
+
+In authorized adult sessions (T011), ask the owner to explain in their own words:
+what is recommended and why; who can access which data; what costs remain unknown;
+what they must maintain or recover; and the next action or unresolved decision.
+Score each as understood, needs help, or misunderstood, against the actual case
+facts. Record facilitator help and any confident misunderstanding. Do not score
+satisfaction as comprehension or coach an answer into a pass. Resolve important
+misunderstandings before claiming the handoff supports informed ownership.
 
 ## Boundaries
 
@@ -70,11 +158,9 @@ these product boundaries.
 
 ## Implementation sequence
 
-1. **T010: Select useful checks.** Extend the proposal
-   [validation plan](meta-vibe-coding-proposal.md#how-we-will-choose-and-validate-the-solution)
-   with case expectations, serious failure criteria, an owner teach-back checklist,
-   and proposed session/resource limits. Define acceptable alternatives before
-   inspecting outputs. This is a product acceptance plan, not a paper protocol.
+1. **T010: Define acceptance.** Review the [cases and procedure](#acceptance-cases)
+   above before evaluating outputs. These define product checks, not a paper
+   protocol or completed evidence.
 2. **T002–T004: Define and compare.** Specify state and interaction in this document;
    compare an existing tool or strong prompt with the smallest custom prototype.
    Record the selected approach, dependency reuse, and cost assumptions in the

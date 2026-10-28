@@ -3,7 +3,8 @@
 Meta Vibe Coding aims to help non-experts decide what software they need,
 understand its consequences, and eventually own and maintain it. The objective is
 a useful solution. Reuse existing ideas, tools, and components when they fit;
-research publication is optional.
+research publication is optional. The scope covers general vibe coding: websites,
+applications, games, utilities, and automations.
 
 The first milestone is **Level 0: Intent Interpreter**. It turns an idea into a
 plain-language recommendation and a structured engineering brief. It may recommend

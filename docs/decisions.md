@@ -49,6 +49,14 @@ approval is required for changes to scope, acceptable risk, or external authorit
   checks to improve delivery; novelty, publication, and a new architecture are not
   success requirements. Revisit only if the owner adds a research deliverable.
 
+## D004: Support general vibe coding
+
+- Date: 2026-10-28
+- Status: accepted; source: repository owner's explicit clarification during T010.
+- Decision: Kanji is the motivating example, not the target product. Use varied
+  software ideas for acceptance and remove the Kanji-specific demo requirement.
+- Consequence: keep the L0 process general; examples must not hardcode its behavior.
+
 ## Open choices
 
 | Choice | Resolve in | Needed before |
