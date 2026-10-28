@@ -42,8 +42,8 @@ while ownership is being resolved. A separate handoff document is unnecessary.
 ## Code conventions
 
 Use this baseline for human-written and agent-generated code. Follow the selected
-language's established conventions; record formatter, linter, type-checking, and
-test commands when T004 establishes the stack. There is no code toolchain yet.
+language's established conventions. The initial implementation uses Python 3.12
+and plain browser JavaScript; README records setup and current check commands.
 
 - Choose clear names that describe the domain. Avoid unexplained abbreviations,
   clever expressions, and boolean flags whose meaning is unclear at the call site.

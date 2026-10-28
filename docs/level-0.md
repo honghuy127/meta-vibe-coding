@@ -43,8 +43,8 @@ before it can proceed. Never fabricate an answer to finish the flow.
 ## Project state and brief contract
 
 Use JSON with `schema_version: 1` for state and exported briefs. This defines the
-logical contract; [D006](decisions.md#d006-small-local-web-app-with-a-local-model)
-selects Pydantic strict models and application validators. State
+logical contract, implemented by strict Pydantic models and application validators.
+[D008](decisions.md#d008-wrap-coding-agents-only) defines the agent boundary. State
 is scoped to one idea. Persistence and import are not implied by export support.
 
 | State field | Type and meaning |
@@ -53,8 +53,17 @@ is scoped to one idea. Persistence and import are not implied by export support.
 | `raw_intent` | Original idea, unchanged. It is the source identified as `t0`. |
 | `turns` | Ordered owner replies/corrections, each with a unique `id` and original `text`; retain earlier replies. The idea is not copied here. |
 | `facts` | Map from stable lower-case dotted keys to the fact records below. Use `goal`, `users.primary`, `usage.environment`, `data.persistent`, `data.personal`, `data.sensitive`, `access.public`, `access.accounts`, `content.updates`, and `operations.budget` where relevant. Give individual requirements/constraints stable keys such as `requirements.r1`; additional topics can be added without changing the envelope. |
-| `questions` | Ordered records with `id`, `topic`, `text`, `decision`, and nullable `answer_turn_id`. `decision` states what a different answer could change. |
+| `questions` | Ordered records with `id`, `topic`, `text`, `decision`, nullable `answer_turn_id`/`conflict_turn_id`, and `retired` (boolean). `decision` states what a different answer could change. |
 | `assessment` | Null until a valid current result is available; otherwise the assessment below with matching `based_on_revision`. The UI may retain the previous snapshot as visibly stale. |
+
+Runtime state also carries `agent_calls` (assessment request attempts), `started_at` (Unix seconds), and
+`assessed_turn_count`, the number of owner replies covered by the last adopted
+assessment. These are not exported. A retry cannot reuse an already assessed reply
+as new confirmation; a new reply retained after failure can still be assessed. Retire unanswered questions when a
+new result supersedes them, while preserving their history. Reopening an answered
+topic requires `conflict_turn_id` to cite the latest owner reply, newer than its
+previous answers, with the conflict explained in `decision`. Semantic review must
+check that the conflict is genuine; source IDs alone do not prove this.
 
 Each fact has `value`, `status`, and `source_turn_ids`. Values are JSON scalars or
 arrays of scalars; use separate semantic keys for independently revisable facts.
@@ -214,8 +223,8 @@ at least one changed answer and one unknown. Freeze those facts and expectations
 before inspecting outputs. Rewording the public examples alone is not fresh
 coverage; keep acceptance cases out of prompt tuning and report any exposure.
 
-Within a backend, compare the same model using a strong prompt with the proposed
-stateful flow. Across backend types, follow D007 and identify model/harness
+Within the same coding agent and model configuration, compare a strong prompt
+with the proposed stateful flow. Across agents, follow D008 and identify model/harness
 differences; do not attribute their combined effect solely to the wrapper.
 The baseline prompt must ask it to clarify consequential unknowns, consider
 existing tools or no build, recommend the minimum sufficient solution, explain
@@ -223,17 +232,18 @@ use/data/cost/maintenance, and produce both views with explicit assumptions and
 open questions. Preserve the exact prompt and configuration with the results.
 Both approaches receive the same initial request and access to operator answers.
 
-Proposed local-review limits are five clarification questions, ten minutes, and
+Current review limits are five clarification questions, thirty minutes, and
 one attempt per case and approach. A question counts even when bundled in one
 message; a final recommendation does not. Stop at the limit and record unfinished
-work. Apply D007's backend-aware limits; external spending stays disabled until
-an account and spending cap are authorized. Do not grant extra retries to one approach; retain
-technical failures and identify any diagnostic rerun separately.
+work. Apply D008's agent-aware limits; spending stays unauthorized until
+an account and spending cap are authorized. Do not grant extra retries to one
+approach; retain technical failures and identify any diagnostic rerun separately.
 
 Compare blocking failures first, then decision fit, question burden, correction
 effort, latency, and cost. Prefer the simpler workflow when it meets the same needs;
-record the concrete benefit that justifies added state or UI. No evaluation has
-been run, and these limits do not authorize spending or participant recruitment.
+record the concrete benefit that justifies added state or UI. Development
+diagnostics do not establish acceptance or a baseline advantage. These limits
+do not authorize spending or participant recruitment.
 
 ### Check owner understanding
 
@@ -253,9 +263,11 @@ monitor a service, or manage an operational system. It does not require a
 multi-agent runtime or a complex database. Any retained conversation data needs
 an explicit purpose, storage location, and deletion policy before collection.
 
-A coding-agent wrapper may supply planning/reasoning under
-[D007](decisions.md#d007-interchangeable-inference-and-agent-backends), with its
-action permissions restricted and output validated like any model response.
+All reasoning goes through an OpenCode, Claude Code, or Codex wrapper under
+[D008](decisions.md#d008-wrap-coding-agents-only). The coding agent owns model and
+provider access, including any local inference. This repo has no direct model API
+or local model server. Restrict action tools and validate the completed response;
+review trusted native configuration and retention before live use.
 Repository collaboration can use multiple people and agents without expanding
 these product boundaries.
 
@@ -263,18 +275,22 @@ these product boundaries.
 
 The [work board](work-board.md) holds task status and ownership. T010 defines the
 acceptance procedure; T002–T003 define the contract and interaction above. T004
-defines interchangeable backends in D007; T005 builds the common core, verifies
-one backend, and adds other modes incrementally with exact setup/check commands.
+defines the agent-only boundary in D008; T005 provides the common core and T012
+replaces direct inference with the three coding-agent wrappers. Verify native
+configuration, structured responses, and lifecycle behavior before live acceptance.
 T006 exercises acceptance with another contributor; T011 checks authorized adult
 use before deciding whether to simplify, revise, or progress to L1.
 
 Assign a human owner, reviewer, and resource cap before paid or participant-facing
-work. There is no committed launch date or API budget.
+work. There is no committed launch date or agent spending budget.
 
 ## Milestone review
 
 Record actual case outputs, failures, and check results against the acceptance
 procedure above. Structural validation and a software smoke test do not establish
-recommendation quality or owner comprehension. No product cases or adult sessions
-have run. Before a public demo, resolve provider data handling, deployment authority,
-and operating cost; readiness must be demonstrated in the intended environment.
+recommendation quality or owner comprehension. Local smoke attempts are recorded
+as historical evidence under `artifacts/legacy/`; no full acceptance review or
+adult sessions have run. The current coding-agent wrappers have only mocked
+inference checks and local CLI help/version inspection. Before a public demo, resolve
+provider data handling, deployment authority, and operating cost; readiness must
+be demonstrated in the intended environment.

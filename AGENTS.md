@@ -65,5 +65,9 @@ in [CONTRIBUTING.md](CONTRIBUTING.md).
 - Commit or push only when requested or covered by an explicit standing agreement.
   Stage only the requested paths and inspect the staged diff before committing.
 
-There are currently no application build or test commands. Do not report them as
-passing or choose a stack merely to supply them.
+Use the setup and check commands in README. Level 0 always wraps OpenCode,
+Claude Code, or Codex. Do not add direct model/provider clients, model servers,
+or local inference benchmarks. Model access, native credentials, and local hosting
+belong to the selected coding agent. Keep execution opt-in and live verification
+separate from deterministic process doubles. See D008 and README for the supported
+CLI contract and its configuration/retention limits.

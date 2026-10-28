@@ -1,0 +1,219 @@
+{
+  "archive_provenance": {"scope": "Historical diagnostics, not acceptance of the current coding-agent wrappers.", "revision": "Any recorded source_commit identifies the HEAD/design baseline, not the uncommitted implementation that executed.", "replay_limit": "Prior adapter/runner source snapshots are not retained. Source hashes and raw requests/responses alone do not permit exact replay."},
+  "scope": "Bounded fictional development diagnostics, all attempts retained",
+  "attempts": [
+    {
+      "at": "2026-10-28T11:32:00.196868+00:00",
+      "purpose": "Fictional diagnostic only; not acceptance evidence",
+      "model": "gemma3:4b",
+      "stage": "tiny-schema-probe",
+      "python": "3.12.12 (main, Apr  5 2026, 00:53:45) [Clang 21.0.0 (clang-2100.0.123.102)]",
+      "platform": "macOS-27.0.1-arm64-arm-64bit",
+      "request": {
+        "model": "gemma3:4b",
+        "stream": false,
+        "messages": [
+          {
+            "role": "user",
+            "content": "Return exactly this JSON object: {\"ok\": true}"
+          }
+        ],
+        "format": {
+          "type": "object",
+          "properties": {
+            "ok": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "ok"
+          ],
+          "additionalProperties": false
+        },
+        "options": {
+          "temperature": 0,
+          "num_predict": 32,
+          "num_ctx": 2048
+        }
+      },
+      "ollama_version": {
+        "version": "0.40.12"
+      },
+      "installed_models": {
+        "models": [
+          {
+            "name": "qwen3.5:0.8b",
+            "model": "qwen3.5:0.8b",
+            "modified_at": "2026-07-25T01:14:04.370073138+09:00",
+            "size": 1036046583,
+            "digest": "f3817196d142eaf72ce79dfebe53dcb20bd21da87ce13e138a8f8e10a866b3a4",
+            "details": {
+              "parent_model": "",
+              "format": "gguf",
+              "family": "qwen35",
+              "families": [
+                "qwen35"
+              ],
+              "parameter_size": "873.44M",
+              "quantization_level": "Q8_0",
+              "context_length": 262144,
+              "embedding_length": 1024,
+              "runner": "ggml"
+            },
+            "capabilities": [
+              "completion",
+              "vision",
+              "tools",
+              "thinking"
+            ]
+          },
+          {
+            "name": "gemma3:4b",
+            "model": "gemma3:4b",
+            "modified_at": "2026-07-01T16:49:21.188897829+09:00",
+            "size": 3338801804,
+            "digest": "a2af6cc3eb7fa8be8504abaf9b04e88f17a119ec3f04a3addf55f92841195f5a",
+            "details": {
+              "parent_model": "",
+              "format": "gguf",
+              "family": "gemma3",
+              "families": [
+                "gemma3"
+              ],
+              "parameter_size": "4.3B",
+              "quantization_level": "Q4_K_M",
+              "context_length": 131072,
+              "embedding_length": 2560,
+              "runner": "ggml"
+            },
+            "capabilities": [
+              "completion",
+              "vision"
+            ]
+          },
+          {
+            "name": "deepseek-r1:1.5b",
+            "model": "deepseek-r1:1.5b",
+            "modified_at": "2026-06-26T16:04:38.348782747+09:00",
+            "size": 1117322768,
+            "digest": "e0979632db5a88d1a53884cb2a941772d10ff5d055aabaa6801c4e36f3a6c2d7",
+            "details": {
+              "parent_model": "",
+              "format": "gguf",
+              "family": "qwen2",
+              "families": [
+                "qwen2"
+              ],
+              "parameter_size": "1.8B",
+              "quantization_level": "Q4_K_M",
+              "context_length": 131072,
+              "embedding_length": 1536,
+              "runner": "ggml"
+            },
+            "capabilities": [
+              "tools",
+              "thinking",
+              "completion"
+            ]
+          },
+          {
+            "name": "qwen3.5:2b",
+            "model": "qwen3.5:2b",
+            "modified_at": "2026-03-03T13:47:15.160639263+09:00",
+            "size": 2741192820,
+            "digest": "324d162be6ca5629ae4517c8710434d0bd2d665bc94dbad46e9af8fbf8a2f0df",
+            "details": {
+              "parent_model": "",
+              "format": "gguf",
+              "family": "qwen35",
+              "families": [
+                "qwen35"
+              ],
+              "parameter_size": "2.3B",
+              "quantization_level": "Q8_0",
+              "context_length": 262144,
+              "embedding_length": 2048,
+              "runner": "ggml"
+            },
+            "capabilities": [
+              "completion",
+              "vision",
+              "tools",
+              "thinking"
+            ]
+          },
+          {
+            "name": "qwen3.5:4b",
+            "model": "qwen3.5:4b",
+            "modified_at": "2026-03-03T13:45:46.036474691+09:00",
+            "size": 3389983735,
+            "digest": "2a654d98e6fba55d452b7043684e9b57a947e393bbffa62485a7aac05ee4eefd",
+            "details": {
+              "parent_model": "",
+              "format": "gguf",
+              "family": "qwen35",
+              "families": [
+                "qwen35"
+              ],
+              "parameter_size": "4.7B",
+              "quantization_level": "Q4_K_M",
+              "context_length": 262144,
+              "embedding_length": 2560,
+              "runner": "ggml"
+            },
+            "capabilities": [
+              "completion",
+              "vision",
+              "tools",
+              "thinking"
+            ]
+          },
+          {
+            "name": "qwen2.5-coder:7b",
+            "model": "qwen2.5-coder:7b",
+            "modified_at": "2026-02-12T23:29:00.041067763+09:00",
+            "size": 4683087561,
+            "digest": "dae161e27b0e90dd1856c8bb3209201fd6736d8eb66298e75ed87571486f4364",
+            "details": {
+              "parent_model": "",
+              "format": "gguf",
+              "family": "qwen2",
+              "families": [
+                "qwen2"
+              ],
+              "parameter_size": "7.6B",
+              "quantization_level": "Q4_K_M",
+              "context_length": 32768,
+              "embedding_length": 3584,
+              "runner": "ggml"
+            },
+            "capabilities": [
+              "completion",
+              "tools",
+              "insert"
+            ]
+          }
+        ]
+      },
+      "http_status": 200,
+      "response": {
+        "model": "gemma3:4b",
+        "created_at": "2026-10-28T11:32:09.224023Z",
+        "message": {
+          "role": "assistant",
+          "content": "{\"ok\": true}"
+        },
+        "done": true,
+        "done_reason": "stop",
+        "total_duration": 8908170875,
+        "load_duration": 7889931667,
+        "prompt_eval_count": 21,
+        "prompt_eval_cached_count": 0,
+        "prompt_eval_duration": 595290000,
+        "eval_count": 6,
+        "eval_duration": 340086000
+      },
+      "elapsed_seconds": 9.116776624927297
+    }
+  ]
+}

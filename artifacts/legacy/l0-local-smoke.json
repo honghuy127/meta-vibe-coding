@@ -1,0 +1,101 @@
+{
+  "archive_provenance": {"scope": "Historical diagnostics, not acceptance of the current coding-agent wrappers.", "revision": "Any recorded source_commit identifies the HEAD/design baseline, not the uncommitted implementation that executed.", "replay_limit": "Prior adapter/runner source snapshots are not retained. Source hashes and raw requests/responses alone do not permit exact replay."},
+  "kind": "local-smoke",
+  "scope": "Fictional input; not product acceptance or owner-comprehension evidence",
+  "source_commit": "6f7ec5d2ee707cdb08124898666cb0f7ff6f2fd4",
+  "source_sha256": {
+    "src/meta_vibe_coding.egg-info/PKG-INFO": "6b8a1267de54b465e357eaccc8997ea78dd42a0cff90317afb021a8674417f8b",
+    "src/meta_vibe_coding.egg-info/SOURCES.txt": "fe397e940eb43247c98315c856d4db23cbde460f1cd38685c35fd179a3445c61",
+    "src/meta_vibe_coding.egg-info/requires.txt": "468ccc994a9afa5e75cb558ba429a83c93f5aacbc75ff06360e49ec044021790",
+    "src/meta_vibe_coding.egg-info/top_level.txt": "12a140b227f65180bdc26e9fe138b63c6bdf100aa6f53e608d9e13abab5d30cb",
+    "src/meta_vibe_coding.egg-info/dependency_links.txt": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+    "src/meta_vibe_coding/models.py": "7211d3af000957e9e080824b501027b796822d1b8e9afab9eeeac0a98bff4e6c",
+    "src/meta_vibe_coding/__init__.py": "bc2c616949b2df2c04ef3a5fc83d33f7b68a6ef35c88d1328cf9c3814c67df04",
+    "src/meta_vibe_coding/core.py": "cdf55a1ccd81352afafd2118a6526145988afc56758f9e928d5a7f2bc58e6b8b",
+    "src/meta_vibe_coding/prompt.txt": "7f3b14f200e66a7569ca9b6a9eef2d4f39ad44c94dab00337a242ef4350fe9cd",
+    "src/meta_vibe_coding/backends.py": "8c3c29b84c7aa9cf1c185606e818b2d392fdd6e81c3d54efab5d1017e952826b",
+    "src/meta_vibe_coding/app.py": "8c8e4d5491027e7b55b7c8a3515fd546df2cdedadc549149301991c52dc9d4b5",
+    "src/meta_vibe_coding/static/index.html": "f0fe954a49d6104f8f8f4d29494c2783c41d9646773a24a39c9704b78ce13a03",
+    "src/meta_vibe_coding/static/style.css": "096d1acb61fc7a82366860489a4999d26651bc9b61f31266d9c67c474a8114f5",
+    "src/meta_vibe_coding/static/app.js": "ac7e27815cfcfc3102032c003fa435899e4ee836248918eda6bd5a43fb8282f3"
+  },
+  "attempts": [
+    {
+      "at": "2026-10-28T04:59:57.296936+00:00",
+      "config": {
+        "backend": "ollama",
+        "model": "qwen3.5:4b",
+        "destination": "http://127.0.0.1:11434",
+        "available_modes": [
+          "ollama"
+        ],
+        "planned_modes": [
+          "commercial_api",
+          "agent"
+        ]
+      },
+      "request": {
+        "state": {
+          "schema_version": 1,
+          "revision": 1,
+          "raw_intent": "I want a website for our gardening club.",
+          "turns": [],
+          "facts": {},
+          "questions": [],
+          "assessment": null,
+          "model_calls": 0,
+          "started_at": 1793163537.0043788
+        },
+        "request_id": "smoke-1"
+      },
+      "http_status": 200,
+      "elapsed_seconds": 60.300111750140786,
+      "response": {
+        "request_id": "smoke-1",
+        "state": {
+          "schema_version": 1,
+          "revision": 1,
+          "raw_intent": "I want a website for our gardening club.",
+          "turns": [],
+          "facts": {},
+          "questions": [],
+          "assessment": null,
+          "model_calls": 1,
+          "started_at": 1793163537.0043788
+        },
+        "usage": null,
+        "error": {
+          "code": "timeout",
+          "message": "The model timed out. Your answers are retained; retry explicitly."
+        }
+      }
+    },
+    {
+      "kind": "browser-observed diagnostic retry",
+      "at": "2026-10-28T05:12:46.831622+00:00",
+      "input": "I want a website for our gardening club.",
+      "backend": "ollama",
+      "model": "qwen3.5:4b",
+      "change": "Shortened response guidance; same 60-second timeout, no automatic fallback.",
+      "observed_error": "The model timed out. Your answers are retained; retry explicitly.",
+      "result": "Original idea remains visible; Retry the failed step is available; no assessment or export.",
+      "raw_response": null,
+      "source_sha256": {
+        "src/meta_vibe_coding.egg-info/PKG-INFO": "6b8a1267de54b465e357eaccc8997ea78dd42a0cff90317afb021a8674417f8b",
+        "src/meta_vibe_coding.egg-info/SOURCES.txt": "fe397e940eb43247c98315c856d4db23cbde460f1cd38685c35fd179a3445c61",
+        "src/meta_vibe_coding.egg-info/requires.txt": "468ccc994a9afa5e75cb558ba429a83c93f5aacbc75ff06360e49ec044021790",
+        "src/meta_vibe_coding.egg-info/top_level.txt": "12a140b227f65180bdc26e9fe138b63c6bdf100aa6f53e608d9e13abab5d30cb",
+        "src/meta_vibe_coding.egg-info/dependency_links.txt": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+        "src/meta_vibe_coding/models.py": "7211d3af000957e9e080824b501027b796822d1b8e9afab9eeeac0a98bff4e6c",
+        "src/meta_vibe_coding/__init__.py": "bc2c616949b2df2c04ef3a5fc83d33f7b68a6ef35c88d1328cf9c3814c67df04",
+        "src/meta_vibe_coding/core.py": "cdf55a1ccd81352afafd2118a6526145988afc56758f9e928d5a7f2bc58e6b8b",
+        "src/meta_vibe_coding/prompt.txt": "06e658b2e55be394a579b4f64ba0c1579991b4472171d03aea45ed0910c7b515",
+        "src/meta_vibe_coding/backends.py": "8c3c29b84c7aa9cf1c185606e818b2d392fdd6e81c3d54efab5d1017e952826b",
+        "src/meta_vibe_coding/app.py": "8c8e4d5491027e7b55b7c8a3515fd546df2cdedadc549149301991c52dc9d4b5",
+        "src/meta_vibe_coding/static/index.html": "a8f6df576bf128c4d6aa6a8e20386b33ee596c97a0b0d0dee0404dda95a590d4",
+        "src/meta_vibe_coding/static/style.css": "096d1acb61fc7a82366860489a4999d26651bc9b61f31266d9c67c474a8114f5",
+        "src/meta_vibe_coding/static/app.js": "d9498b931e4764d15865e8045b76300349c98153a92f824f72ae5e6b87a7e1d8"
+      }
+    }
+  ]
+}

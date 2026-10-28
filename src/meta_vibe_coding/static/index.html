@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Meta Vibe Coding</title><link rel="stylesheet" href="/style.css"><script src="/app.js" defer></script></head>
+<body>
+<header><span class="eyebrow">META VIBE CODING · LEVEL 0</span><h1>Start with what you need.</h1><p>A thinking space for your software idea. Understand the choices before you build.</p></header>
+<main>
+<section class="notice"><strong id="agent">Checking coding agent…</strong><p id="data-notice">Waiting for agent information before sending an idea.</p><p id="allowance-notice"></p><p>This app keeps your session in memory: reloading or closing the tab loses the session. Download a brief to keep a copy. No software is built or deployed.</p></section>
+<section id="entry"><form id="idea-form"><label for="idea">What would you like to accomplish?</label><textarea id="idea" rows="4" maxlength="8000" required placeholder="Describe your goal in your own words."></textarea><button id="start" disabled>Explore my idea</button></form></section>
+<div id="status" role="status" aria-live="polite"></div>
+<section id="workspace" hidden>
+<div class="toolbar"><h2>Your idea</h2><button id="reset" class="secondary">New idea</button></div><p id="original"></p>
+<section id="clarification" hidden><h2>One thing that could change the solution</h2><p id="question"></p><p id="why" class="muted"></p>
+<form id="reply-form"><label for="answer">Your answer</label><textarea id="answer" rows="2" maxlength="8000" required></textarea><div class="actions"><button id="reply">Use this answer</button><button id="unknown" type="button" class="secondary">I don't know</button><button id="provisional" type="button" class="secondary">Show a provisional result</button></div></form></section>
+<section id="result" hidden><div class="toolbar"><h2>What this means for you</h2><span id="disposition" class="badge"></span></div><div id="owner"></div>
+<details><summary>Developer View · JSON brief</summary><p>Preview includes referenced owner text. Check the contents before saving or sharing.</p><pre id="brief"></pre></details><button id="download" disabled>Download brief</button></section>
+<form id="correction-form"><label for="correction">Change or correct anything</label><textarea id="correction" rows="2" maxlength="8000" required placeholder="Tell us what changed. Your earlier words will be retained as sources."></textarea><button id="revise" class="secondary">Reconsider with this change</button></form>
+<button id="retry" hidden class="secondary">Retry the failed step</button><p id="usage" class="muted"></p>
+</section>
+</main><footer>Recommendations can be wrong. Assumptions and open questions stay visible so you can check them.</footer>
+</body></html>

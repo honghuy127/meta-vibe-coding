@@ -81,11 +81,12 @@ justify the additional effort through a better owner experience or reliability.
 
 The first useful version accepts an idea, clarifies consequential unknowns,
 recommends a solution, and presents two synchronized views. It does not generate
-application code or provision infrastructure. It can use a local model, a
-commercial API, or a constrained coding-agent wrapper for reasoning, as specified
-in [the backend design](decisions.md#d007-interchangeable-inference-and-agent-backends).
-Its purpose is to settle the right
-problem and prepare a trustworthy handoff.
+application code or provision infrastructure. It always delegates reasoning to
+OpenCode, Claude Code, or Codex through a thin wrapper, as specified in
+[the agent boundary](decisions.md#d008-wrap-coding-agents-only). The coding agent
+owns model access, authentication, and any locally hosted model. This repository
+does not run inference or integrate model APIs. Its purpose is to settle the
+right problem and prepare a useful handoff.
 
 The interaction is:
 
@@ -113,11 +114,11 @@ constraints, risk reasons, assumptions, open questions, and acceptance criteria.
 Both views must reflect the same current answers. A changed answer must trigger a
 review of the affected recommendation, not just update a displayed field.
 
-Keep the stewardship policy and state independent of the chosen backend or UI.
-Reuse an existing agent harness when it satisfies the interaction and permission
-requirements; a thin model API integration is another valid route. Keep decision
-logic, validation, and presentation independently testable, and compare the result
-with a strong-prompt workflow before adding custom orchestration.
+Keep stewardship policy, validation, and presentation independent of the selected
+coding agent. Reuse its model/provider integration rather than implementing a
+second one. OpenCode, Claude Code, and Codex are alternative entry points, not
+three agents collaborating on every idea. Compare the wrapper with a strong prompt
+through the same agent before adding orchestration or additional product layers.
 The detailed contract belongs in [Level 0 scope](level-0.md#required-behavior).
 
 ## Examples that guide development
@@ -135,8 +136,9 @@ do not establish that every software domain is supported.
 
 ## How we will choose and validate the solution
 
-Start with the cheapest useful comparison: the same model with a strong stewardship
-prompt versus the proposed stateful interaction. Give both the same initial ideas,
+Start with the cheapest useful comparison: the same coding agent and configured
+model with a strong stewardship prompt versus the proposed stateful interaction.
+Give both the same initial ideas,
 access to clarifying answers, and comparable limits on interaction and generation.
 Allow both to recommend an existing tool or no build. Record the exact prompts,
 model version or alias, dates, configuration, questions, answers, failures, latency,
@@ -184,7 +186,7 @@ judgments remain disputed, report uncertainty and gather targeted evidence.
 
 The [work board](work-board.md) tracks owners and dependencies. The following are
 stages with exit conditions, not promised dates. Assign people and estimate effort
-before scheduling; staffing, provider access, API budget, and user access remain
+before scheduling; staffing, agent access, operating budget, and user access remain
 unconfirmed.
 
 | Stage | Deliverable | Exit condition |
@@ -192,7 +194,7 @@ unconfirmed.
 | Decide the smallest useful form | Compared existing options, strong prompt, and interaction sketch | A chosen approach with a concrete reason and a bounded cost estimate. |
 | Implement Level 0 | Working flow, explicit state, two views, exported brief | Acceptance cases pass and changed or missing answers behave correctly. |
 | Validate owner use | Recorded scenario review and authorized adult usability checks | Important failures addressed; owner can explain the recommendation and next step. |
-| Introduce Level 1 planning | Specification usable by a selected coding backend | A developer or coding agent can act on it without inventing consequential decisions. |
+| Introduce Level 1 planning | Specification usable by a selected coding agent | A developer or coding agent can act on it without inventing consequential decisions. |
 | Add Level 2 supervision | Build, review, and correction loop | Requirement coverage and recoverable corrections demonstrated on bounded tasks. |
 | Add Level 3 delivery | Product in its intended environment and owner handover | Reachability, access, cost, and deployment/rollback responsibilities verified. |
 | Add Level 4 operations | Maintained system record and supported maintenance tasks | Owner can request an update, diagnose a problem, and recover through a tested process. |
@@ -204,10 +206,11 @@ Agents may assist those contributors; their presence does not require a multi-ag
 product architecture. Assign a technical reviewer and a person responsible for
 owner-facing checks before declaring a milestone ready.
 
-Estimate API cost from expected sessions, calls per session, input/output tokens,
-and current provider rates; include retries and a contingency. Estimate review and
-user-session effort separately. The owner sets the spending cap before paid runs.
-Start locally with fictional inputs while those choices are unresolved.
+Review the selected coding agent’s account, provider charges, internal retries,
+and spending controls before live runs. Record reported usage and cost without
+inventing missing values. Estimate review and user-session effort separately.
+Use fictional inputs during development; configuring a wrapper does not authorize
+spending, disclosure of private data, or deployment.
 
 ## Risks and practical limits
 
