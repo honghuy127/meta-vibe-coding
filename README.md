@@ -10,8 +10,10 @@ The first milestone is **Level 0: Intent Interpreter**. It turns an idea into a
 plain-language recommendation and a structured engineering brief. It may recommend
 an existing tool or advise against building.
 
-**Current state:** proposal and collaboration foundation only. There is no runnable
-application, chosen technology stack, or evaluated prototype yet.
+**Current state:** product plan, acceptance cases, and draft state/interaction
+contracts. The design supports local models, commercial APIs, and wrappers around
+existing coding agents through one shared contract. None is implemented yet; see
+[backend options](docs/decisions.md#d007-interchangeable-inference-and-agent-backends).
 
 ## Start here
 

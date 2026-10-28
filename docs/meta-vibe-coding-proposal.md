@@ -81,7 +81,10 @@ justify the additional effort through a better owner experience or reliability.
 
 The first useful version accepts an idea, clarifies consequential unknowns,
 recommends a solution, and presents two synchronized views. It does not generate
-application code or provision infrastructure. Its purpose is to settle the right
+application code or provision infrastructure. It can use a local model, a
+commercial API, or a constrained coding-agent wrapper for reasoning, as specified
+in [the backend design](decisions.md#d007-interchangeable-inference-and-agent-backends).
+Its purpose is to settle the right
 problem and prepare a trustworthy handoff.
 
 The interaction is:
@@ -110,10 +113,11 @@ constraints, risk reasons, assumptions, open questions, and acceptance criteria.
 Both views must reflect the same current answers. A changed answer must trigger a
 review of the affected recommendation, not just update a displayed field.
 
-Use one small application and a model integration if needed. Keep decision logic,
-state validation, and presentation independently testable, without introducing
-multiple agents or services merely to mirror the conceptual workflow. Choose the
-stack after comparing a prompt-only prototype with the interaction requirements.
+Keep the stewardship policy and state independent of the chosen backend or UI.
+Reuse an existing agent harness when it satisfies the interaction and permission
+requirements; a thin model API integration is another valid route. Keep decision
+logic, validation, and presentation independently testable, and compare the result
+with a strong-prompt workflow before adding custom orchestration.
 The detailed contract belongs in [Level 0 scope](level-0.md#required-behavior).
 
 ## Examples that guide development
