@@ -14,6 +14,7 @@
 *.tmp
 *.swp
 *~
+artifacts/.pilot-*.claim
 
 # Python development outputs
 .venv/

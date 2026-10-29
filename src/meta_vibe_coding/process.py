@@ -8,6 +8,14 @@ import time
 from .core import FlowError
 
 
+class CliFailure(FlowError):
+    """Keep bounded stdout available for native error classification, never display it."""
+
+    def __init__(self, stdout: bytes):
+        super().__init__("unavailable", "The agent process failed. Check its installation and account configuration.")
+        self.stdout = stdout
+
+
 async def run_cli(args: list[str], *, content: str, cwd: str, env: dict[str, str], timeout: float) -> bytes:
     """No shell; bound both output streams and stop the process group on failure."""
     if timeout <= 0:
@@ -36,7 +44,7 @@ async def run_cli(args: list[str], *, content: str, cwd: str, env: dict[str, str
                         asyncio.create_task(read(process.stderr, 128_000))])
         stdout, _stderr, _returncode = await asyncio.gather(*readers, process.wait())
         if process.returncode:
-            raise FlowError("unavailable", "The agent process failed. Check its installation and account configuration.")
+            raise CliFailure(stdout)
         return stdout
 
     try:

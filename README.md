@@ -14,6 +14,8 @@ only through a configured coding agent, such as OpenCode.
 and developer views, and JSON export. All three CLI wrappers have deterministic
 contract tests; live agent compatibility, recommendation quality, and owner
 understanding remain unverified. Agent execution is disabled by default.
+The first [OpenCode free-plan pilot](artifacts/2026-10-29-opencode-free-pilot.json)
+was blocked by the native free usage limit before returning a recommendation.
 
 ## Run the prototype
 
@@ -32,7 +34,35 @@ and sends no ideas. Once its account, data destination, permissions, and spendin
 controls are agreed, restart with `MVC_AGENT=opencode`, `claude`, or `codex` and
 `MVC_ENABLE_AGENT=1`. These settings select one agent; there is no fallback.
 Configure authentication through that agent, not application-specific API keys.
-No live agent request was made as part of the wrapper rewrite.
+
+For an OpenCode free plan, select an exact currently free model from
+`opencode --standalone models` and pin `MVC_AGENT_MODEL`. OpenCode can choose
+helper models separately: pin its native `title`, `summary`, and `compaction`
+agents too. The dated pilot artifact records the process-local configuration used;
+it leaves global settings unchanged. Free availability and quotas can change.
+The wrapper reports a recognized free usage limit without retrying or selecting
+a paid route. Resume explicitly after the allowance resets.
+
+The pilot runner checks the recorded cooldown without starting an agent:
+
+```sh
+.venv/bin/python -m meta_vibe_coding.pilot
+```
+
+After the cooldown, review native settings and [current free pricing](https://opencode.ai/v2/docs/console/models/).
+Only then use the explicit confirmation flag to start the fictional pilot:
+
+```sh
+.venv/bin/python -m meta_vibe_coding.pilot --serve --free-pricing-checked
+```
+
+This reserves the five remaining invocations for one continuation. An ignored
+claim file blocks later or concurrent launches until the attempts and any new
+cooldown are reconciled in the pilot record. Claims remain after startup failures;
+review the evidence before authorizing another run. A private JSONL file under
+`/tmp` records source hashes and HTTP inputs/results/exports, including failures.
+It contains fictional owner text; inspect it before sharing. Raw CLI events and
+browser observations are not captured. Model pins do not enforce a dollar cap.
 
 | Variable | Meaning |
 | --- | --- |
@@ -75,7 +105,8 @@ settings before live or private-data use. This app's in-tab state does not contr
 agent/provider retention. Invocation counts and time limits are not dollar caps;
 use the selected agent/provider's spending controls before enabling calls.
 
-CLI contracts checked: OpenCode 2.0.12, Claude Code 2.1.312, Codex CLI 0.165.0.
+CLI contracts checked: OpenCode 2.0.12 and 2.2.0, Claude Code 2.1.312,
+Codex CLI 0.165.0.
 Help/version inspection and mocked events do not establish live compatibility.
 References: [OpenCode CLI](https://opencode.ai/v2/docs/cli/),
 [permissions](https://opencode.ai/v2/docs/permissions/),

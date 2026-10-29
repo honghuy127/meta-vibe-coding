@@ -253,3 +253,43 @@ def test_subprocess_creation_is_bounded_and_zero_budget_never_spawns(monkeypatch
         with pytest.raises(TimeoutError): await process.run_cli(["fictional"], timeout=0.02, **kwargs)
         assert len(calls) == 1
     asyncio.run(check())
+
+
+@pytest.mark.parametrize("exit_failure", [False, True])
+def test_free_limit_retains_reply_and_does_not_retry_or_expose_provider_text(configured, monkeypatch, exit_failure):
+    monkeypatch.setenv("MVC_AGENT", "opencode")
+    raw = b'{"type":"error","error":{"type":"provider.free-limit","message":"private-provider-details"}}'
+    calls = []
+    async def runner(args, **kwargs):
+        if "--help" in args: return help_text()
+        if "--version" in args: return b"test 1.0"
+        calls.append(args)
+        if exit_failure: raise process.CliFailure(raw)
+        return raw
+    monkeypatch.setattr(module, "run_cli", runner)
+    wrapper = module.CodingAgent()
+    with TestClient(create_app(wrapper)) as client:
+        response = client.post("/api/advance", json={"state": State(raw_intent="Fictional").model_dump(),
+            "request_id": "free-limit", "answer": "Keep this correction"}).json()
+    assert response["error"]["code"] == "free_limit"
+    assert "free usage limit" in response["error"]["message"]
+    assert "private-provider-details" not in json.dumps(response)
+    assert response["state"]["turns"][-1]["text"] == "Keep this correction"
+    assert response["state"]["assessment"] is None and response["usage"] is None
+    assert len(calls) == wrapper.calls == 1 and not wrapper.lock.locked()
+
+
+@pytest.mark.parametrize("raw", [b"private-not-json", b"null", b"[]",
+    b'{"type":"error","error":"private-details"}',
+    b'{"type":"error","error":{"type":"unknown","message":"private-details"}}'])
+def test_unrecognized_process_errors_remain_generic(raw):
+    assert module.reported_failure("opencode", raw) is None
+    assert module.reported_failure("claude", raw) is None
+    assert "private" not in process.CliFailure(raw).message
+
+
+def test_nonzero_process_preserves_bounded_stdout_for_error_classification(tmp_path):
+    with pytest.raises(process.CliFailure) as error:
+        asyncio.run(process.run_cli([sys.executable, "-c", "import sys; print('fictional'); sys.exit(1)"],
+            content="", cwd=str(tmp_path), env={"PATH": os.defpath}, timeout=5))
+    assert error.value.stdout == b"fictional\n" and "fictional" not in str(error.value)

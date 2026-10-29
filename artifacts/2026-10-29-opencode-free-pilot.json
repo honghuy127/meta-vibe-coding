@@ -1,0 +1,208 @@
+{
+  "kind": "fictional-development-pilot",
+  "status": "blocked-by-free-usage-limit",
+  "source_commit": "87b05395f6faf7cdb0ab9396ffe7dc61a8b55721",
+  "instrumentation": "Temporary local observer captured actual CLI streams, request/response, timing, and workspace file names. It did not substitute model responses. The second attempt was an explicit UI retry with stdout/stderr capture; no wrapper-initiated automatic retry or fallback ran. Native internal retries and billing were not audited.",
+  "agent": {
+    "name": "opencode",
+    "version": "2.2.0",
+    "requested_model": "opencode/glm-5.3-flash-free",
+    "reported_model": null,
+    "authentication": "Existing saved native OpenCode account; credentials and account identity excluded."
+  },
+  "authority": {
+    "scope": "Configure one coding agent, then one fictional pilot. Owner confirmed an OpenCode free plan.",
+    "additional_spend_cap_usd": 0,
+    "native_invocation_limit": 7,
+    "request_timeout_seconds": 300,
+    "session_timeout_seconds": 1800,
+    "paid_fallback_authorized": false
+  },
+  "native_overlay": {
+    "model": "opencode/glm-5.3-flash-free",
+    "agents": {
+      "title": {
+        "model": "opencode/glm-5.3-flash-free"
+      },
+      "summary": {
+        "model": "opencode/glm-5.3-flash-free"
+      },
+      "compaction": {
+        "model": "opencode/glm-5.3-flash-free"
+      }
+    },
+    "policies": [
+      {
+        "action": "provider.use",
+        "resource": "*",
+        "effect": "deny"
+      },
+      {
+        "action": "provider.use",
+        "resource": "opencode",
+        "effect": "allow"
+      },
+      {
+        "action": "tool.use",
+        "resource": "*",
+        "effect": "deny"
+      }
+    ],
+    "warming": false,
+    "compaction": {
+      "auto": false
+    },
+    "experimental": {
+      "background_compaction": false
+    }
+  },
+  "wrapper_overlay": "Source agents.py at source_commit appends global and meta-vibe deny-all permissions, planning system instructions, and update:disable. Exact schema, policy and stdin assembly are recoverable from that commit and each recorded request.",
+  "preflight": {
+    "inference_sent": false,
+    "default_model_configured": false,
+    "plugins_configured": 0,
+    "mcp_servers_configured": 0,
+    "native_diagnostics": "OpenCode debug agents --standalone accepted the overlay; title/summary/compaction each resolved to the requested free model. Effective meta-vibe permissions end in deny-all rules.",
+    "pricing_checked_date": "2026-10-29",
+    "pricing_source": "https://opencode.ai/v2/docs/console/models/",
+    "pricing_observation": "Exact free model lists input, output and cached reads as Free, for a limited time. Model pins are intended routing, not an application-enforced monetary cap."
+  },
+  "attempts": [
+    {
+      "number": 1,
+      "started_at_utc": "2026-10-29T13:03:29.501101+00:00",
+      "elapsed_seconds": 2.051780939102173,
+      "command": [
+        "opencode",
+        "run",
+        "--standalone",
+        "--format",
+        "json",
+        "--agent",
+        "meta-vibe",
+        "--model",
+        "opencode/glm-5.3-flash-free"
+      ],
+      "stdin_sha256": "e0e6515aecd27d2fc472fdc9f805e95bc07ab52707c39e9ad5e6ae1f3965114c",
+      "request": {
+        "state": {
+          "schema_version": 1,
+          "revision": 1,
+          "raw_intent": "I want a website for our gardening club.",
+          "turns": [],
+          "facts": {},
+          "questions": [],
+          "assessment": null,
+          "agent_calls": 0,
+          "started_at": 1793279009.225565,
+          "assessed_turn_count": 0
+        },
+        "request_id": "c4b9536c-05a3-4223-bbb3-253fc734d5e2",
+        "answer": null,
+        "question_id": null,
+        "provisional": false
+      },
+      "response": {
+        "request_id": "c4b9536c-05a3-4223-bbb3-253fc734d5e2",
+        "state": {
+          "schema_version": 1,
+          "revision": 1,
+          "raw_intent": "I want a website for our gardening club.",
+          "turns": [],
+          "facts": {},
+          "questions": [],
+          "assessment": null,
+          "agent_calls": 1,
+          "started_at": 1793279009.225565,
+          "assessed_turn_count": 0
+        },
+        "usage": null,
+        "error": {
+          "code": "unavailable",
+          "message": "The agent process failed. Check its installation and account configuration."
+        }
+      },
+      "native_stdout": null,
+      "native_stderr": null,
+      "capture_limit": "First attempt captured only the wrapper error; its native streams were not retained.",
+      "workspace_files_after": []
+    },
+    {
+      "number": 2,
+      "started_at_utc": "2026-10-29T13:04:46.221292+00:00",
+      "elapsed_seconds": 1.6761889457702637,
+      "command": [
+        "opencode",
+        "run",
+        "--standalone",
+        "--format",
+        "json",
+        "--agent",
+        "meta-vibe",
+        "--model",
+        "opencode/glm-5.3-flash-free"
+      ],
+      "stdin_sha256": "5d7f4980f015f877f893e55a8d5b4d9fc8a03b0a7823699d233417936744490f",
+      "request": {
+        "state": {
+          "schema_version": 1,
+          "revision": 1,
+          "raw_intent": "I want a website for our gardening club.",
+          "turns": [],
+          "facts": {},
+          "questions": [],
+          "assessment": null,
+          "agent_calls": 1,
+          "started_at": 1793279009.225565,
+          "assessed_turn_count": 0
+        },
+        "request_id": "28a411eb-5787-41ad-80c4-d58c8cace699",
+        "answer": null,
+        "question_id": null,
+        "provisional": false
+      },
+      "response": {
+        "request_id": "28a411eb-5787-41ad-80c4-d58c8cace699",
+        "state": {
+          "schema_version": 1,
+          "revision": 1,
+          "raw_intent": "I want a website for our gardening club.",
+          "turns": [],
+          "facts": {},
+          "questions": [],
+          "assessment": null,
+          "agent_calls": 2,
+          "started_at": 1793279009.225565,
+          "assessed_turn_count": 0
+        },
+        "usage": null,
+        "error": {
+          "code": "unavailable",
+          "message": "The agent process failed. Check its installation and account configuration."
+        }
+      },
+      "native_stdout": "{\"type\":\"error\",\"timestamp\":1793279087837,\"sessionID\":\"ses_e783cafbbffe8mc2NUtDq5w0Ja\",\"error\":{\"type\":\"provider.free-limit\",\"message\":\"Free usage limit reached. Connect a provider or subscribe to OpenCode Go to keep going, or switch models.\",\"status\":429,\"response\":{\"body\":\"{\\\"type\\\":\\\"error\\\",\\\"error\\\":{\\\"type\\\":\\\"FreeUsageLimitError\\\",\\\"message\\\":\\\"Free usage limit reached. Free models work in OpenCode (https://opencode.ai); subscribe to OpenCode Go to keep going: https://opencode.ai/go\\\"}}\"},\"retryAfterMs\":39313000}}\n",
+      "native_stderr": "",
+      "capture_limit": null,
+      "workspace_files_after": []
+    }
+  ],
+  "checks": {
+    "recovery": "After the first failure, the browser retained the idea and offered Retry the failed step. Explicit retry made one further native invocation and returned the same generic wrapper error; second native stream identifies its quota cause. The first underlying cause is unknown because native streams were not retained.",
+    "permissions": "Deny rules inspected in native diagnostics; no tool activity or files observed in either temporary workspace. Behavioral permission enforcement was not exercised.",
+    "retention": "Native OpenCode/provider retention was not independently tested. Use of fictional input does not establish transcript deletion.",
+    "billing": "No token/cost report returned. The selected route is listed free and no paid fallback was used; account billing was not independently reconciled.",
+    "semantic_and_ui_flow": "No Candidate or assessment returned. Clarification, unknown answer, correction, synchronized result views, export and recommendation quality remain untested live.",
+    "held_out_cases_sha256": "1dacff58594ae1baa976ca3a5ec6c5d107c5064bbf7081525d4b8f3999da06ca",
+    "held_out_cases_run": false
+  },
+  "next_action": "At or after 2026-10-30 09:00 JST, recheck exact free-model availability/pricing, then explicitly resume the same fictional pilot with the existing $0 additional-spend authority. The recorded cooldown is still active. Do not upgrade or switch to a paid provider automatically.",
+  "resume_gate": {
+    "source": "Second attempt native event timestamp plus error.retryAfterMs; this is an earliest retry time, not a guarantee of restored availability.",
+    "retry_not_before_utc": "2026-10-30T00:00:00.837000+00:00",
+    "retry_not_before_jst": "2026-10-30T09:00:00.837000+09:00",
+    "checked_at_utc": "2026-10-29T13:14:25.947468+00:00",
+    "cooldown_active_at_check": true,
+    "additional_native_requests": 0
+  }
+}

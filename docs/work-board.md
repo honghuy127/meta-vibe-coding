@@ -25,7 +25,7 @@ means the acceptance evidence and required review are recorded.
 | T003 | Design clarification and synchronized owner/developer flows | review | Codex, requested by repository owner | `docs/level-0.md`, D005 | Idea → clarification → recommendation → revision → export/recovery specified. Covers unknown answers, stale results, and late responses. Self-reviewed; implementation and user review remain. |
 | T004 | Choose the simplest viable solution and document setup | review | Codex, requested by repository owner | D008, README, Level 0 scope, proposal | Agent-only architecture selected by owner. OpenCode, Claude Code, and Codex wrappers replace direct transports in T012; live access and permissions need verification. |
 | T005 | Implement the Level 0 prototype | review | Codex, requested by repository owner | `src/meta_vibe_coding/`, `tests/`, dependency files, README | State, browser flow, corrections, and JSON export retained. Agent integration is being revised in T012. Product acceptance remains incomplete. |
-| T006 | Review demos and identify readiness gaps | blocked | Codex with separate reviewer, requested by repository owner | `artifacts/`, README, this board | Fresh cases remain frozen. Earlier direct-model checks are historical. Resume with real agent development responses after T012, then a matched same-agent baseline and held-out review. |
+| T006 | Review demos and identify readiness gaps | blocked | Codex with separate reviewer, requested by repository owner | `artifacts/`, agent/process boundary and tests, README, this board | OpenCode 2.2.0 configured for the owner's free plan, $0 additional spend. Two fictional C01 attempts failed; the second identified the free usage limit. Retry recovery observed; no recommendation returned. Quota handling fixed and tested. Resume after allowance reset; fresh cases remain frozen. |
 | T007 | Initialize GitHub repository metadata | done | Codex, requested by repository owner | GitHub repository settings, labels, milestone; `docs/work-board.md` | Description, seven topics, three work-area labels, and [Level 0 milestone](https://github.com/honghuy127/meta-vibe-coding/milestone/1) saved and verified through the GitHub API on 2026-10-28. |
 | T008 | Define code, writing, filename, and directory conventions | review | Codex, requested by repository owner | `CONTRIBUTING.md`, `docs/writing-guide.md`, `AGENTS.md`, `README.md`, this board | Existing guides updated; no new files. Checks passed across 11 Markdown files: relative links/anchors, headings, fences, and whitespace. Self-reviewed; repository owner to review conventions. |
 | T009 | Improve the solution proposal and delivery plan using research skills | review | Codex, requested by repository owner | Proposal, Level 0 plan, work board, decision log, README | D003 applied; proposal condensed, sources checked, and acceptance tasks linked. Strict Markdown checks and local render review completed; owner review pending. |
@@ -33,6 +33,7 @@ means the acceptance evidence and required review are recorded.
 | T011 | Check whether adult owners understand and can use the L0 handoff | blocked | Unassigned | Authorized session artifacts; short result in this board | Depends on T006, named facilitator, consent/data-handling decisions, and owner authorization. Record comprehension, task completion, burden, and changes needed before L1. |
 | T012 | Replace direct inference with coding-agent wrappers | done | Codex with separate wrapper reviewer, requested by repository owner | `src/`, `tests/`, artifacts organization, README, proposal, Level 0 scope, decisions, agent guidance | OpenCode, Claude Code, and Codex CLI wrappers implemented; direct clients/runner removed. Native help/version and mocked contracts checked. See note for review and remaining live verification. |
 | T013 | Self-audit the pending implementation before commit | done | Codex, requested by repository owner | Source, tests, package/lock files, docs, artifact provenance | Audited all 33 tracked/untracked candidate files against D008; fixed owner-confirmation, stale-question/ID, readiness, and instruction-boundary issues. Independent fix review passed; see note. No commit or live inference. |
+| T014 | Make the fictional pilot repeatable after the cooldown | done | Codex with separate reviewer, requested by repository owner | `src/meta_vibe_coding/pilot.py`, `tests/test_pilot.py`, `.gitignore`, README, this board | Opt-in runner prepared and independently reviewed. Default check sends no inference; serving requires cooldown expiry and a current pricing check. Exclusive claims prevent allowance resets. 101 pytest and ten UI checks pass; T006 remains blocked. |
 
 Proposed paths are locations for future work, not existing artifacts. Split tasks
 when contributors need independent ownership; do not reserve the whole repository
@@ -53,7 +54,50 @@ and reviews remain in `artifacts/legacy/`; they are not tests of the current age
 wrappers. The seven [fresh cases](../artifacts/l0-acceptance-cases.json) remain
 unchanged and unrun. D008 supersedes their original timing metadata with the
 current configurable 300/1,800-second limits. No matched baseline, adult owner
-session, or live external agent evaluation has run.
+session, or completed live external agent evaluation has run.
+
+On 2026-10-29 the owner requested setup followed by one fictional pilot and
+confirmed an OpenCode free plan. Pinned `opencode/glm-5.3-flash-free`, including
+native title/summary/compaction helpers, using only a process-local overlay.
+Disabled warming and automatic compaction; native diagnostics accepted the
+configuration and showed deny-all planning permissions. A separate reviewer
+checked native helper routing and current free pricing. These pins are intended
+routing, not a monetary enforcement mechanism; global settings were unchanged.
+
+The [pilot record](../artifacts/2026-10-29-opencode-free-pilot.json) retains both
+actual attempts against `87b0539`. They failed in 2.05 and 1.68 seconds; the second
+captured `provider.free-limit` (429). The first native streams were not retained,
+so its underlying cause is unknown.
+The browser kept the idea and exposed an explicit retry. No Candidate, token/cost
+report, tool activity, or workspace file was observed. No paid fallback ran.
+Clarification, unknown answers, correction, both result views, export, permission
+enforcement, retention and recommendation quality remain unverified live.
+
+Added a narrow static quota message for this recognized native code, including
+nonzero CLI exits, while keeping unknown errors generic and provider text private.
+Checks: 86 pytest tests, ten Node UI regressions, strict Markdown, whitespace and
+dependency checks pass. A separate reviewer replayed the captured native error:
+the quota message preserved a correction, kept export disabled, and invoked the
+wrapper once. Evidence hashes matched; review wording corrections were applied.
+The native event's timestamp plus `retryAfterMs` gives an earliest retry time of
+2026-10-30 00:00 UTC (09:00 JST). The cooldown was still active when the owner
+requested continuation on 2026-10-29 at 13:13 UTC, so no further native request
+was sent. This time does not guarantee renewed availability. Next: recheck free
+availability after that time, then explicitly resume the fictional development
+pilot before using the frozen cases.
+
+### T014: Repeatable fictional pilot
+
+Added the [pilot runner](../src/meta_vibe_coding/pilot.py) and usage in README.
+It records local HTTP evidence and source hashes, and reserves one continuation
+through an exclusive claim tied to the recorded request IDs. Claims survive
+startup failure; review evidence and reconcile attempts/cooldowns before relaunch.
+Separate review verified the cooldown, request allowance, concurrent launch guard,
+private journal and preserved HTTP boundaries. All 101 pytest tests, ten Node UI
+checks, strict Markdown, whitespace and dependency checks pass. Actual CLI checks
+report the active cooldown and refuse serving; no new native request ran. Frozen
+cases are unchanged. T014 prepares execution; T006 acceptance remains blocked.
+The owner requested committing the reviewed changes after this preparation.
 
 ### T012: Coding-agent-only revision
 

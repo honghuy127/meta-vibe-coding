@@ -13,7 +13,7 @@ from pydantic import ValidationError
 
 from .core import FlowError, model_input
 from .models import Candidate, State, Usage
-from .process import run_cli
+from .process import CliFailure, run_cli
 from .settings import Limits, load_limits
 
 PROMPT = Path(__file__).with_name("prompt.txt").read_text()
@@ -74,8 +74,29 @@ def invocation(agent: str, binary: str, model: str | None, env: dict[str, str]) 
     return args
 
 
+def reported_failure(agent: str, raw: bytes) -> FlowError | None:
+    """Translate only recognized native codes; provider messages may contain private data."""
+    if agent != "opencode":
+        return None
+    for line in raw.splitlines():
+        try:
+            event = json.loads(line)
+        except (ValueError, UnicodeError):
+            continue
+        if not isinstance(event, dict) or event.get("type") != "error":
+            continue
+        error = event.get("error")
+        if isinstance(error, dict) and error.get("type") == "provider.free-limit":
+            return FlowError("free_limit", "OpenCode's free usage limit has been reached. "
+                "Your answers are retained. Wait for the free allowance to reset, then retry.")
+    return None
+
+
 def parse_result(agent: str, raw: bytes) -> tuple[Candidate, dict]:
     """Require an explicit successful completion; never extract JSON from prose."""
+    failure = reported_failure(agent, raw)
+    if failure:
+        raise failure
     if agent == "claude":
         body = json.loads(raw)
         if body.get("type") != "result" or body.get("subtype") != "success" or body.get("is_error"):
@@ -201,6 +222,8 @@ class CodingAgent:
                     candidate, metadata = parse_result(self.agent, raw)
                     return candidate, Usage(agent=self.agent, agent_version=self.version,
                         elapsed_seconds=time.perf_counter() - started, **metadata)
+            except CliFailure as exc:
+                raise reported_failure(self.agent, exc.stdout) or exc
             except TimeoutError as exc:
                 raise FlowError("timeout", "The agent timed out and was stopped. Your answers are retained; retry explicitly.") from exc
             except OSError as exc:
