@@ -15,11 +15,11 @@ from meta_vibe_coding import process, settings
 from meta_vibe_coding.app import create_app
 from meta_vibe_coding.core import FlowError, reserve_call
 from meta_vibe_coding.models import State
-from test_flow import result
+from test_flow import result, native_result
 
 
 def output(agent, state):
-    content = result(state).model_dump_json()
+    content = native_result(state)
     if agent == "claude":
         return json.dumps({"type": "result", "subtype": "success", "is_error": False,
             "result": content, "modelUsage": {"reported-model": {}},
@@ -45,7 +45,7 @@ def configured(monkeypatch):
 
 
 def help_text():
-    return b"--standalone --format --agent --safe-mode --restricted --tools --strict-mcp-config --no-session-persistence --append-system-prompt --json --ephemeral --ignore-user-config --ignore-rules --sandbox --disable"
+    return b"--standalone --format --agent --safe-mode --restricted --tools --strict-mcp-config --no-session-persistence --append-system-prompt --json --ephemeral --ignore-user-config --ignore-rules --sandbox --disable --output-schema"
 
 
 @pytest.mark.parametrize("agent", ["opencode", "claude", "codex"])
@@ -78,6 +78,11 @@ def test_three_wrappers_share_state_and_delegate_models(configured, monkeypatch,
             assert args[args.index("--sandbox") + 1] == "read-only"
             assert "shell_tool" in args and "code_mode_host" in args
             assert "--ignore-user-config" in args and args[-1] == "-"
+            schema_path = args[args.index("--output-schema") + 1]
+            with open(schema_path) as schema_file:
+                assert schema_file.read() == module.SCHEMA
+            assert os.stat(schema_path).st_mode & 0o777 == 0o600
+            assert state.raw_intent not in module.SCHEMA
             policy = next(arg for arg in args if arg.startswith("developer_instructions="))
             assert tomllib.loads(policy)["developer_instructions"] == module.PROMPT
         assert module.PROMPT not in kwargs["content"], "Stewardship policy belongs in the native trusted instruction surface"
@@ -136,7 +141,7 @@ def test_incomplete_refused_or_invalid_output_is_rejected(agent, failure):
             events.insert(1, {"type": "item.started", "item": {"type": "command_execution"}} if agent == "codex" else {"type": "tool_use"})
         raw = "\n".join(json.dumps(event) for event in events).encode()
     with pytest.raises((ValueError, KeyError, TypeError)):
-        module.parse_result(agent, raw)
+        module.parse_result(agent, raw, state)
 
 
 CODEX_HOST_NOTICE = {"type": "item.completed", "item": {"type": "error", "message":
@@ -175,7 +180,7 @@ def test_codex_startup_notice_does_not_hide_errors_or_tool_activity(failure):
     if failure == "tool": events.insert(3, {"type": "item.started", "item": {"type": "command_execution"}})
     if failure == "failed_turn": events[-1] = {"type": "turn.failed"}
     raw = "\n".join(json.dumps(event) for event in events).encode()
-    with pytest.raises(ValueError): module.parse_result("codex", raw)
+    with pytest.raises(ValueError): module.parse_result("codex", raw, State(raw_intent="Fictional"))
 
 
 def test_native_auth_references_and_explicit_env_are_forwarded_without_old_mvc_keys(monkeypatch):
@@ -212,7 +217,7 @@ def test_completion_cannot_be_reused_after_a_later_start_or_message(agent, suffi
         extra = {"type": "item.completed", "item": {"type": "agent_message", "text": "{}"}}
     else:
         extra = {"type": "text", "part": {"text": "{}"}}
-    with pytest.raises(ValueError): module.parse_result(agent, raw + b"\n" + json.dumps(extra).encode())
+    with pytest.raises(ValueError): module.parse_result(agent, raw + b"\n" + json.dumps(extra).encode(), State(raw_intent="Fictional"))
 
 
 @pytest.mark.parametrize("failure", ["flags", "timeout", "invalid_output", "help_expiry"])

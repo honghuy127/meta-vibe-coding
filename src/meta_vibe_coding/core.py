@@ -37,6 +37,13 @@ def prepare(request: AdvanceRequest) -> State:
             if not question or question["retired"] or question["answer_turn_id"] is not None:
                 raise FlowError("invalid_input", "That question is missing, retired, or already answered.")
             question["answer_turn_id"] = turn_id
+            if request.declares_unknown:
+                key = question["topic"]
+                if key not in state["facts"]:
+                    raise FlowError("invalid_input", "This question is from an older session. Start a new idea to continue.")
+                state["facts"][key] = {"value": None, "status": "unknown", "source_turn_ids": [turn_id],
+                    "reason": "The owner does not know yet."}
+                state["owner_unknowns"][key] = {"source_turn_id": turn_id, "quote": request.answer}
         state["revision"] += 1
         # Facts may still describe earlier answers until reassessment. They cannot
         # be exported with an old recommendation while this input is pending.
@@ -56,27 +63,52 @@ def reserve_call(state: State, limits: Limits | None = None) -> State:
 def adopt(state: State, candidate: Candidate, *, allow_question: bool = True) -> State:
     if candidate.assessment.based_on_revision != state.revision:
         raise FlowError("invalid_output", "The agent returned an outdated revision.")
+    goal = candidate.facts.get("goal")
+    if goal is None or (goal.value is not None and (not isinstance(goal.value, str) or not goal.value.strip())):
+        raise FlowError("invalid_output", "The agent did not provide a usable goal. Your answers are retained.")
+    if candidate.question and candidate.question.topic not in candidate.facts:
+        raise FlowError("invalid_output", "The agent returned a question that does not match the current understanding.")
     # Retaining unsupported confirmed assertions is not a way to remove a fact.
     removed = {k for k, f in state.facts.items() if f.status == "confirmed"} - candidate.facts.keys()
     if removed:
         raise FlowError("invalid_output", "The agent dropped confirmed facts.")
+    if state.owner_unknowns.keys() - candidate.facts.keys():
+        raise FlowError("invalid_output", "The agent lost a detail you said was unknown. Your answers are retained.")
     latest_turn = state.turns[-1].id if state.turns else "t0"
     fresh_reply = len(state.turns) > state.assessed_turn_count
+    latest_text = state.turns[-1].text.strip().lower().rstrip(".! ") if state.turns else ""
+    substantive_reply = fresh_reply and latest_text not in {
+        "continue", "go on", "proceed", "next", "i don't know", "i do not know"}
+    turn_ids = ["t0"] + [turn.id for turn in state.turns]
+    unknowns = state.owner_unknowns.copy()
     for key, fact in candidate.facts.items():
         previous = state.facts.get(key)
         if previous and previous.status != "confirmed" and fact.status == "confirmed":
-            latest_text = state.turns[-1].text.strip().lower().rstrip(".! ") if state.turns else ""
-            if not fresh_reply or latest_turn not in fact.source_turn_ids or latest_text in {"continue", "go on", "proceed", "next"}:
+            if not substantive_reply or latest_turn not in fact.source_turn_ids:
                 raise FlowError("invalid_output", "An assumption requires a substantive owner confirmation.")
         meaning_changed = previous is not None and (not same_json(fact.value, previous.value) or fact.status != previous.status)
         if meaning_changed and previous.status == "confirmed":
             if not fresh_reply or latest_turn not in fact.source_turn_ids or latest_turn in previous.source_turn_ids:
                 raise FlowError("invalid_output", "A changed confirmed fact needs a new owner reply as evidence.")
+        evidence = state.owner_unknowns.get(key)
+        if evidence and fact.status != "unknown":
+            if (fact.status not in {"confirmed", "not_applicable"} or not substantive_reply
+                    or latest_turn not in fact.source_turn_ids
+                    or turn_ids.index(latest_turn) <= turn_ids.index(evidence.source_turn_id)):
+                raise FlowError("invalid_output", "The agent treated an unanswered detail as settled. Your answers are retained.")
+            unknowns.pop(key)
+    for key, evidence in candidate.owner_unknowns.items():
+        previous = unknowns.get(key)
+        if previous and evidence != previous:
+            if evidence.source_turn_id not in turn_ids or turn_ids.index(evidence.source_turn_id) <= turn_ids.index(previous.source_turn_id):
+                raise FlowError("invalid_output", "The agent changed the source of an unanswered detail. Your answers are retained.")
+        unknowns[key] = evidence
     data = state.model_dump()
     facts = {key: fact.model_dump() for key, fact in candidate.facts.items()}
     if not same_json(facts, data["facts"]):
         data["revision"] += 1
     data["facts"] = facts
+    data["owner_unknowns"] = {key: value.model_dump() for key, value in unknowns.items()}
     data["assessment"] = candidate.assessment.model_dump()
     data["assessment"]["based_on_revision"] = data["revision"]
     data["assessed_turn_count"] = len(state.turns)
@@ -87,12 +119,15 @@ def adopt(state: State, candidate: Candidate, *, allow_question: bool = True) ->
         raise FlowError("invalid_output", "A ready result cannot ask another clarification question.")
     # An explicit request for a result ends clarification; open decisions remain
     # in the assessment without creating another question for the owner.
-    if candidate.question and allow_question:
+    ask_question = allow_question and (candidate.question is None or candidate.question.topic not in unknowns)
+    if candidate.question and not ask_question:
+        if not any(q.topic == candidate.question.topic for q in candidate.assessment.open_questions):
+            raise FlowError("invalid_output", "The agent omitted an unresolved decision from its result. Your answers are retained.")
+    if candidate.question and ask_question:
         if len(data["questions"]) >= 5:
             raise FlowError("limit", "The agent requested more than five clarification questions.")
         answered = [q for q in state.questions if q.topic == candidate.question.topic and q.answer_turn_id is not None]
         conflict = candidate.question.conflict_turn_id
-        turn_ids = ["t0"] + [turn.id for turn in state.turns]
         if answered and (conflict != latest_turn or not all(turn_ids.index(conflict) > turn_ids.index(q.answer_turn_id) for q in answered)):
             raise FlowError("invalid_output", "A repeated question must cite newer owner input that creates a conflict.")
         if conflict is not None and (not answered or conflict != latest_turn):

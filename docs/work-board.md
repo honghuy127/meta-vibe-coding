@@ -25,7 +25,7 @@ means the acceptance evidence and required review are recorded.
 | T003 | Design clarification and synchronized owner/developer flows | review | Codex, requested by repository owner | `docs/level-0.md`, D005 | Idea → clarification → recommendation → revision → export/recovery specified. Covers unknown answers, stale results, and late responses. Self-reviewed; implementation and user review remain. |
 | T004 | Choose the simplest viable solution and document setup | review | Codex, requested by repository owner | D008, README, Level 0 scope, proposal | Agent-only architecture selected by owner. OpenCode, Claude Code, and Codex wrappers replace direct transports in T012; live access and permissions need verification. |
 | T005 | Implement the Level 0 prototype | review | Codex, requested by repository owner | `src/meta_vibe_coding/`, `tests/`, dependency files, README | State, browser flow, corrections, JSON export and T012 agent wrappers are implemented. T006 records live development checks; product acceptance remains incomplete. |
-| T006 | Review demos and identify readiness gaps | review | Codex with separate reviewer, requested by repository owner | `artifacts/`, `src/`, `tests/`, README, Level 0 scope, this board | Committed `438f61d`, then ran a seven-call browser Codex/Luna conversation. Correction recovery and export worked, but an earlier constraint was omitted and unknown questions repeated. Provisional-question guard fixed offline; 124 Python and ten UI checks pass. Source review passed; final evidence delta self-reviewed. Next: repair/recheck development gaps before frozen acceptance. |
+| T006 | Review demos and identify readiness gaps | review | Codex with separate reviewer, requested by repository owner | `artifacts/`, `src/`, `tests/`, README, Level 0 scope, this board | Development evidence remains in T016/T017. T019 completed seven frozen pairs: one provisional case passed, eleven technical stops and two substantive failures. Variations remain unreached; T020 owns repairs. Product acceptance and owner comprehension remain incomplete. |
 | T007 | Initialize GitHub repository metadata | done | Codex, requested by repository owner | GitHub repository settings, labels, milestone; `docs/work-board.md` | Description, seven topics, three work-area labels, and [Level 0 milestone](https://github.com/honghuy127/meta-vibe-coding/milestone/1) saved and verified through the GitHub API on 2026-10-28. |
 | T008 | Define code, writing, filename, and directory conventions | review | Codex, requested by repository owner | `CONTRIBUTING.md`, `docs/writing-guide.md`, `AGENTS.md`, `README.md`, this board | Existing guides updated; no new files. Checks passed across 11 Markdown files: relative links/anchors, headings, fences, and whitespace. Self-reviewed; repository owner to review conventions. |
 | T009 | Improve the solution proposal and delivery plan using research skills | review | Codex, requested by repository owner | Proposal, Level 0 plan, work board, decision log, README | D003 applied; proposal condensed, sources checked, and acceptance tasks linked. Strict Markdown checks and local render review completed; owner review pending. |
@@ -36,7 +36,11 @@ means the acceptance evidence and required review are recorded.
 | T014 | Make the fictional pilot repeatable after the cooldown | done | Codex with separate reviewer, requested by repository owner | `src/meta_vibe_coding/pilot.py`, `tests/test_pilot.py`, `.gitignore`, README, this board | Opt-in runner prepared and independently reviewed. Default check sends no inference; serving requires cooldown expiry and a current pricing check. Exclusive claims prevent allowance resets. 101 pytest and ten UI checks pass; T006 acceptance remains incomplete. |
 | T015 | Verify the packaged pilot and rehearse the full flow offline | done | Codex with separate reviewer, requested by repository owner | `tests/test_pilot.py`, this board | Built/installed `0e9ebaa` offline; all 12 packaged files match. Full source suite: 102 pass. All 16 pilot tests also pass against the wheel, independently verified. Process doubles only; no new model calls or held-out cases. |
 | T016 | Check independent constraints across corrections | done | Codex, requested by repository owner | `src/meta_vibe_coding/prompt.txt`, development evidence, README, Level 0 scope, this board | Committed prior snapshot as `bff1f17`. Four-call fresh Codex/Luna check retained analytics/payments/registration exclusions while accounts changed, kept unknowns and honored provisional control. Source and evidence reviews passed; 124 tests pass. Claims are limited to these three prohibitions; other semantic gaps remain in T017. |
-| T017 | Align clarification and views with known state | ready | Unassigned | Agent contract/prompt, core/views and tests, relevant scope and evidence | T016 still asks about explicit unknowns; model uses `project.goal` while Owner View reads `goal`. Use facts consistently, distinguish member storage from public-visitor storage, verify normal clarification/goal display, and keep acceptance cases frozen until development gaps are resolved. |
+| T017 | Align clarification and views with known state | done | Codex, requested by repository owner | Agent contract/prompt, core/views and tests, relevant scope and evidence | Committed prior changes as `fc13d10`. Added fact-bound questions, retained quoted unknowns and canonical text/null goal; source/evidence reviews passed. Four-call browser check verified visible goal, retained button/free-text unknowns, scoped data and export. 146 Python and 12 UI tests, document and dependency checks pass; brief schema 1 unchanged. No frozen cases. |
+| T018 | Prepare the frozen acceptance run and matched baseline | done | Codex with separate reviewer, requested by repository owner | Evaluation entry point/tests, `artifacts/`, README, Level 0 scope, this board | Frozen bytes preserved; matched plan and no-inference rehearsal recorded. Source review passed after provenance fixes; 163 Python and 12 UI tests, strict Markdown and whitespace pass. No acceptance scores at this stage; T019 records the later authorized run. |
+| T019 | Execute and review the bounded matched comparison | done | Codex with separate reviewer, requested by repository owner | Native parsing/stream capture and tests, `artifacts/`, README, Level 0 scope, this board | Owner authorized 98 native calls; all fourteen first attempts closed using 33. Source/raw/rendered-view reviews passed; one provisional case passes, eleven technical stops and two substantive failures. No retry, fallback, purchase or participant session. 166 Python and 12 UI tests pass. See result and T020. |
+| T020 | Repair observed output and requirement-contract gaps | done | Codex with separate reviewer, requested by repository owner | Native contract/agent/prompt, evaluation preview, fresh fixtures/tests, relevant docs | D010 implemented and independently reviewed. Explicit question targets, quoted source linkage and private Codex schema file preserve canonical guards and brief schema 1. All 194 Python and 12 UI tests, dependency, strict Markdown/link and whitespace checks pass. T019 bytes are intact. Scripted fixtures do not establish live discovery or acceptance; see notes. |
+| T021 | Verify the revised native contract and prepare a fresh comparison | ready | Unassigned | Agent development evidence, versioned evaluation plan, relevant docs | Review native settings and obtain a fresh bounded allowance before model calls. First verify schema compatibility and useful behavior on fresh development examples; then review a new matched plan for both schemas. Preserve T019 and report exposure of its cases. No live execution is authorized by this task row. |
 
 Proposed paths are locations for future work, not existing artifacts. Split tasks
 when contributors need independent ownership; do not reserve the whole repository
@@ -160,6 +164,90 @@ access and data fields. T017 owns these gaps; retention claims cover only the
 three checked prohibitions. Source and evidence reviews passed, as do 124 Python
 tests. Strict Markdown, relative links, whitespace and evidence-hash checks pass.
 No frozen case, baseline or owner session ran.
+
+### T017: Questions and views use known state
+
+Implemented [D009](decisions.md#d009-bind-clarification-to-facts-and-retain-explicit-uncertainty):
+new questions identify facts, results contain text/null `goal`, and explicit owner
+unknowns retain quoted evidence through failures/retries. Only a later substantive
+reply can resolve a declaration. Brief schema 1 is unchanged; old in-flight clients
+need a new idea. Source review also found and verified the provisional control
+remaining reachable when suppression leaves `needs_answer` without a question.
+
+The [four-call browser check](../artifacts/2026-10-30-codex-luna-known-state.json)
+verified the visible goal, button declaration before inference, quoted budget
+uncertainty, distinct public/private storage, and a matching provisional export.
+A new sensitivity question remained allowed because that fact was not declared
+unknown. Calls 2 and 4 themselves proposed no question: backend interception,
+marker resolution and the `needs_answer` edge case are tested with doubles, not
+observed live here. Quotes and keys do not prove semantic intent or detect aliases.
+No new dependency or extra per-assessment agent call was added.
+
+Source and raw evidence reviews passed. The server stopped after four calls;
+old records, the owner’s download and frozen cases were preserved. The exact live
+source patch is retained, before later plain-language error wording. All 146 Python
+and 12 UI tests pass, as do dependency, strict Markdown, relative-link and whitespace
+checks. Changes after `fc13d10` join T018–T020 in the reviewed checkpoint. T018 prepares bounded
+acceptance/baseline execution; no frozen case or owner-comprehension session ran.
+
+### T018: Prepare the matched comparison
+
+The [plan](../artifacts/l0-acceptance-plan.json) preserved frozen cases and defined
+the matched comparison. The [rehearsal](../artifacts/2026-10-30-acceptance-rehearsal.json)
+used a separate timer fixture and HTTP doubles. Review verified fixes for source
+provenance, changes during capture and ambient legacy settings. All 163 Python
+and 12 UI tests, strict Markdown/link and whitespace checks passed. No native
+calls or acceptance scores came from rehearsal. T019 records the later run.
+
+### T019: Seven frozen pairs
+
+The [result](../artifacts/2026-10-30-codex-luna-acceptance.json) records all fourteen
+first attempts, using 33 of the owner's 98 allowed native calls. Source and plan
+stayed fixed; claims and fsynced reservations prevented resets. A shared native
+completion parser kept baseline output separate from Candidate/state adoption;
+optional stream capture retained exact bytes/hashes. Independent source, raw-record
+and rendered-text reviews passed. The server stopped with all attempts closed.
+Final archive review passed for `900838356cc8` (SHA-256 prefix).
+
+H04 wrapper passed narrowly as a provisional checklist/board solution; its latest
+maintenance answer still lacks a fact/export source reference. Five wrapper attempts
+failed state protocols; six baselines failed JSON parsing. Completed H06 wrapper
+omitted the prior-copy limit on revocation; H07 baseline omitted unattended service
+versus human credentials. Neither omission was a cross-view contradiction. All six
+attached variation phases remain `not checked`. HV04 passed only its separate
+no-native-call HTTP recovery checks on a state copy.
+
+Read-only replay disables controls, so HTTP statuses establish export gating.
+Setup status can overwrite its error label. Owner comprehension, billing, native
+internal calls and general superiority remain unverified. All 166 Python and 12 UI
+tests and dependency checks pass; Markdown/link and whitespace checks pass. The
+existing Starlette warning remains; hosted Markdown rendering was not checked.
+T020 repairs follow in the same checkpoint; a new evaluated version remains pending.
+
+### T020: Native response contract repair
+
+[D010](decisions.md#d010-separate-native-responses-from-canonical-state) separates
+the native response from canonical state. Keyed arrays and embedded question
+targets remove ambiguous map generation; exact quotes link new or changed confirmed
+facts to cited sources. Existing confirmation, repeated-topic and owner-unknown
+guards stay intact. Codex receives a private schema input file; other agents use
+stdin and local validation. Baseline preparation previews its own closed schema
+and still receives only the owner transcript and limits.
+
+Independent code review found no blocker; 109 focused offline checks passed.
+Final commands: `python -m pytest -q` (194 passed),
+`node --test tests/test_ui.cjs` (12 passed), `python -m pip check`, strict Markdown
+checks on README/scope/decisions/board, and `git diff --check` all pass. Python
+commands used `.venv/bin/python`. The existing Starlette deprecation warning remains.
+T019 archive, plan and frozen cases retain their hashes; canonical core/models
+remain as captured in T019. No native call was made for T020; its changes join
+the owner's requested checkpoint commit.
+
+Fresh fixtures verify partial-answer state transitions and preservation/export of
+scripted consequences. They do not show live consequence discovery, complete
+extraction or semantic support. Native schema compatibility, recommendation quality,
+owner understanding and Level 0 acceptance remain open. T021 needs fresh settings,
+plan and allowance; the closed T019 run is not reopened.
 
 ### T014: Repeatable fictional pilot
 

@@ -50,6 +50,11 @@ function assessed(payload, summary, question = null) {
     state.turns.push({id, text: payload.answer});
     state.revision += 1;
     if (payload.question_id) state.questions.find((q) => q.id === payload.question_id).answer_turn_id = id;
+    if (payload.declares_unknown) {
+      const key = state.questions.find((q) => q.id === payload.question_id).topic;
+      state.facts[key] = {value: null, status: 'unknown', source_turn_ids: [id], reason: 'The owner does not know yet.'};
+      state.owner_unknowns = {...state.owner_unknowns, [key]: {source_turn_id: id, quote: payload.answer}};
+    }
   }
   state.facts.goal = {value: state.raw_intent, status: 'confirmed', source_turn_ids: ['t0'], reason: ''};
   for (const prior of state.questions) if (!prior.answer_turn_id) prior.retired = true;
@@ -59,8 +64,11 @@ function assessed(payload, summary, question = null) {
     recommendation: {kind: 'local_utility', summary, rationale: ['Fictional rationale.'],
       alternatives: [], owner_responsibilities: ['Check the fictional result.']},
     acceptance_criteria: ['Fictional acceptance check.'], open_questions: [], limitations: ['Test double.']};
-  if (question) state.questions.push({id: `q${state.questions.length + 1}`, topic: 'usage', text: question,
-    decision: 'Changes the fictional recommendation.', answer_turn_id: null, retired: false});
+  if (question) {
+    state.facts.usage ??= {value: null, status: 'unknown', source_turn_ids: []};
+    state.questions.push({id: `q${state.questions.length + 1}`, topic: 'usage', text: question,
+      decision: 'Changes the fictional recommendation.', answer_turn_id: null, retired: false});
+  }
   state.assessed_turn_count = state.turns.length;
   return {request_id: payload.request_id, state,
     usage: {agent: 'test-double', model: 'fictional', elapsed_seconds: 0.01}, error: null};
@@ -130,6 +138,54 @@ for (const networkFailure of [false, true]) {
     assert.match(ui.el('owner').textContent, /Retried conditional result/);
   });
 }
+
+test('An unknown declaration survives a lost response and retry without becoming false', async () => {
+  const ui = await page();
+  ui.advances.push((body) => assessed(body, 'Initial conditional result.', 'Who owns updates?'));
+  await ui.start('Fictional idea');
+  ui.advances.push(() => { throw new Error('Fictional lost response.'); });
+  await ui.el('unknown').fire('click');
+  assert.equal(ui.el('retry').hidden, false);
+  ui.advances.push((body) => {
+    assert.equal(body.answer, null);
+    assert.equal(body.declares_unknown, false);
+    assert.equal(body.state.turns.length, 1);
+    assert.equal(body.state.questions[0].answer_turn_id, 't1');
+    assert.equal(body.state.facts.usage.value, null);
+    assert.equal(body.state.facts.usage.status, 'unknown');
+    assert.deepEqual(body.state.owner_unknowns.usage, {source_turn_id: 't1', quote: "I don't know."});
+    return assessed(body, 'Conditional result with uncertainty.');
+  });
+  await ui.el('retry').fire('click');
+  const calls = ui.calls.filter((call) => call.path === '/api/advance');
+  assert.equal(calls[1].body.declares_unknown, true);
+  assert.match(ui.el('owner').textContent, /usage: unknown/);
+});
+
+test('A suppressed unknown question still leaves the provisional action reachable', async () => {
+  const ui = await page();
+  ui.advances.push((body) => assessed(body, 'Initial question.', 'Who owns updates?'));
+  await ui.start('Fictional idea');
+  ui.advances.push((body) => {
+    const result = assessed(body, 'A decision is still needed.');
+    result.state.assessment.disposition = 'needs_answer';
+    return result;
+  });
+  await ui.el('unknown').fire('click');
+  assert.equal(ui.el('clarification').hidden, true);
+  assert.equal(ui.el('provisional').hidden, false);
+  assert.equal(ui.el('provisional').disabled, false);
+  assert.equal(ui.el('download').disabled, true);
+  ui.advances.push((body) => {
+    assert.equal(body.provisional, true);
+    const result = assessed(body, 'A conditional option with the unknown preserved.');
+    result.state.assessment.disposition = 'provisional';
+    return result;
+  });
+  await ui.el('provisional').fire('click');
+  assert.equal(ui.el('provisional').hidden, true);
+  assert.equal(ui.el('download').disabled, false);
+});
 
 test('A lost reply response retains owner evidence once when retrying', async () => {
   const ui = await page();

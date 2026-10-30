@@ -15,9 +15,13 @@ from meta_vibe_coding.models import AdvanceRequest, Candidate, Fact, Question, S
 
 def result(state, *, question=None, facts=None, disposition="ready"):
     """Fictional response from a agent test double, never an evaluation result."""
+    facts = facts if facts is not None else {
+        "goal": {"value": state.raw_intent, "status": "confirmed", "source_turn_ids": ["t0"]}}
+    if question:
+        facts = {**facts}
+        facts.setdefault(question["topic"], {"value": None, "status": "unknown", "source_turn_ids": []})
     return Candidate.model_validate({
-        "facts": facts if facts is not None else {
-            "goal": {"value": state.raw_intent, "status": "confirmed", "source_turn_ids": ["t0"]}},
+        "facts": facts,
         "assessment": {"based_on_revision": state.revision, "disposition": disposition,
             "risk": {"level": "unknown", "reasons": ["A fictional test result, not a risk review."]},
             "hidden_requirements": [],
@@ -27,6 +31,24 @@ def result(state, *, question=None, facts=None, disposition="ready"):
             "acceptance_criteria": ["A dry run shows proposed names."], "open_questions": [],
             "limitations": ["Test-double output."]}, "question": question})
 
+
+
+def native_result(state, candidate=None):
+    """Serialize a scripted response into the native contract, without inference."""
+    candidate = candidate or result(state)
+    body = candidate.model_dump()
+    records = [{"key": key, **fact} for key, fact in body["facts"].items()]
+    question = body["question"]
+    if question:
+        question = {"fact": {"key": question["topic"], **body["facts"][question["topic"]]},
+            **{key: value for key, value in question.items() if key != "topic"}}
+    sources = {"t0": state.raw_intent, **{turn.id: turn.text for turn in state.turns}}
+    grounding = [{"source_turn_id": source, "quote": sources[source][:500], "fact_keys": [key]}
+        for key, fact in candidate.facts.items() if fact.status == "confirmed"
+        for source in fact.source_turn_ids]
+    return json.dumps({"contract_version": 1, "facts": records, "assessment": body["assessment"],
+        "question": question, "owner_unknowns": [{"key": key, **value}
+            for key, value in body["owner_unknowns"].items()], "grounding": grounding})
 
 def test_false_unknown_empty_and_strict_types():
     for value, status in [(False, "confirmed"), ([], "confirmed"), (None, "unknown")]:
@@ -296,11 +318,12 @@ def test_valid_nonsequential_ids_do_not_collide_with_new_records():
 
 
 @pytest.mark.parametrize("value", [False, 0, [], "", " "])
-def test_ready_result_requires_a_textual_nonempty_goal(value):
+@pytest.mark.parametrize("disposition", ["ready", "provisional"])
+def test_result_requires_a_textual_nonempty_goal(value, disposition):
     state = State(raw_intent="Organize events")
-    candidate = result(state)
+    candidate = result(state, disposition=disposition)
     candidate.facts["goal"] = Fact(value=value, status="confirmed", source_turn_ids=["t0"])
-    with pytest.raises(ValidationError): adopt(state, candidate)
+    with pytest.raises(FlowError): adopt(state, candidate)
 
 
 def test_assessed_reply_count_cannot_claim_future_or_unreviewed_input():

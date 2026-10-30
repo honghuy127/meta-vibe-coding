@@ -46,6 +46,7 @@ async function render() {
   const assessment = viewState?.assessment;
   $('result').hidden = !assessment;
   $('clarification').hidden = true;
+  $('provisional').hidden = true;
   brief = null;
   $('brief').textContent = '';
   $('owner').replaceChildren();
@@ -69,6 +70,7 @@ async function render() {
       $('question').textContent = question.text;
       $('why').textContent = `Why this matters: ${question.decision}`;
     }
+    $('provisional').hidden = !state.assessment || (!question && assessment.disposition !== 'needs_answer');
     if (state.assessment && assessment.disposition !== 'needs_answer') {
       const snapshot = state;
       try {
@@ -81,12 +83,13 @@ async function render() {
   }
   $('download').disabled = pending || !brief;
 }
-async function advance(answer = null, questionId = null, provisional = false) {
+async function advance(answer = null, questionId = null, provisional = false, declaresUnknown = false) {
   if (!state || pending) return;
   lastProvisional = provisional;
   const requestId = crypto.randomUUID();
   currentRequest = requestId;
-  const payload = {state, request_id: requestId, answer, question_id: questionId, provisional};
+  const payload = {state, request_id: requestId, answer, question_id: questionId, provisional,
+    declares_unknown: declaresUnknown};
   if (state.assessment) previousResult = structuredClone(state);
   // Keep a local copy of the submitted reply even if the HTTP request is lost.
   if (answer !== null) {
@@ -97,6 +100,13 @@ async function advance(answer = null, questionId = null, provisional = false) {
     state = structuredClone(state);
     state.turns.push({id: turnId, text: answer});
     if (questionId) state.questions.find((q) => q.id === questionId).answer_turn_id = turnId;
+    if (declaresUnknown && questionId) {
+      const key = state.questions.find((q) => q.id === questionId).topic;
+      if (state.facts[key]) {
+        state.facts[key] = {value: null, status: 'unknown', source_turn_ids: [turnId], reason: 'The owner does not know yet.'};
+        state.owner_unknowns = {...state.owner_unknowns, [key]: {source_turn_id: turnId, quote: answer}};
+      }
+    }
     state.revision += 1;
   }
   state = {...state, assessment: null, agent_calls: Math.min(7, state.agent_calls + 1)};
@@ -144,7 +154,7 @@ $('reply-form').addEventListener('submit', async (event) => {
 });
 $('unknown').addEventListener('click', async () => {
   const question = [...state.questions].reverse().find((q) => !q.answer_turn_id && !q.retired);
-  if (question) await advance("I don't know.", question.id);
+  if (question) await advance("I don't know.", question.id, false, true);
 });
 $('provisional').addEventListener('click', () => advance(null, null, true));
 $('retry').addEventListener('click', () => advance(null, null, lastProvisional));

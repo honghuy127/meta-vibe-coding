@@ -47,29 +47,52 @@ logical contract, implemented by strict Pydantic models and application validato
 [D008](decisions.md#d008-wrap-coding-agents-only) defines the agent boundary. State
 is scoped to one idea. Persistence and import are not implied by export support.
 
+The native response contract is separate from this canonical state. It uses
+keyed fact arrays, embeds the question's target fact, and requires exact source
+quotes for new or changed confirmed facts before state adoption. These checks
+do not establish semantic support or complete extraction. Existing state guards
+still apply; see [D010](decisions.md#d010-separate-native-responses-from-canonical-state).
+
 | State field | Type and meaning |
 | --- | --- |
 | `schema_version`, `revision` | Integers; version is 1, revision starts at 1 and increases whenever owner input or an adopted assumption changes the state. |
 | `raw_intent` | Original idea, unchanged. It is the source identified as `t0`. |
 | `turns` | Ordered owner replies/corrections, each with a unique `id` and original `text`; retain earlier replies. The idea is not copied here. |
 | `facts` | Map from stable lower-case dotted keys to the fact records below. Use `goal`, `users.primary`, `usage.environment`, `data.persistent`, `data.personal`, `data.sensitive`, `access.public`, `access.accounts`, `content.updates`, and `operations.budget` where relevant. Give individual requirements/constraints stable keys such as `requirements.r1`; additional topics can be added without changing the envelope. |
-| `questions` | Ordered records with `id`, `topic`, `text`, `decision`, nullable `answer_turn_id`/`conflict_turn_id`, and `retired` (boolean). `decision` states what a different answer could change. |
+| `questions` | Ordered records with `id`, `topic`, `text`, `decision`, nullable `answer_turn_id`/`conflict_turn_id`, and `retired` (boolean). New `topic` values identify a key in `facts`; `decision` states what a different answer could change. |
 | `assessment` | Null until a valid current result is available; otherwise the assessment below with matching `based_on_revision`. The UI may retain the previous snapshot as visibly stale. |
 
-Runtime state also carries `agent_calls` (assessment request attempts), `started_at` (Unix seconds), and
-`assessed_turn_count`, the number of owner replies covered by the last adopted
-assessment. These are not exported. A retry cannot reuse an already assessed reply
-as new confirmation; a new reply retained after failure can still be assessed. Retire unanswered questions when a
-new result supersedes them, while preserving their history. Reopening an answered
-topic requires `conflict_turn_id` to cite the latest owner reply, newer than its
-previous answers, with the conflict explained in `decision`. Semantic review must
-check that the conflict is genuine; source IDs alone do not prove this.
+Runtime state also carries `agent_calls` (assessment attempts), `started_at` (Unix
+seconds), `assessed_turn_count` (covered owner replies), and `owner_unknowns`.
+These fields are not exported. A retry cannot turn an already assessed reply into
+new confirmation; new input retained after failure can still be assessed.
+
+`owner_unknowns` maps a fact key to `source_turn_id` and a nonempty exact `quote`
+of at most 500 characters from that owner source. The fact must remain unknown
+and cite that source. The “I don’t know” button records this before inference,
+using its fact-bound question; free-text declarations are proposed by the selected
+agent. Quotes prove source presence, not meaning or relevance. Semantic review
+must check those claims. Older states default to an empty map; older in-flight
+clients and unbound questions are not automatically migrated. Brief schema 1 is
+unchanged.
+
+A retained declaration cannot be dropped or resolved using its own source turn.
+Only a later substantive owner reply can resolve its fact as confirmed or not
+applicable. Questions for the same retained fact are suppressed; their unresolved
+decision must still appear in assessment open questions. This is exact-key
+control, not semantic alias detection. Retire unanswered questions when a new
+result supersedes them, while preserving history. Reopening an answered topic
+requires `conflict_turn_id` citing a later owner reply, with the conflict explained
+in `decision`. Source IDs alone do not establish a genuine conflict.
 
 Each fact has `value`, `status`, and `source_turn_ids`. Values are JSON scalars or
 arrays of scalars; use separate semantic keys for independently revisable facts.
 Record independently changeable permissions and prohibitions as separate boolean
 facts. A reason explains a fact; it must not be the only record of a requirement.
-Keep genuine collection-valued requirements as lists.
+Keep genuine collection-valued requirements as lists. Requirements for different
+groups or contexts use distinct scoped keys; storage for members does not imply
+storage for public visitors. Every new agent result includes `goal` with nonempty
+text or an explicit unknown/null value. Other keys are not aliases for `goal`.
 Status is `confirmed`, `assumed`, `unknown`, or `not_applicable`. Confirmed facts
 must be supported by explicit owner input, including the initial idea. A model's
 inference remains assumed until the owner confirms it. Unknown and not-applicable
@@ -132,7 +155,9 @@ conditions. Neither disposition is permission to start implementation.
    confirm a questionnaire or choose a stack before providing value.
 2. **Clarify.** Ask one consequential question at a time, explaining why it matters.
    Allow a free-text answer, “I don't know,” correction of an earlier answer, or
-   a request for a provisional result. Do not repeat a resolved question unless
+   a request for a provisional result. The unknown button sends a fact-bound
+   `declares_unknown` action with its standard reply, so failures and retries retain
+   the declaration. Do not repeat a resolved question unless
    new input creates a genuine conflict. A provisional-result request adds no new
    clarification question; keep unresolved decisions in the assessment. Use the
    acceptance-plan question limits.
@@ -250,6 +275,25 @@ record the concrete benefit that justifies added state or UI. Development
 diagnostics do not establish acceptance or a baseline advantage. These limits
 do not authorize spending or participant recruitment.
 
+The [T019 comparison plan](../artifacts/l0-acceptance-plan.json) preserves the
+frozen case file, including its superseded direct-model limits, and records the
+current Codex/Luna configuration, strong transcript-only baseline, alternating
+approach order, operator rules and review evidence. Base cases and their variations
+share seven top-level invocations, five questions and thirty minutes per approach;
+an unreachable phase stays `not checked`. Each bundled information request counts
+separately. The baseline receives no canonical state or state-validation feedback.
+The default preparation and separate-fixture rehearsal make no native calls;
+see [README](../README.md#check-and-review). The
+[first seven-pair run](../artifacts/2026-10-30-codex-luna-acceptance.json) is complete:
+one provisional case passed, eleven attempts stopped technically and two completed
+outputs omitted consequential requirements. The six attached variation phases
+were not reached. Level 0 remains unaccepted; these results do not change the
+criteria or establish a general wrapper advantage. T020 changes the native
+response contract; current preparation previews a closed schema for each approach
+without giving the baseline canonical state. A fresh live comparison needs a new
+versioned matched plan, reviewed settings and invocation allowance. Deterministic
+fixtures do not reopen or repair the historical attempts.
+
 ### Check owner understanding
 
 In authorized adult sessions (T011), ask the owner to explain in their own words:
@@ -293,9 +337,10 @@ work. There is no committed launch date or agent spending budget.
 
 Record actual case outputs, failures, and check results against the acceptance
 procedure above. Structural validation and a software smoke test do not establish
-recommendation quality or owner comprehension. Local smoke attempts are recorded
-as historical evidence under `artifacts/legacy/`; no full acceptance review or
-adult sessions have run. The current coding-agent wrappers have only mocked
-inference checks and local CLI help/version inspection. Before a public demo, resolve
-provider data handling, deployment authority, and operating cost; readiness must
-be demonstrated in the intended environment.
+recommendation quality or owner comprehension. Earlier direct-model smoke attempts
+remain under `artifacts/legacy/`. T019 completed and independently reviewed a live
+seven-pair Codex comparison with blocking failures; Level 0 is not accepted.
+T020's revised native response contract has deterministic checks but no live
+verification. Adult comprehension sessions have not run. Before a public demo,
+resolve provider data handling, deployment authority, and operating cost; readiness
+must be demonstrated in the intended environment.

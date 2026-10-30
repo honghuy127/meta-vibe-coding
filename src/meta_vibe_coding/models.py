@@ -8,6 +8,8 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 Text = Annotated[str, Field(min_length=1, max_length=8000)]
 Scalar = str | bool | int | float
+FACT_KEY_PATTERN = r"^[a-z][a-z0-9_]*(\.[a-z][a-z0-9_]*)*$"
+FactKey = Annotated[str, Field(pattern=FACT_KEY_PATTERN)]
 
 
 class Model(BaseModel):
@@ -36,6 +38,11 @@ class Turn(Model):
     text: Text
 
 
+class UnknownEvidence(Model):
+    source_turn_id: Text
+    quote: Annotated[str, Field(min_length=1, max_length=500)]
+
+
 class Question(Model):
     id: Text
     topic: Text
@@ -47,7 +54,7 @@ class Question(Model):
 
 
 class ProposedQuestion(Model):
-    topic: Text
+    topic: FactKey
     text: Text
     decision: Text
     conflict_turn_id: str | None = None
@@ -101,6 +108,7 @@ class State(Model):
     agent_calls: int = Field(default=0, ge=0, le=7)
     started_at: float = Field(default_factory=time.time, gt=0)
     assessed_turn_count: int = Field(default=0, ge=0)
+    owner_unknowns: dict[FactKey, UnknownEvidence] = Field(default_factory=dict, max_length=100)
 
     @model_validator(mode="after")
     def check_consistency(self) -> Self:
@@ -111,10 +119,18 @@ class State(Model):
         if self.assessed_turn_count > len(self.turns):
             raise ValueError("Assessed turn count cannot exceed owner reply count")
         for key, fact in self.facts.items():
-            if not re.fullmatch(r"[a-z][a-z0-9_]*(\.[a-z][a-z0-9_]*)*", key):
+            if not re.fullmatch(FACT_KEY_PATTERN, key):
                 raise ValueError("Fact keys must be lower-case semantic keys")
             if not set(fact.source_turn_ids).issubset(turn_ids):
                 raise ValueError("Fact refers to an unknown owner source")
+        sources = {"t0": self.raw_intent, **{turn.id: turn.text for turn in self.turns}}
+        for key, evidence in self.owner_unknowns.items():
+            fact = self.facts.get(key)
+            if not fact or fact.status != "unknown" or evidence.source_turn_id not in fact.source_turn_ids:
+                raise ValueError("An owner unknown must reference its current unknown fact")
+            source = sources.get(evidence.source_turn_id)
+            if source is None or not evidence.quote.strip() or evidence.quote not in source:
+                raise ValueError("An owner unknown needs an exact nonempty source quote")
         for question in self.questions:
             if question.answer_turn_id is not None and question.answer_turn_id not in turn_ids:
                 raise ValueError("Question answer refers to an unknown owner source")
@@ -142,9 +158,10 @@ class State(Model):
 
 class Candidate(Model):
     # A complete fact map makes removals of dependent assumptions explicit.
-    facts: dict[str, Fact]
+    facts: dict[FactKey, Fact] = Field(json_schema_extra={"required": ["goal"]})
     assessment: Assessment
     question: ProposedQuestion | None
+    owner_unknowns: dict[FactKey, UnknownEvidence] = Field(default_factory=dict, max_length=100)
 
 
 class AdvanceRequest(Model):
@@ -153,6 +170,13 @@ class AdvanceRequest(Model):
     answer: Text | None = None
     question_id: str | None = None
     provisional: bool = False
+    declares_unknown: bool = False
+
+    @model_validator(mode="after")
+    def check_unknown_action(self) -> Self:
+        if self.declares_unknown and (not self.question_id or self.answer != "I don't know."):
+            raise ValueError("The unknown action needs a question and its standard reply")
+        return self
 
 
 class Usage(Model):

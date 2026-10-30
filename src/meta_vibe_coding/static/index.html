@@ -10,7 +10,8 @@
 <section id="workspace" hidden>
 <div class="toolbar"><h2>Your idea</h2><button id="reset" class="secondary">New idea</button></div><p id="original"></p>
 <section id="clarification" hidden><h2>One thing that could change the solution</h2><p id="question"></p><p id="why" class="muted"></p>
-<form id="reply-form"><label for="answer">Your answer</label><textarea id="answer" rows="2" maxlength="8000" required></textarea><div class="actions"><button id="reply">Use this answer</button><button id="unknown" type="button" class="secondary">I don't know</button><button id="provisional" type="button" class="secondary">Show a provisional result</button></div></form></section>
+<form id="reply-form"><label for="answer">Your answer</label><textarea id="answer" rows="2" maxlength="8000" required></textarea><div class="actions"><button id="reply">Use this answer</button><button id="unknown" type="button" class="secondary">I don't know</button></div></form></section>
+<button id="provisional" type="button" class="secondary" hidden>Show a provisional result</button>
 <section id="result" hidden><div class="toolbar"><h2>What this means for you</h2><span id="disposition" class="badge"></span></div><div id="owner"></div>
 <details><summary>Developer View · JSON brief</summary><p>Preview includes referenced owner text. Check the contents before saving or sharing.</p><pre id="brief"></pre></details><button id="download" disabled>Download brief</button></section>
 <form id="correction-form"><label for="correction">Change or correct anything</label><textarea id="correction" rows="2" maxlength="8000" required placeholder="Tell us what changed. Your earlier words will be retained as sources."></textarea><button id="revise" class="secondary">Reconsider with this change</button></form>

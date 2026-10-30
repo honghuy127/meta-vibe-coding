@@ -12,12 +12,16 @@ only through a configured coding agent, such as OpenCode.
 
 **Current state:** a Level 0 web prototype with clarification, corrections, owner
 and developer views, and JSON export. All three CLI wrappers have deterministic
-contract tests. A [fresh Codex/Luna development check](artifacts/2026-10-30-codex-luna-constraint-retention.json)
-retained independent constraints through a partial correction and honored an
-explicit provisional-result request in a live call. This is one development
-example, not automatic repair of older grouped histories. Repeated questions about
-explicit unknowns and a goal-field mismatch remain open. Frozen acceptance,
-broader recommendation quality and owner understanding remain unverified.
+contract tests. A [four-call Codex/Luna browser check](artifacts/2026-10-30-codex-luna-known-state.json)
+verified goal display, retained explicit unknowns, distinct public/private data
+requirements and a provisional export. Questions now identify facts; a retained
+“I don’t know” declaration prevents another question for the same key. Quoted
+sources prove presence, not meaning, and aliases remain a semantic limitation.
+The [seven-pair acceptance run](artifacts/2026-10-30-codex-luna-acceptance.json)
+used 33 of 98 authorized native calls. One provisional wrapper case passed;
+eleven attempts stopped technically and two completed outputs missed substantive
+requirements. Level 0 is not accepted, no comparative advantage is established,
+and owner understanding remains untested.
 Agent execution is disabled by default.
 
 The [OpenCode pilot](artifacts/2026-10-29-opencode-free-pilot.json) and
@@ -51,6 +55,9 @@ MVC_AGENT=codex MVC_AGENT_MODEL=gpt-6-luna MVC_ENABLE_AGENT=1 .venv/bin/python -
 ```
 
 Account access and usage limits still apply; this is not a free-usage guarantee.
+After an update, reload the page and start a new idea to use the current runtime
+contract. Older in-flight clients are not automatically migrated; exported briefs
+still use schema version 1.
 
 For an OpenCode free plan, select an exact currently free model from
 `opencode --standalone models` and pin `MVC_AGENT_MODEL`. OpenCode can choose
@@ -116,7 +123,12 @@ settings have no supported execution path.
 ## Agent boundaries
 
 Each request uses a fresh temporary working directory, passes the state through
-stdin, bounds output, and validates the final JSON against the same contract.
+stdin, bounds output, and validates the final JSON through one native response
+contract before applying the state guards. The response uses keyed fact arrays
+and embeds each question's target fact. New or changed confirmed facts need exact
+owner quotes linked to their cited sources. Quotes establish source presence,
+not semantic support or complete extraction. State and exported brief schema 1
+remain unchanged; see [D010](docs/decisions.md#d010-separate-native-responses-from-canonical-state).
 Stewardship policy uses each agent’s native system/developer instruction surface;
 owner text stays in the data input. The wrapper stops the process group at the
 deadline and never resumes another
@@ -149,6 +161,13 @@ References: [OpenCode CLI](https://opencode.ai/v2/docs/cli/),
 [Claude CLI](https://code.claude.com/docs/en/cli-reference),
 [Codex non-interactive mode](https://learn.chatgpt.com/docs/non-interactive-mode).
 
+Codex receives a private, request-owned `response-schema.json` through its native
+`--output-schema` option, with identical schema content in stdin. This file is
+wrapper input, not agent-created output. OpenCode and Claude receive the schema
+in stdin and use the same local validation; native constrained decoding is not
+claimed for them. Software checks cover the new encoding and failure handling;
+the new native-schema invocation has not been verified live.
+
 ## Check and review
 
 ```sh
@@ -161,7 +180,30 @@ Checks use agent/process doubles and small local subprocesses, without inference
 Subprocess checks need permission to launch and terminate their process groups.
 They cover contract validation, revised answers, recovery, limits, and stale
 responses. They cannot judge recommendation quality or owner understanding.
-The [frozen acceptance cases](artifacts/l0-acceptance-cases.json) remain unrun.
+All seven [frozen case pairs](artifacts/l0-acceptance-cases.json) were attempted
+once; the [results](artifacts/2026-10-30-codex-luna-acceptance.json) preserve failures,
+raw native exchanges, source snapshots, rendered-view text and independent review.
+The [matched comparison plan](artifacts/l0-acceptance-plan.json) preserves their
+original bytes and records the limits used for that run. Check the plan, or rehearse
+HTTP recovery and baseline input assembly without inference:
+
+```sh
+.venv/bin/python -m meta_vibe_coding.evaluation
+.venv/bin/python -m meta_vibe_coding.evaluation --rehearse --output /tmp/mvc-acceptance-rehearsal.json
+```
+
+The default writes nothing. Rehearsal uses a separate fictional fixture and a
+double; its new private output file includes source snapshots and unchecked review
+rows. Run from this source checkout; a different installed package or changes
+during capture fail the provenance check. Existing files are never overwritten.
+This entry point has no live execution mode. T019 used the audited local harness
+retained in its result artifact; it made no repairs, retries or fallback requests.
+The fourteen first attempts are closed. Current preparation previews separate
+closed response schemas for both approaches; the baseline remains transcript-only.
+Another live run needs a new versioned matched plan, reviewed settings and an
+invocation allowance. It must account for the changed schemas and native flags.
+Owner sessions remain separate.
+
 Earlier direct-model experiments are retained under `artifacts/legacy/`; they are
 historical evidence, not acceptance of the current agent wrappers. Their Git
 SHAs identify the design baseline; the prior uncommitted implementation snapshots

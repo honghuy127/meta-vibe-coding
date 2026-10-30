@@ -4,6 +4,7 @@ import asyncio
 import os
 import signal
 import time
+from collections.abc import Callable
 
 from .core import FlowError
 
@@ -16,7 +17,8 @@ class CliFailure(FlowError):
         self.stdout = stdout
 
 
-async def run_cli(args: list[str], *, content: str, cwd: str, env: dict[str, str], timeout: float) -> bytes:
+async def run_cli(args: list[str], *, content: str, cwd: str, env: dict[str, str], timeout: float,
+                  capture: Callable[[bytes, bytes, int | None], None] | None = None) -> bytes:
     """No shell; bound both output streams and stop the process group on failure."""
     if timeout <= 0:
         raise TimeoutError()
@@ -26,8 +28,9 @@ async def run_cli(args: list[str], *, content: str, cwd: str, env: dict[str, str
         stdin=asyncio.subprocess.PIPE, stdout=asyncio.subprocess.PIPE,
         stderr=asyncio.subprocess.PIPE, start_new_session=True), timeout)
 
-    async def read(stream, limit):
-        output = bytearray()
+    outputs = [bytearray(), bytearray()]
+
+    async def read(stream, limit, output):
         while chunk := await stream.read(min(65_536, limit + 1 - len(output))):
             output.extend(chunk)
             if len(output) > limit:
@@ -40,8 +43,8 @@ async def run_cli(args: list[str], *, content: str, cwd: str, env: dict[str, str
         process.stdin.write(content.encode("utf-8"))
         await process.stdin.drain()
         process.stdin.close()
-        readers.extend([asyncio.create_task(read(process.stdout, 1_000_000)),
-                        asyncio.create_task(read(process.stderr, 128_000))])
+        readers.extend([asyncio.create_task(read(process.stdout, 1_000_000, outputs[0])),
+                        asyncio.create_task(read(process.stderr, 128_000, outputs[1]))])
         stdout, _stderr, _returncode = await asyncio.gather(*readers, process.wait())
         if process.returncode:
             raise CliFailure(stdout)
@@ -59,3 +62,5 @@ async def run_cli(args: list[str], *, content: str, cwd: str, env: dict[str, str
         for task in readers:
             task.cancel()
         await asyncio.gather(*readers, return_exceptions=True)
+        if capture is not None:
+            capture(bytes(outputs[0]), bytes(outputs[1]), process.returncode)

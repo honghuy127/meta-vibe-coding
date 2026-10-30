@@ -137,6 +137,55 @@ failures. Before acceptance, establish a useful development response through a
 real agent, then review fresh cases, corrections, unknowns, and failures. Adult
 owner sessions still need separate authorization and data handling.
 
+## D009: Bind clarification to facts and retain explicit uncertainty
+
+- Date: 2026-10-30; status: accepted implementation choice, reviewed in T017.
+- Owner: Codex for the repository owner’s requested next task; within Level 0.
+- Context: development runs repeated explicit unknowns and returned a goal under
+  a key the Owner View did not read.
+- Choice: new questions identify a fact key; new results contain text/null `goal`.
+  Runtime `owner_unknowns` stores a fact key, source turn and exact short quote.
+  The button records uncertainty before inference; free-text declarations are
+  proposed by the agent and checked against source text. Only a later substantive
+  reply can resolve a retained declaration. Suppressed questions must remain in
+  assessment open decisions; the app does not invent their blocking status.
+- Limits: exact quotes prove presence, not meaning. Same-key suppression does not
+  detect semantic aliases. Runtime defaults accept older state envelopes, while
+  new agent results follow the tighter contract. Exported brief schema 1 is
+  unchanged; this is not a migration of old grouped facts or saved clients.
+
+## D010: Separate native responses from canonical state
+
+- Date: 2026-10-30; status: accepted implementation choice, reviewed in T020.
+- Context: T019 exposed malformed JSON, dangling question targets, state-guard
+  failures and omitted requirements. Keep that failed run and its inputs intact.
+- Choice: native response contract 1 uses keyed fact arrays and an embedded
+  question target, then converts to canonical state. Duplicate array keys and
+  conflicting question targets fail; an identical target may also appear in facts.
+  New or changed confirmed facts require exact owner quotes linked
+  to every cited source. Unchanged facts and explanations need no invented fact.
+  Canonical guards, owner-unknown evidence and exported brief schema 1 stay intact.
+
+Codex supports a schema file through
+[`--output-schema`](https://learn.chatgpt.com/docs/non-interactive-mode).
+Write it privately within the request directory and also send its content in
+stdin. Compile a closed schema with required fields and nullable alternatives,
+following the documented [structured-output constraints](https://developers.openai.com/api/docs/guides/structured-outputs).
+Local validation retains bounds and checks that the native subset cannot express.
+OpenCode and Claude use the same stdin contract and local validation; this change
+does not establish native constrained decoding for those agents. Invalid output
+fails without JSON repair, fallback parsing, another agent or automatic retry.
+
+Quotes establish source presence and linkage, not correct interpretation or
+complete requirement extraction. Prompt guidance distinguishes independently
+answerable properties and asks about copies, derivatives and unattended identities
+when relevant; it does not relax confirmation, repeated-topic or unknown guards.
+Fresh scripted consequence fixtures check preservation and export of supplied
+content, not live agent discovery. Actual schema compatibility and model-quality
+improvement remain unverified live. Future preparation previews separate closed
+schemas for wrapper and transcript-only baseline; another comparison requires a
+new versioned matched plan and allowance rather than reusing T019's unused calls.
+
 ## Open choices
 
 | Choice | Resolve in | Needed before |

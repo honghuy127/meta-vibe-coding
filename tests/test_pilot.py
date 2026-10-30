@@ -272,7 +272,7 @@ def test_non_json_host_rejection_is_preserved_without_recording_invalid_body():
 def test_full_recorded_flow_through_wrapper_with_explicit_process_double(monkeypatch):
     from meta_vibe_coding import agents
     from meta_vibe_coding.models import State
-    from test_flow import result
+    from test_flow import result, native_result
 
     monkeypatch.delenv("MVC_BACKEND", raising=False)
     for name, value in {"MVC_AGENT": "opencode", "MVC_ENABLE_AGENT": "1", "MVC_AGENT_MAX_CALLS": "5",
@@ -304,7 +304,7 @@ def test_full_recorded_flow_through_wrapper_with_explicit_process_double(monkeyp
         candidate.assessment.recommendation.rationale = ["Scripted response for integration testing only."]
         candidate.assessment.acceptance_criteria = ["Fixture only: preserve revised facts and the unknown budget in the export."]
         events = [{"type": "step_start", "part": {}},
-                  {"type": "text", "part": {"text": candidate.model_dump_json()}},
+                  {"type": "text", "part": {"text": native_result(state, candidate)}},
                   {"type": "step_finish", "part": {"reason": "stop", "tokens": {"input": 120, "output": 60}}}]
         return "\n".join(json.dumps(event) for event in events).encode()
 

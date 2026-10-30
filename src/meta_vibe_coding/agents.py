@@ -12,12 +12,13 @@ from typing import Protocol
 from pydantic import ValidationError
 
 from .core import FlowError, model_input
+from .contracts import NativeResponse, native_schema
 from .models import Candidate, State, Usage
 from .process import CliFailure, run_cli
 from .settings import Limits, load_limits
 
 PROMPT = Path(__file__).with_name("prompt.txt").read_text()
-SCHEMA = json.dumps(Candidate.model_json_schema(), separators=(",", ":"))
+SCHEMA = json.dumps(native_schema(NativeResponse), separators=(",", ":"))
 AGENTS = {"opencode": "opencode", "claude": "claude", "codex": "codex"}
 CODEX_DISABLED = ("shell_tool", "code_mode", "code_mode_host",
     "multi_agent", "apps", "plugins", "hooks", "memories", "skill_search",
@@ -47,7 +48,10 @@ def agent_environment(agent: str) -> dict[str, str]:
     return env
 
 
-def invocation(agent: str, binary: str, model: str | None, env: dict[str, str]) -> list[str]:
+def invocation(agent: str, binary: str, model: str | None, env: dict[str, str], *, prompt: str = PROMPT,
+               output_schema: str | None = None) -> list[str]:
+    if output_schema is not None and agent != "codex":
+        raise ValueError("Native schema-file constraints are currently supported only for Codex")
     if agent == "opencode":
         # Use v2's ordered permission rules; the inline deny rule follows native defaults.
         config = json.loads(env.get("OPENCODE_CONFIG_CONTENT", "{}"))
@@ -55,7 +59,7 @@ def invocation(agent: str, binary: str, model: str | None, env: dict[str, str]) 
         denied = [{"action": "*", "resource": "*", "effect": "deny"}]
         planning = {**native_agents.get("meta-vibe", {}), "description": "Intent interpretation without construction",
                     "mode": "primary", "disabled": False, "hidden": False,
-                    "permissions": denied, "system": PROMPT}
+                    "permissions": denied, "system": prompt}
         config.update(permissions=denied, update="disable", agents={**native_agents, "meta-vibe": planning})
         env["OPENCODE_CONFIG_CONTENT"] = json.dumps(config)
         args = [binary, "run", "--standalone", "--format", "json", "--agent", "meta-vibe"]
@@ -63,17 +67,19 @@ def invocation(agent: str, binary: str, model: str | None, env: dict[str, str]) 
         args = [binary, "--print", "--safe-mode", "--restricted", "--tools", "",
                 "--strict-mcp-config", "--mcp-config", '{"mcpServers":{}}',
                 "--disable-slash-commands", "--no-session-persistence", "--output-format", "json",
-                "--append-system-prompt", PROMPT]
+                "--append-system-prompt", prompt]
     else:
         args = [binary, "exec", "--json", "--ephemeral", "--ignore-user-config", "--ignore-rules",
                 "--skip-git-repo-check", "--sandbox", "read-only", "--strict-config",
                 "-c", 'approval_policy="never"', "-c", 'web_search="disabled"',
-                "-c", "project_doc_max_bytes=0", "-c", "developer_instructions=" + json.dumps(PROMPT)]
+                "-c", "project_doc_max_bytes=0", "-c", "developer_instructions=" + json.dumps(prompt)]
         for feature in CODEX_DISABLED:
             args.extend(["--disable", feature])
     if model:
         args.extend(["--model", model])
     if agent == "codex":
+        if output_schema is not None:
+            args.extend(["--output-schema", output_schema])
         args.append("-")
     return args
 
@@ -99,8 +105,8 @@ def reported_failure(agent: str, raw: bytes) -> FlowError | None:
     return None
 
 
-def parse_result(agent: str, raw: bytes) -> tuple[Candidate, dict]:
-    """Require an explicit successful completion; never extract JSON from prose."""
+def parse_completion(agent: str, raw: bytes) -> tuple[str, dict]:
+    """Check native completion/tool boundaries before interpreting the response schema."""
     failure = reported_failure(agent, raw)
     if failure:
         raise failure
@@ -108,11 +114,10 @@ def parse_result(agent: str, raw: bytes) -> tuple[Candidate, dict]:
         body = json.loads(raw)
         if body.get("type") != "result" or body.get("subtype") != "success" or body.get("is_error"):
             raise ValueError("Agent did not finish successfully")
-        candidate = Candidate.model_validate_json(body["result"])
         models = body.get("modelUsage") or {}
         reported = ", ".join(sorted(models)) if models else None
         usage = body.get("usage") or {}
-        return candidate, {"model": reported, "input_tokens": usage.get("input_tokens"),
+        return body["result"], {"model": reported, "input_tokens": usage.get("input_tokens"),
             "output_tokens": usage.get("output_tokens"), "cost": body.get("total_cost_usd")}
 
     events = [json.loads(line) for line in raw.splitlines() if line.strip()]
@@ -167,7 +172,13 @@ def parse_result(agent: str, raw: bytes) -> tuple[Candidate, dict]:
                 usage = {"input_tokens": tokens.get("input"), "output_tokens": tokens.get("output")}
     if not finished or not text:
         raise ValueError("Incomplete agent event stream")
-    return Candidate.model_validate_json("".join(text)), usage
+    return "".join(text), usage
+
+
+def parse_result(agent: str, raw: bytes, state: State) -> tuple[Candidate, dict]:
+    """The product additionally requires its strict state-candidate contract."""
+    content, usage = parse_completion(agent, raw)
+    return NativeResponse.model_validate_json(content).candidate(state), usage
 
 
 class CodingAgent:
@@ -198,7 +209,7 @@ class CodingAgent:
             timeout=min(5, remaining()))).decode()
         required = {"opencode": ["--standalone", "--format", "--agent"],
                     "claude": ["--safe-mode", "--restricted", "--tools", "--strict-mcp-config", "--no-session-persistence", "--append-system-prompt"],
-                    "codex": ["--json", "--ephemeral", "--ignore-user-config", "--ignore-rules", "--sandbox", "--disable"]}
+                    "codex": ["--json", "--ephemeral", "--ignore-user-config", "--ignore-rules", "--sandbox", "--disable", "--output-schema"]}
         if any(flag not in help_text for flag in required[self.agent]):
             raise FlowError("unavailable", "This agent CLI lacks the required flags. No inference request was sent.")
         version = await run_cli([self.binary, "--version"], content="", cwd=cwd, env=env,
@@ -226,13 +237,19 @@ class CodingAgent:
                 with tempfile.TemporaryDirectory(prefix="mvc-agent-") as cwd:
                     env = agent_environment(self.agent)
                     env["PWD"] = cwd
-                    args = invocation(self.agent, self.binary, self.model, env)
+                    schema_path = None
+                    if self.agent == "codex":
+                        schema_path = str(Path(cwd) / "response-schema.json")
+                        descriptor = os.open(schema_path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+                        with os.fdopen(descriptor, "w") as file:
+                            file.write(SCHEMA)
+                    args = invocation(self.agent, self.binary, self.model, env, output_schema=schema_path)
                     await self.probe(cwd, env, remaining)
                     if remaining() <= 0:
                         raise TimeoutError()
                     self.calls += 1
                     raw = await run_cli(args, content=content, cwd=cwd, env=env, timeout=remaining())
-                    candidate, metadata = parse_result(self.agent, raw)
+                    candidate, metadata = parse_result(self.agent, raw, state)
                     return candidate, Usage(agent=self.agent, agent_version=self.version,
                         elapsed_seconds=time.perf_counter() - started, **metadata)
             except CliFailure as exc:
