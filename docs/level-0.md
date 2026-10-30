@@ -67,6 +67,9 @@ check that the conflict is genuine; source IDs alone do not prove this.
 
 Each fact has `value`, `status`, and `source_turn_ids`. Values are JSON scalars or
 arrays of scalars; use separate semantic keys for independently revisable facts.
+Record independently changeable permissions and prohibitions as separate boolean
+facts. A reason explains a fact; it must not be the only record of a requirement.
+Keep genuine collection-valued requirements as lists.
 Status is `confirmed`, `assumed`, `unknown`, or `not_applicable`. Confirmed facts
 must be supported by explicit owner input, including the initial idea. A model's
 inference remains assumed until the owner confirms it. Unknown and not-applicable

@@ -35,6 +35,8 @@ means the acceptance evidence and required review are recorded.
 | T013 | Self-audit the pending implementation before commit | done | Codex, requested by repository owner | Source, tests, package/lock files, docs, artifact provenance | Audited all 33 tracked/untracked candidate files against D008; fixed owner-confirmation, stale-question/ID, readiness, and instruction-boundary issues. Independent fix review passed; see note. No commit or live inference. |
 | T014 | Make the fictional pilot repeatable after the cooldown | done | Codex with separate reviewer, requested by repository owner | `src/meta_vibe_coding/pilot.py`, `tests/test_pilot.py`, `.gitignore`, README, this board | Opt-in runner prepared and independently reviewed. Default check sends no inference; serving requires cooldown expiry and a current pricing check. Exclusive claims prevent allowance resets. 101 pytest and ten UI checks pass; T006 acceptance remains incomplete. |
 | T015 | Verify the packaged pilot and rehearse the full flow offline | done | Codex with separate reviewer, requested by repository owner | `tests/test_pilot.py`, this board | Built/installed `0e9ebaa` offline; all 12 packaged files match. Full source suite: 102 pass. All 16 pilot tests also pass against the wheel, independently verified. Process doubles only; no new model calls or held-out cases. |
+| T016 | Check independent constraints across corrections | done | Codex, requested by repository owner | `src/meta_vibe_coding/prompt.txt`, development evidence, README, Level 0 scope, this board | Committed prior snapshot as `bff1f17`. Four-call fresh Codex/Luna check retained analytics/payments/registration exclusions while accounts changed, kept unknowns and honored provisional control. Source and evidence reviews passed; 124 tests pass. Claims are limited to these three prohibitions; other semantic gaps remain in T017. |
+| T017 | Align clarification and views with known state | ready | Unassigned | Agent contract/prompt, core/views and tests, relevant scope and evidence | T016 still asks about explicit unknowns; model uses `project.goal` while Owner View reads `goal`. Use facts consistently, distinguish member storage from public-visitor storage, verify normal clarification/goal display, and keep acceptance cases frozen until development gaps are resolved. |
 
 Proposed paths are locations for future work, not existing artifacts. Split tasks
 when contributors need independent ownership; do not reserve the whole repository
@@ -125,6 +127,39 @@ behavior in a new bounded development run, including the provisional guard, befo
 frozen cases and a matched baseline. This conversation does not pass acceptance
 or establish general recommendation quality or owner comprehension. Adult sessions
 still need their own authorization.
+
+### T016: Independent constraints in a fresh conversation
+
+Committed the reviewed T006 follow-up as `bff1f17`, then clarified the existing
+fact representation: separate independently changeable permissions/prohibitions
+into scalar facts; do not hide several exclusions in an empty list or a reason.
+Genuine collection-valued requirements remain lists. No model-specific examples,
+new schema, dependency, validator relaxation or tool permission was added.
+
+The [four-call check](../artifacts/2026-10-30-codex-luna-constraint-retention.json)
+uses the same Codex/Luna boundaries and saved ChatGPT login as the earlier run.
+The fictional initial input provides the public-site details up front. The agent
+recorded accounts, registration forms, payments, analytics and stored visitor
+information as separate confirmed booleans. After a correction adding private
+member attendance, the three unaffected exclusions stayed false and cited `t0`;
+the account change cited correction `t1`. Unknown budget and public
+identifiable content remained null. An explicit provisional request added no new
+question even though the native response proposed one. Export returned 200.
+
+All four calls are consumed, with no retries or purchases. The prior seven-call
+record and the owner’s download were preserved. This is an observed improvement
+for one fresh development example, not a matched comparison or a migration of
+older grouped states. Extraction completeness and semantic support still need
+review; source IDs alone do not establish either.
+
+The normal clarification path still repeated questions about explicit unknowns.
+The model also used `project.goal` instead of the canonical `goal` field used by
+the Owner View; browser rendering was not exercised here. A visitor-storage key
+was reused for member storage, leaving scope ambiguous despite member-specific
+access and data fields. T017 owns these gaps; retention claims cover only the
+three checked prohibitions. Source and evidence reviews passed, as do 124 Python
+tests. Strict Markdown, relative links, whitespace and evidence-hash checks pass.
+No frozen case, baseline or owner session ran.
 
 ### T014: Repeatable fictional pilot
 

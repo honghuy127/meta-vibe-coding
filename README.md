@@ -12,13 +12,12 @@ only through a configured coding agent, such as OpenCode.
 
 **Current state:** a Level 0 web prototype with clarification, corrections, owner
 and developer views, and JSON export. All three CLI wrappers have deterministic
-contract tests. A [Codex/Luna development conversation](artifacts/2026-10-30-codex-luna-conversation.json)
-exercised clarification, unknowns, a changed requirement, failure recovery, and a
-downloaded brief. It exposed an omitted earlier constraint and repeated unknown
-questions. Explicit provisional requests now stop new questions in application
-code, verified with captured output; the remaining findings need development checks
-before frozen acceptance. Broader recommendation quality and owner understanding
-remain unverified.
+contract tests. A [fresh Codex/Luna development check](artifacts/2026-10-30-codex-luna-constraint-retention.json)
+retained independent constraints through a partial correction and honored an
+explicit provisional-result request in a live call. This is one development
+example, not automatic repair of older grouped histories. Repeated questions about
+explicit unknowns and a goal-field mismatch remain open. Frozen acceptance,
+broader recommendation quality and owner understanding remain unverified.
 Agent execution is disabled by default.
 
 The [OpenCode pilot](artifacts/2026-10-29-opencode-free-pilot.json) and
@@ -142,7 +141,7 @@ use the selected agent/provider's spending controls before enabling calls.
 CLI contracts checked: OpenCode 2.0.12, 2.2.0 and 2.2.1, Claude Code 2.1.312,
 Codex CLI 0.165.0.
 Help/version inspection and mocked events do not establish live compatibility.
-Codex checks cover one fictional conversation, not product acceptance. Its exact
+Codex development checks do not establish product acceptance. Its exact
 disabled Code Mode host startup notice is accepted; other errors and tool activity
 still fail.
 References: [OpenCode CLI](https://opencode.ai/v2/docs/cli/),
