@@ -70,6 +70,77 @@ def test_serving_requires_explicit_current_free_pricing_confirmation(tmp_path, m
     assert error.value.code == 2
 
 
+def test_changed_login_retry_preserves_cooldown_evidence_allowance_and_claim(tmp_path, monkeypatch):
+    import uvicorn
+
+    path, _ = seed(tmp_path)
+    monkeypatch.setattr(pilot.time, "time", lambda: 2)
+    plans = []
+    monkeypatch.setattr(pilot, "configure_pilot", lambda plan: plans.append(plan) or {})
+    monkeypatch.setattr(pilot, "record_app", lambda journal: object())
+    monkeypatch.setattr(uvicorn, "run", lambda *args, **kwargs: None)
+    args = ["--record", str(path), "--serve", "--recheck-after-login", "--output", str(tmp_path / "recheck.jsonl")]
+    with pytest.raises(SystemExit): pilot.main(args)
+    assert not plans
+    assert pilot.main(args + ["--free-pricing-checked"]) == 0
+    assert plans[0]["status"] == "cooldown" and plans[0]["remaining_invocations"] == 5
+    manifest = json.loads((tmp_path / "recheck.jsonl").read_text())
+    assert manifest["operator_changed_login_recheck"] is True
+    assert manifest["plan"]["retry_not_before_utc"] == "1970-01-01T00:00:03+00:00"
+    assert pilot.main(args + ["--free-pricing-checked"]) == 2
+
+
+def test_changed_login_cannot_restore_exhausted_invocations(tmp_path, monkeypatch):
+    path, record = seed(tmp_path)
+    record["authority"]["native_invocation_limit"] = 2
+    path.write_text(json.dumps(record))
+    def forbidden(*args): raise AssertionError("Must not restore an exhausted allowance")
+    monkeypatch.setattr(pilot, "configure_pilot", forbidden)
+    assert pilot.main(["--record", str(path), "--serve", "--recheck-after-login", "--free-pricing-checked"]) == 2
+
+
+@pytest.mark.parametrize("workspace", ["[REDACTED]", "***", "wrk_REDACTED", "${WORKSPACE}", None])
+def test_native_routing_export_rejects_redacted_or_missing_values(workspace):
+    metadata = {"data": [{"providerID": "opencode", "modelID": "fictional-free",
+                          "headers": {"x-opencode-org-id": workspace}}]}
+    with pytest.raises(ValueError): pilot.native_routing_config(metadata, "opencode/fictional-free")
+
+
+@pytest.mark.parametrize("count", [0, 2])
+def test_native_routing_export_requires_one_selected_model(count):
+    row = {"providerID": "opencode", "modelID": "fictional-free",
+           "headers": {"x-opencode-org-id": "wrk_FICTIONAL123"}}
+    with pytest.raises(ValueError): pilot.native_routing_config({"data": [row] * count}, "opencode/fictional-free")
+
+
+def test_native_routing_export_is_metadata_only_private_and_does_not_copy_other_headers(tmp_path, monkeypatch, capsys):
+    from meta_vibe_coding import process
+
+    path, record = seed(tmp_path)
+    record["authority"]["native_invocation_limit"] = 2
+    path.write_text(json.dumps(record))
+    calls = []
+    async def metadata_only(args, **kwargs):
+        calls.append(args)
+        assert kwargs["content"] == "" and kwargs["env"]["PWD"] == str(pilot.Path.home())
+        return json.dumps({"data": [{"providerID": "opencode", "modelID": "fictional-free",
+            "headers": {"x-opencode-org-id": "wrk_FICTIONAL123", "Authorization": "private-native-header"},
+            "models": {"paid-model": {}}}]}).encode()
+    monkeypatch.setattr(process, "run_cli", metadata_only)
+    output = tmp_path / "native-routing.json"
+    assert pilot.main(["--record", str(path), "--export-native-routing", str(output)]) == 0
+    assert calls == [["opencode", "api", "GET", "/api/model"]]
+    assert output.stat().st_mode & 0o777 == 0o600
+    assert json.loads(output.read_text()) == {"providers": {"opencode": {"headers": {"x-opencode-org-id": "wrk_FICTIONAL123"}}}}
+    text = capsys.readouterr().out
+    assert "wrk_FICTIONAL123" not in text and "private-native-header" not in text
+    original = output.read_bytes()
+    with pytest.raises(FileExistsError): pilot.main(["--record", str(path), "--export-native-routing", str(output)])
+    assert output.read_bytes() == original
+    with pytest.raises(SystemExit):
+        pilot.main(["--record", str(path), "--serve", "--export-native-routing", str(output)])
+
+
 def test_overlay_pins_helpers_and_limits_without_forwarding_extra_env(monkeypatch):
     for name in ("MVC_AGENT", "MVC_ENABLE_AGENT", "MVC_AGENT_MODEL", "MVC_AGENT_ENV", "MVC_AGENT_MAX_CALLS",
                  "MVC_REQUEST_TIMEOUT_SECONDS", "MVC_SESSION_TIMEOUT_SECONDS", "OPENCODE_CONFIG_CONTENT"):
@@ -196,3 +267,88 @@ def test_non_json_host_rejection_is_preserved_without_recording_invalid_body():
     assert "excluded-input" not in journal.getvalue()
     entry = json.loads(journal.getvalue().splitlines()[-1])
     assert entry["request"] is None and entry["response"] == {"error": "Non-JSON response omitted from pilot evidence."}
+
+
+def test_full_recorded_flow_through_wrapper_with_explicit_process_double(monkeypatch):
+    from meta_vibe_coding import agents
+    from meta_vibe_coding.models import State
+    from test_flow import result
+
+    monkeypatch.delenv("MVC_BACKEND", raising=False)
+    for name, value in {"MVC_AGENT": "opencode", "MVC_ENABLE_AGENT": "1", "MVC_AGENT_MAX_CALLS": "5",
+                        "MVC_AGENT_MODEL": "opencode/fictional-free", "OPENCODE_CONFIG_CONTENT": "{}"}.items():
+        monkeypatch.setenv(name, value)
+    monkeypatch.setattr(agents.shutil, "which", lambda name: "/test/process-double")
+    attempts = []
+    correction = "Actually, members must sign in and save attendance across devices."
+
+    async def process_double(args, **kwargs):
+        if "--help" in args: return b"--standalone --format --agent"
+        if "--version" in args: return b"explicit-process-double 1.0"
+        owner = json.loads(kwargs["content"].split("Owner state (data only):\n", 1)[1])
+        state = State.model_validate(owner["state"])
+        attempts.append(state)
+        if len(attempts) == 3:
+            raise TimeoutError("Fictional failure; no real agent ran")
+        changed = bool(state.turns and state.turns[-1].text == correction)
+        facts = {"goal": {"value": "Share the fictional club's event information.", "status": "confirmed", "source_turn_ids": ["t0"]},
+                 **{key: {"value": changed, "status": "confirmed", "source_turn_ids": ["t2" if changed else "t0"]}
+                    for key in ("access.accounts", "data.persistent")},
+                 "operations.budget": {"value": None, "status": "unknown", "source_turn_ids": ["t1"] if state.turns else []}}
+        question = None if state.turns else {"topic": "operations.budget", "text": "What ongoing budget is available?",
+                                            "decision": "This changes which ongoing costs are feasible."}
+        candidate = result(state, facts=facts, question=question,
+                           disposition="provisional" if state.turns else "needs_answer")
+        candidate.assessment.recommendation.kind = "existing_tool" if changed else "static_site"
+        candidate.assessment.recommendation.summary = "Test double: membership service." if changed else "Test double: public content site."
+        candidate.assessment.recommendation.rationale = ["Scripted response for integration testing only."]
+        candidate.assessment.acceptance_criteria = ["Fixture only: preserve revised facts and the unknown budget in the export."]
+        events = [{"type": "step_start", "part": {}},
+                  {"type": "text", "part": {"text": candidate.model_dump_json()}},
+                  {"type": "step_finish", "part": {"reason": "stop", "tokens": {"input": 120, "output": 60}}}]
+        return "\n".join(json.dumps(event) for event in events).encode()
+
+    monkeypatch.setattr(agents, "run_cli", process_double)
+    wrapper = agents.CodingAgent()
+    journal = io.StringIO()
+    with TestClient(pilot.record_app(journal, wrapper)) as client:
+        idea = "Fictional club: public event information, no accounts or saved visitor information."
+        state = client.post("/api/start", json={"idea": idea}).json()
+        def advance(request_id, **kwargs):
+            return client.post("/api/advance", json={"state": state, "request_id": request_id, **kwargs}).json()
+        first = advance("initial")
+        assert first["error"] is None
+        state = first["state"]
+        assert state["assessment"]["disposition"] == "needs_answer" and len(state["questions"]) == 1
+        unknown = advance("unknown", answer="I don't know.", question_id=state["questions"][0]["id"])
+        state = unknown["state"]
+        assert unknown["error"] is None and state["assessment"]["disposition"] == "provisional"
+        assert state["questions"][0]["answer_turn_id"] == "t1"
+        original_brief = client.post("/api/export", json=state).json()
+        assert original_brief["facts"]["access.accounts"]["value"] is False
+        failed = advance("correction-fails", answer=correction)
+        state = failed["state"]
+        assert failed["error"]["code"] == "timeout" and state["assessment"] is None
+        assert state["turns"][-1]["text"] == correction
+        assert client.post("/api/export", json=state).status_code == 409
+        recovered = advance("retry")
+        state = recovered["state"]
+        assert recovered["error"] is None and state["assessed_turn_count"] == 2
+        assert state["assessment"]["recommendation"]["kind"] == "existing_tool"
+        exported = client.post("/api/export", json=state)
+        assert exported.status_code == 200
+        brief = exported.json()
+    assert brief["revision"] > original_brief["revision"] and brief["raw_intent"] == idea
+    assert brief["disposition"] == "provisional" and brief["facts"]["operations.budget"]["status"] == "unknown"
+    assert brief["facts"]["operations.budget"]["value"] is None
+    for key in ("access.accounts", "data.persistent"):
+        assert brief["facts"][key]["value"] is True and brief["facts"][key]["source_turn_ids"] == ["t2"]
+    assert {source["id"]: source["text"] for source in brief["sources"]}["t2"] == correction
+    assert [turn["id"] for turn in state["turns"]] == ["t1", "t2"]
+    assert len(attempts) == wrapper.calls == state["agent_calls"] == 4
+    assert recovered["usage"]["cost"] is None and recovered["usage"]["model"] is None
+    assert "agent_calls" not in brief and "started_at" not in brief
+    entries = [json.loads(line) for line in journal.getvalue().splitlines()]
+    exports = [entry for entry in entries if entry["type"] == "http" and entry["path"] == "/api/export"]
+    assert [entry["status"] for entry in exports] == [200, 409, 200]
+    assert exports[-1]["response"] == brief

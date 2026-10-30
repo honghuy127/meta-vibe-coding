@@ -12,10 +12,15 @@ only through a configured coding agent, such as OpenCode.
 
 **Current state:** a Level 0 web prototype with clarification, corrections, owner
 and developer views, and JSON export. All three CLI wrappers have deterministic
-contract tests; live agent compatibility, recommendation quality, and owner
-understanding remain unverified. Agent execution is disabled by default.
-The first [OpenCode free-plan pilot](artifacts/2026-10-29-opencode-free-pilot.json)
-was blocked by the native free usage limit before returning a recommendation.
+contract tests. A [Codex/Luna pilot](artifacts/2026-10-30-codex-luna-pilot.json)
+verified one live initial clarification and blocked premature export. The full
+conversation, recommendation quality, and owner understanding remain unverified.
+Agent execution is disabled by default.
+
+The [OpenCode pilot](artifacts/2026-10-29-opencode-free-pilot.json) and
+[routing comparison](artifacts/2026-10-30-opencode-routing-verification.json)
+retain failed requests. The owner reported a working terminal chat, but the
+restricted wrapper still received free-limit errors; that difference is unresolved.
 
 ## Run the prototype
 
@@ -35,13 +40,23 @@ controls are agreed, restart with `MVC_AGENT=opencode`, `claude`, or `codex` and
 `MVC_ENABLE_AGENT=1`. These settings select one agent; there is no fallback.
 Configure authentication through that agent, not application-specific API keys.
 
+The initial live Codex check used `gpt-6-luna` with the existing native ChatGPT
+login. To select that agent/model explicitly:
+
+```sh
+MVC_AGENT=codex MVC_AGENT_MODEL=gpt-6-luna MVC_ENABLE_AGENT=1 .venv/bin/python -m uvicorn meta_vibe_coding.app:app --host 127.0.0.1 --port 8000 --no-access-log
+```
+
+Account access and usage limits still apply; this is not a free-usage guarantee.
+
 For an OpenCode free plan, select an exact currently free model from
 `opencode --standalone models` and pin `MVC_AGENT_MODEL`. OpenCode can choose
 helper models separately: pin its native `title`, `summary`, and `compaction`
 agents too. The dated pilot artifact records the process-local configuration used;
 it leaves global settings unchanged. Free availability and quotas can change.
-The wrapper reports a recognized free usage limit without retrying or selecting
-a paid route. Resume explicitly after the allowance resets.
+The wrapper reports native errors without retrying or selecting a paid route.
+A free-limit response applies to that request and routing context; it does not
+establish that every session on the account is blocked.
 
 The pilot runner checks the recorded cooldown without starting an agent:
 
@@ -49,20 +64,35 @@ The pilot runner checks the recorded cooldown without starting an agent:
 .venv/bin/python -m meta_vibe_coding.pilot
 ```
 
-After the cooldown, review native settings and [current free pricing](https://opencode.ai/v2/docs/console/models/).
+Before a live continuation, review native settings and [current free pricing](https://opencode.ai/v2/docs/console/models/).
 Only then use the explicit confirmation flag to start the fictional pilot:
 
 ```sh
 .venv/bin/python -m meta_vibe_coding.pilot --serve --free-pricing-checked
 ```
 
-This reserves the five remaining invocations for one continuation. An ignored
+This reserves the remaining recorded invocations for one continuation. An ignored
 claim file blocks later or concurrent launches until the attempts and any new
 cooldown are reconciled in the pilot record. Claims remain after startup failures;
 review the evidence before authorizing another run. A private JSONL file under
 `/tmp` records source hashes and HTTP inputs/results/exports, including failures.
 It contains fictional owner text; inspect it before sharing. Raw CLI events and
 browser observations are not captured. Model pins do not enforce a dollar cap.
+After changing the native login, `--recheck-after-login` permits an explicit retry
+before the old cooldown, with the same pricing check, allowance and claim rules.
+It records the reason for retrying; it does not establish renewed quota.
+
+For a native Console workspace, export its resolved routing to a private file:
+
+```sh
+.venv/bin/python -m meta_vibe_coding.pilot --export-native-routing /tmp/mvc-native-routing.json
+```
+
+Reference it with `OPENCODE_CONFIG=/tmp/mvc-native-routing.json` when starting the
+pilot. The exporter makes no inference request and copies no credentials or model
+catalog. It rejects redacted values and never overwrites an existing file. Do not
+replay values from `opencode debug config`: its header values are redacted.
+Keep this native routing file private and regenerate it after workspace changes.
 
 | Variable | Meaning |
 | --- | --- |
@@ -105,9 +135,11 @@ settings before live or private-data use. This app's in-tab state does not contr
 agent/provider retention. Invocation counts and time limits are not dollar caps;
 use the selected agent/provider's spending controls before enabling calls.
 
-CLI contracts checked: OpenCode 2.0.12 and 2.2.0, Claude Code 2.1.312,
+CLI contracts checked: OpenCode 2.0.12, 2.2.0 and 2.2.1, Claude Code 2.1.312,
 Codex CLI 0.165.0.
 Help/version inspection and mocked events do not establish live compatibility.
+The Codex pilot verifies only the initial planning response. Its exact disabled
+Code Mode host startup notice is accepted; other errors and tool activity still fail.
 References: [OpenCode CLI](https://opencode.ai/v2/docs/cli/),
 [permissions](https://opencode.ai/v2/docs/permissions/),
 [Claude CLI](https://code.claude.com/docs/en/cli-reference),

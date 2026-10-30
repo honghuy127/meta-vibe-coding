@@ -23,6 +23,10 @@ CODEX_DISABLED = ("shell_tool", "code_mode", "code_mode_host",
     "multi_agent", "apps", "plugins", "hooks", "memories", "skill_search",
     "browser_use", "browser_use_external", "in_app_browser", "computer_use",
     "in_app_local_automation", "image_generation", "view_image")
+CODEX_DISABLED_HOST_NOTICE = (
+    "Code Mode is unavailable because code-mode host is disabled. Code mode will fail closed; "
+    "enable `features.code_mode_host` and install `codex-code-mode-host`."
+)
 
 
 class Agent(Protocol):
@@ -87,8 +91,11 @@ def reported_failure(agent: str, raw: bytes) -> FlowError | None:
             continue
         error = event.get("error")
         if isinstance(error, dict) and error.get("type") == "provider.free-limit":
-            return FlowError("free_limit", "OpenCode's free usage limit has been reached. "
-                "Your answers are retained. Wait for the free allowance to reset, then retry.")
+            return FlowError("free_limit", "OpenCode reported a free usage limit for this request. "
+                "Your answers are retained. Check the active native workspace and routing, or wait before retrying.")
+        if isinstance(error, dict) and error.get("type") == "provider.invalid-request":
+            return FlowError("agent_request", "OpenCode rejected this agent request. Your answers are retained. "
+                "Check the native model, workspace routing and supported request settings.")
     return None
 
 
@@ -114,16 +121,22 @@ def parse_result(agent: str, raw: bytes) -> tuple[Candidate, dict]:
     text = []
     finished = False
     usage = {}
-    for event in events:
+    for index, event in enumerate(events):
         kind = event["type"]
         if kind in {"error", "turn.failed"}:
             raise ValueError("Agent reported a failed turn")
         if agent == "codex":
+            item = event.get("item") or {}
+            # Codex 0.165 emits this startup notice with our host deliberately off.
+            # Accept only its observed position; errors during a turn still fail.
+            if (index == 1 and events[0].get("type") == "thread.started"
+                    and kind == "item.completed" and item.get("type") == "error"
+                    and item.get("message") == CODEX_DISABLED_HOST_NOTICE):
+                continue
             if kind == "turn.started":
                 finished = False
                 text = []
                 usage = {}
-            item = event.get("item") or {}
             if kind.startswith("item.") and item.get("type") not in {"agent_message", "reasoning", "todo_list"}:
                 raise ValueError("Unexpected agent tool activity")
             if kind == "item.completed" and item.get("type") == "agent_message":

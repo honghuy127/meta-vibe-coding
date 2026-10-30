@@ -1,9 +1,11 @@
 """Opt-in fictional pilot server; a default invocation only checks the saved cooldown."""
 
 import argparse
+import asyncio
 import hashlib
 import json
 import os
+import re
 import time
 from datetime import datetime, timezone
 from pathlib import Path
@@ -42,7 +44,7 @@ def pilot_plan(record: dict, now: float | None = None) -> dict:
             "continuation_id": hashlib.sha256(json.dumps(request_ids).encode()).hexdigest(),
             "requested_model": model, "remaining_invocations": remaining,
             "retry_not_before_utc": datetime.fromtimestamp(retry_at, timezone.utc).isoformat() if retry_at else None,
-            "notice": "The retry time does not guarantee restored availability. Recheck native settings and current free pricing before starting. Use fictional inputs only."}
+            "notice": "The saved quota deadline applies to the recorded routing context, not every native session. Recheck native workspace settings and current free pricing before starting. Use fictional inputs only."}
 
 
 def configure_pilot(plan: dict) -> dict:
@@ -59,6 +61,31 @@ def configure_pilot(plan: dict) -> dict:
         MVC_REQUEST_TIMEOUT_SECONDS="300", MVC_SESSION_TIMEOUT_SECONDS="1800",
         OPENCODE_CONFIG_CONTENT=json.dumps(overlay))
     return overlay
+
+
+def native_routing_config(catalog: dict, model: str) -> dict:
+    """Use resolved native metadata, never the redacted debug-config representation."""
+    provider, model_id = model.split("/", 1)
+    matches = [row for row in catalog["data"] if row.get("providerID") == provider and row.get("modelID") == model_id]
+    if len(matches) != 1:
+        raise ValueError("The selected model must resolve uniquely in the native session.")
+    workspace = matches[0].get("headers", {}).get("x-opencode-org-id")
+    if not isinstance(workspace, str) or not re.fullmatch(r"(?:wrk|org)_[A-Za-z0-9]+", workspace) or "redact" in workspace.lower():
+        raise ValueError("Native workspace routing is missing, redacted or unsupported; no config was exported.")
+    return {"providers": {provider: {"headers": {"x-opencode-org-id": workspace}}}}
+
+
+def export_native_routing(model: str, output: Path) -> None:
+    from .agents import agent_environment
+    from .process import run_cli
+
+    env = agent_environment("opencode")
+    env["PWD"] = str(Path.home())
+    raw = asyncio.run(run_cli(["opencode", "api", "GET", "/api/model"], content="", cwd=str(Path.home()), env=env, timeout=30))
+    config = native_routing_config(json.loads(raw), model)
+    descriptor = os.open(output, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+    with os.fdopen(descriptor, "w") as file:
+        json.dump(config, file)
 
 
 def record_app(journal, agent=None):
@@ -101,16 +128,25 @@ def main(argv=None) -> int:
     parser.add_argument("--record", type=Path, default=Path("artifacts/2026-10-29-opencode-free-pilot.json"))
     parser.add_argument("--serve", action="store_true", help="Enable the local pilot for fictional inputs only.")
     parser.add_argument("--free-pricing-checked", action="store_true", help="Confirm the exact recorded model is still free; not a dollar cap.")
+    parser.add_argument("--recheck-after-login", action="store_true", help="Explicitly retry after a changed native login, before the old cooldown expires; keeps the existing call allowance.")
+    parser.add_argument("--export-native-routing", type=Path, help="Export resolved native home-session workspace routing to a new private config file, without inference or credential export.")
     parser.add_argument("--output", type=Path, help="New local JSONL evidence file; existing files are never overwritten.")
     parser.add_argument("--port", type=int, default=8001)
     args = parser.parse_args(argv)
+    if args.serve and args.export_native_routing:
+        parser.error("Export native routing separately from serving the pilot.")
     seed_bytes = args.record.read_bytes()
     record = json.loads(seed_bytes)
     plan = pilot_plan(record)
     print(json.dumps(plan, indent=2))
+    if args.export_native_routing:
+        export_native_routing(plan["requested_model"], args.export_native_routing)
+        print("Native routing exported privately. Treat its contents as private and reference it through OPENCODE_CONFIG.")
+        return 0
     if not args.serve:
         return 0
-    if plan["status"] != "pricing_check_required":
+    login_recheck = args.recheck_after_login and plan["status"] == "cooldown"
+    if plan["status"] != "pricing_check_required" and not login_recheck:
         print("Pilot not started: the recorded cooldown or invocation allowance blocks this run.")
         return 2
     if not args.free_pricing_checked:
@@ -142,6 +178,8 @@ def main(argv=None) -> int:
             "continuation_claim": claim.name,
             "seed_record_sha256": hashlib.sha256(seed_bytes).hexdigest(),
             "runtime_source_sha256": hashes, "operator_free_pricing_checked": True,
+            "operator_changed_login_recheck": login_recheck,
+            "native_config_reference_present": bool(os.getenv("OPENCODE_CONFIG")),
             "capture_limits": "HTTP inputs, validated results, export responses and safe errors only; no raw CLI events, browser observations, or independent billing/retention checks. Source hashes identify the working files; the baseline commit may exclude uncommitted changes."}) + "\n")
         journal.flush()
         app = record_app(journal)

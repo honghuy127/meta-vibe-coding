@@ -139,6 +139,45 @@ def test_incomplete_refused_or_invalid_output_is_rejected(agent, failure):
         module.parse_result(agent, raw)
 
 
+CODEX_HOST_NOTICE = {"type": "item.completed", "item": {"type": "error", "message":
+    "Code Mode is unavailable because code-mode host is disabled. Code mode will fail closed; "
+    "enable `features.code_mode_host` and install `codex-code-mode-host`."}}
+
+
+def test_codex_disabled_host_notice_preserves_completed_assessment(configured, monkeypatch):
+    monkeypatch.setenv("MVC_AGENT", "codex")
+    calls = []
+    async def runner(args, **kwargs):
+        if "--help" in args: return help_text()
+        if "--version" in args: return b"codex-cli 0.165.0"
+        calls.append(args)
+        state = State.model_validate(json.loads(kwargs["content"].split("Owner state (data only):\n")[1])["state"])
+        events = [json.loads(line) for line in output("codex", state).splitlines()]
+        events[1:1] = [CODEX_HOST_NOTICE, {"type": "turn.started"}]
+        return "\n".join(json.dumps(event) for event in events).encode()
+    monkeypatch.setattr(module, "run_cli", runner)
+    with TestClient(create_app()) as client:
+        state = client.post("/api/start", json={"idea": "Fictional idea"}).json()
+        response = client.post("/api/advance", json={"state": state, "request_id": "host-disabled"}).json()
+    assert response["error"] is None and response["state"]["assessment"] is not None
+    assert response["usage"]["input_tokens"] == 10 and len(calls) == 1
+    assert "code_mode_host" in calls[0] and "--enable" not in calls[0]
+
+
+@pytest.mark.parametrize("failure", ["other_notice", "during_turn", "missing_completion", "tool", "failed_turn"])
+def test_codex_startup_notice_does_not_hide_errors_or_tool_activity(failure):
+    events = [json.loads(line) for line in output("codex", State(raw_intent="Fictional")).splitlines()]
+    notice = json.loads(json.dumps(CODEX_HOST_NOTICE))
+    events[1:1] = [notice, {"type": "turn.started"}]
+    if failure == "other_notice": notice["item"]["message"] = "Another native error"
+    if failure == "during_turn": events[1:3] = [events[2], events[1]]
+    if failure == "missing_completion": events.pop()
+    if failure == "tool": events.insert(3, {"type": "item.started", "item": {"type": "command_execution"}})
+    if failure == "failed_turn": events[-1] = {"type": "turn.failed"}
+    raw = "\n".join(json.dumps(event) for event in events).encode()
+    with pytest.raises(ValueError): module.parse_result("codex", raw)
+
+
 def test_native_auth_references_and_explicit_env_are_forwarded_without_old_mvc_keys(monkeypatch):
     monkeypatch.setenv("ANTHROPIC_API_KEY", "fictional-native-key")
     monkeypatch.setenv("MVC_API_KEY", "obsolete-key")
@@ -256,9 +295,12 @@ def test_subprocess_creation_is_bounded_and_zero_budget_never_spawns(monkeypatch
 
 
 @pytest.mark.parametrize("exit_failure", [False, True])
-def test_free_limit_retains_reply_and_does_not_retry_or_expose_provider_text(configured, monkeypatch, exit_failure):
+@pytest.mark.parametrize("native_code,expected_code,message", [
+    ("provider.free-limit", "free_limit", "free usage limit"),
+    ("provider.invalid-request", "agent_request", "rejected this agent request")])
+def test_known_native_errors_retain_reply_without_retry_or_provider_text(configured, monkeypatch, exit_failure, native_code, expected_code, message):
     monkeypatch.setenv("MVC_AGENT", "opencode")
-    raw = b'{"type":"error","error":{"type":"provider.free-limit","message":"private-provider-details"}}'
+    raw = json.dumps({"type": "error", "error": {"type": native_code, "message": "private-provider-details"}}).encode()
     calls = []
     async def runner(args, **kwargs):
         if "--help" in args: return help_text()
@@ -271,8 +313,8 @@ def test_free_limit_retains_reply_and_does_not_retry_or_expose_provider_text(con
     with TestClient(create_app(wrapper)) as client:
         response = client.post("/api/advance", json={"state": State(raw_intent="Fictional").model_dump(),
             "request_id": "free-limit", "answer": "Keep this correction"}).json()
-    assert response["error"]["code"] == "free_limit"
-    assert "free usage limit" in response["error"]["message"]
+    assert response["error"]["code"] == expected_code
+    assert message in response["error"]["message"]
     assert "private-provider-details" not in json.dumps(response)
     assert response["state"]["turns"][-1]["text"] == "Keep this correction"
     assert response["state"]["assessment"] is None and response["usage"] is None
