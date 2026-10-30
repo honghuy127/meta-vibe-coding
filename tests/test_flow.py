@@ -135,6 +135,46 @@ def test_http_flow_and_failure_preserve_reply():
                 assert client.post('/api/export', json=response["state"]).status_code == 200
 
 
+@pytest.mark.parametrize("previous_questions", [0, 5])
+def test_provisional_request_does_not_add_another_question(previous_questions):
+    class QuestioningAgent(FakeAgent):
+        calls = 0
+        async def assess(self, state, provisional):
+            self.calls += 1
+            assert provisional
+            candidate = result(state, facts={key: fact.model_dump() for key, fact in state.facts.items()},
+                disposition="provisional", question={"topic": "operations.budget", "text": "What is the budget?",
+                    "decision": "Changes available options."})
+            body = candidate.model_dump()
+            body["assessment"]["open_questions"] = [{"topic": "operations.budget", "text": "Budget is unknown.",
+                "blocks_recommendation": False, "reason": "Check costs before choosing."}]
+            return Candidate.model_validate(body), Usage(agent="test-double", elapsed_seconds=0.0)
+    state = State(raw_intent="Fictional idea", facts={
+        "goal": Fact(value="Fictional idea", status="confirmed", source_turn_ids=["t0"]),
+        "operations.budget": Fact(value=None, status="unknown", source_turn_ids=[])},
+        questions=[Question(id=f"q{i+1}", topic=f"topic{i}", text="Earlier question?",
+            decision="Changed an earlier decision.") for i in range(previous_questions)])
+    agent = QuestioningAgent()
+    with TestClient(create_app(agent)) as client:
+        response = client.post('/api/advance', json={"state": state.model_dump(),
+            "request_id": "provisional", "provisional": True}).json()
+        assert response["error"] is None
+        updated = response["state"]
+        assert len(updated["questions"]) == previous_questions
+        assert all(question["retired"] for question in updated["questions"])
+        assert updated["facts"]["operations.budget"]["status"] == "unknown"
+        assert updated["assessment"]["open_questions"][0]["topic"] == "operations.budget"
+        assert updated["turns"] == [] and agent.calls == 1
+        assert client.post('/api/export', json=updated).status_code == 200
+
+
+def test_ending_clarification_does_not_allow_dropping_confirmed_facts():
+    base = State(raw_intent="Fictional idea")
+    state = adopt(base, result(base))
+    with pytest.raises(FlowError):
+        adopt(state, result(state, facts={}, disposition="provisional"), allow_question=False)
+
+
 def test_http_origin_host_and_invalid_state_do_not_echo_input():
     with TestClient(create_app(FakeAgent())) as client:
         assert client.post('/api/start', json={"idea": "private"}, headers={"Origin": "https://other.example"}).status_code == 403
@@ -154,10 +194,11 @@ def test_bare_continue_does_not_confirm_assumptions():
     with pytest.raises(FlowError): adopt(state, candidate)
 
 
-def test_ready_with_another_question_is_rejected():
+@pytest.mark.parametrize("allow_question", [True, False])
+def test_ready_with_another_question_is_rejected(allow_question):
     state = State(raw_intent="A tool")
     question = {"topic": "usage", "text": "Who uses it?", "decision": "Changes access"}
-    with pytest.raises(FlowError): adopt(state, result(state, question=question))
+    with pytest.raises(FlowError): adopt(state, result(state, question=question), allow_question=allow_question)
 
 
 def test_reassessment_cannot_rewrite_confirmed_fact_without_new_owner_input():

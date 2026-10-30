@@ -12,9 +12,13 @@ only through a configured coding agent, such as OpenCode.
 
 **Current state:** a Level 0 web prototype with clarification, corrections, owner
 and developer views, and JSON export. All three CLI wrappers have deterministic
-contract tests. A [Codex/Luna pilot](artifacts/2026-10-30-codex-luna-pilot.json)
-verified one live initial clarification and blocked premature export. The full
-conversation, recommendation quality, and owner understanding remain unverified.
+contract tests. A [Codex/Luna development conversation](artifacts/2026-10-30-codex-luna-conversation.json)
+exercised clarification, unknowns, a changed requirement, failure recovery, and a
+downloaded brief. It exposed an omitted earlier constraint and repeated unknown
+questions. Explicit provisional requests now stop new questions in application
+code, verified with captured output; the remaining findings need development checks
+before frozen acceptance. Broader recommendation quality and owner understanding
+remain unverified.
 Agent execution is disabled by default.
 
 The [OpenCode pilot](artifacts/2026-10-29-opencode-free-pilot.json) and
@@ -40,7 +44,7 @@ controls are agreed, restart with `MVC_AGENT=opencode`, `claude`, or `codex` and
 `MVC_ENABLE_AGENT=1`. These settings select one agent; there is no fallback.
 Configure authentication through that agent, not application-specific API keys.
 
-The initial live Codex check used `gpt-6-luna` with the existing native ChatGPT
+The live Codex development checks used `gpt-6-luna` with the existing native ChatGPT
 login. To select that agent/model explicitly:
 
 ```sh
@@ -138,8 +142,9 @@ use the selected agent/provider's spending controls before enabling calls.
 CLI contracts checked: OpenCode 2.0.12, 2.2.0 and 2.2.1, Claude Code 2.1.312,
 Codex CLI 0.165.0.
 Help/version inspection and mocked events do not establish live compatibility.
-The Codex pilot verifies only the initial planning response. Its exact disabled
-Code Mode host startup notice is accepted; other errors and tool activity still fail.
+Codex checks cover one fictional conversation, not product acceptance. Its exact
+disabled Code Mode host startup notice is accepted; other errors and tool activity
+still fail.
 References: [OpenCode CLI](https://opencode.ai/v2/docs/cli/),
 [permissions](https://opencode.ai/v2/docs/permissions/),
 [Claude CLI](https://code.claude.com/docs/en/cli-reference),

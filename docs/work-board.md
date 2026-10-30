@@ -24,8 +24,8 @@ means the acceptance evidence and required review are recorded.
 | T002 | Define state and engineering brief contracts, including unknowns and answer changes | review | Codex, requested by repository owner | `docs/level-0.md`, D005 | Versioned JSON state/export, fact provenance, dispositions, and validation rules drafted. Self-reviewed; document checks pass, runtime validation is T005. |
 | T003 | Design clarification and synchronized owner/developer flows | review | Codex, requested by repository owner | `docs/level-0.md`, D005 | Idea → clarification → recommendation → revision → export/recovery specified. Covers unknown answers, stale results, and late responses. Self-reviewed; implementation and user review remain. |
 | T004 | Choose the simplest viable solution and document setup | review | Codex, requested by repository owner | D008, README, Level 0 scope, proposal | Agent-only architecture selected by owner. OpenCode, Claude Code, and Codex wrappers replace direct transports in T012; live access and permissions need verification. |
-| T005 | Implement the Level 0 prototype | review | Codex, requested by repository owner | `src/meta_vibe_coding/`, `tests/`, dependency files, README | State, browser flow, corrections, and JSON export retained. Agent integration is being revised in T012. Product acceptance remains incomplete. |
-| T006 | Review demos and identify readiness gaps | review | Codex with separate reviewer, requested by repository owner | `artifacts/`, pilot/agent boundary and tests, README, this board | Codex/Luna produced a live valid initial clarification after a narrow startup-notice parser fix. Two native calls recorded; 120 Python and ten UI checks pass; separate code and evidence reviews passed. Next: a bounded fictional conversation through answers/correction/export before frozen cases. |
+| T005 | Implement the Level 0 prototype | review | Codex, requested by repository owner | `src/meta_vibe_coding/`, `tests/`, dependency files, README | State, browser flow, corrections, JSON export and T012 agent wrappers are implemented. T006 records live development checks; product acceptance remains incomplete. |
+| T006 | Review demos and identify readiness gaps | review | Codex with separate reviewer, requested by repository owner | `artifacts/`, `src/`, `tests/`, README, Level 0 scope, this board | Committed `438f61d`, then ran a seven-call browser Codex/Luna conversation. Correction recovery and export worked, but an earlier constraint was omitted and unknown questions repeated. Provisional-question guard fixed offline; 124 Python and ten UI checks pass. Source review passed; final evidence delta self-reviewed. Next: repair/recheck development gaps before frozen acceptance. |
 | T007 | Initialize GitHub repository metadata | done | Codex, requested by repository owner | GitHub repository settings, labels, milestone; `docs/work-board.md` | Description, seven topics, three work-area labels, and [Level 0 milestone](https://github.com/honghuy127/meta-vibe-coding/milestone/1) saved and verified through the GitHub API on 2026-10-28. |
 | T008 | Define code, writing, filename, and directory conventions | review | Codex, requested by repository owner | `CONTRIBUTING.md`, `docs/writing-guide.md`, `AGENTS.md`, `README.md`, this board | Existing guides updated; no new files. Checks passed across 11 Markdown files: relative links/anchors, headings, fences, and whitespace. Self-reviewed; repository owner to review conventions. |
 | T009 | Improve the solution proposal and delivery plan using research skills | review | Codex, requested by repository owner | Proposal, Level 0 plan, work board, decision log, README | D003 applied; proposal condensed, sources checked, and acceptance tasks linked. Strict Markdown checks and local render review completed; owner review pending. |
@@ -33,7 +33,7 @@ means the acceptance evidence and required review are recorded.
 | T011 | Check whether adult owners understand and can use the L0 handoff | blocked | Unassigned | Authorized session artifacts; short result in this board | Depends on T006, named facilitator, consent/data-handling decisions, and owner authorization. Record comprehension, task completion, burden, and changes needed before L1. |
 | T012 | Replace direct inference with coding-agent wrappers | done | Codex with separate wrapper reviewer, requested by repository owner | `src/`, `tests/`, artifacts organization, README, proposal, Level 0 scope, decisions, agent guidance | OpenCode, Claude Code, and Codex CLI wrappers implemented; direct clients/runner removed. Native help/version and mocked contracts checked. See note for review and remaining live verification. |
 | T013 | Self-audit the pending implementation before commit | done | Codex, requested by repository owner | Source, tests, package/lock files, docs, artifact provenance | Audited all 33 tracked/untracked candidate files against D008; fixed owner-confirmation, stale-question/ID, readiness, and instruction-boundary issues. Independent fix review passed; see note. No commit or live inference. |
-| T014 | Make the fictional pilot repeatable after the cooldown | done | Codex with separate reviewer, requested by repository owner | `src/meta_vibe_coding/pilot.py`, `tests/test_pilot.py`, `.gitignore`, README, this board | Opt-in runner prepared and independently reviewed. Default check sends no inference; serving requires cooldown expiry and a current pricing check. Exclusive claims prevent allowance resets. 101 pytest and ten UI checks pass; T006 remains blocked. |
+| T014 | Make the fictional pilot repeatable after the cooldown | done | Codex with separate reviewer, requested by repository owner | `src/meta_vibe_coding/pilot.py`, `tests/test_pilot.py`, `.gitignore`, README, this board | Opt-in runner prepared and independently reviewed. Default check sends no inference; serving requires cooldown expiry and a current pricing check. Exclusive claims prevent allowance resets. 101 pytest and ten UI checks pass; T006 acceptance remains incomplete. |
 | T015 | Verify the packaged pilot and rehearse the full flow offline | done | Codex with separate reviewer, requested by repository owner | `tests/test_pilot.py`, this board | Built/installed `0e9ebaa` offline; all 12 packaged files match. Full source suite: 102 pass. All 16 pilot tests also pass against the wheel, independently verified. Process doubles only; no new model calls or held-out cases. |
 
 Proposed paths are locations for future work, not existing artifacts. Split tasks
@@ -42,96 +42,89 @@ for a broad task.
 
 ## Task notes
 
-### T005–T006: Retained core and earlier checks
+### T005–T006: Prototype and live development checks
 
-The design baseline is `6f7ec5d`. The prototype added strict state, clarification,
-corrections, synchronized views, recovery, and export. Independent review found
-and verified fixes for retry intent, reset isolation, typed revisions, reopening
-conflicts, stale export errors, and subprocess deadlines. These core behaviors
-remain covered by the current tests.
+The retained prototype supports strict state, clarification, corrections,
+synchronized views, recovery and export. The design baseline is `6f7ec5d`;
+[D008](decisions.md#d008-wrap-coding-agents-only) defines the current coding-agent
+boundary. Independent reviews checked state/provenance, failed requests, stale
+exports, subprocess limits and native CLI contracts. Earlier direct-model evidence
+in `artifacts/legacy/` does not establish current wrapper acceptance.
 
-Earlier direct-model experiments did not establish acceptance. Their raw attempts
-and reviews remain in `artifacts/legacy/`; they are not tests of the current agent
-wrappers. The seven [fresh cases](../artifacts/l0-acceptance-cases.json) remain
-unchanged and unrun. D008 supersedes their original timing metadata with the
-current configurable 300/1,800-second limits. No matched baseline, adult owner
-session, or completed live external agent evaluation has run.
+The owner’s OpenCode free-plan investigation remains in the
+[original record](../artifacts/2026-10-29-opencode-free-pilot.json) and
+[routing comparison](../artifacts/2026-10-30-opencode-routing-verification.json).
+The original seven calls are closed; attempts 4–7 used a redacted workspace-header
+placeholder and cannot isolate request-size or tool-eligibility causes. Three
+corrected-profile comparisons still returned request-scoped free-limit errors,
+including shared execution and an after-cooldown request. The owner’s successful
+terminal context remains unmatched. Private routing export and static error
+messages were reviewed; no global configuration, paid fallback or production tool
+permission was changed. Earlier source hashes and the explicit erratum preserve
+these limitations.
 
-The owner authorized a fictional development pilot on an OpenCode free plan,
-with $0 additional spend. Pinned `opencode/glm-5.3-flash-free`, including native
-title/summary/compaction helpers, disabled warming/automatic compaction, and
-verified native deny-all planning permissions. Separate review checked routing
-and free pricing. These settings do not enforce a monetary cap; global native
-configuration was unchanged.
+The owner switched to Codex with `gpt-6-luna`. The
+[initial two-call record](../artifacts/2026-10-30-codex-luna-pilot.json) captured a
+completed response rejected because of the deliberately disabled Code Mode host’s
+startup notice. A narrow parser fix accepts only that exact notice in its observed
+position. Separate review and a second live call verified initial clarification;
+unknown errors, tools and incomplete output remain rejected. These reviewed
+changes were committed as `438f61d` before the requested next step.
 
-The [original record](../artifacts/2026-10-29-opencode-free-pilot.json) retains
-seven failed requests. Attempts 1–2 used `87b0539`; the first native streams were
-not captured, while the second reported `provider.free-limit` (429). A post-login
-attempt on OpenCode 2.2.1 also returned 429. Attempts 4–7 replayed a redacted
-workspace-header placeholder from native debug output and returned 400. Those
-comparisons cannot establish a request-size or tool-eligibility cause. All seven
-invocations remain consumed; prior failures and claims were preserved.
+The [browser conversation](../artifacts/2026-10-30-codex-luna-conversation.json)
+used all seven allowed native calls through saved ChatGPT authentication,
+with 300/1,800-second limits, read-only workspaces, disabled tools, ignored user
+config/rules and ephemeral mode. All replies were scripted fictional inputs.
+The flow covered a public information site, explicit unknown budget and public
+personal content, the “I don’t know” button, and a correction requiring member
+sign-in and private attendance across devices. No API-key route, automatic retry,
+other model, new purchase or frozen case was used. Credit usage/cost, retention and
+complete isolation remain unverified.
 
-The owner supplied a working native reply from the same free model. Compared
-native and standalone metadata, then corrected the routing handoff using resolved
-model metadata. The private exporter copies only the native workspace header,
-rejects redacted/ambiguous values, and never exports credentials or overwrites a
-file. Quota messages now describe the failed request rather than implying every
-native session is blocked. Recognized invalid-request errors have a static
-configuration message; raw provider details stay outside the UI.
+The fifth response renamed two confirmed fact keys. The validator rejected it;
+the browser retained the correction, marked the old result outdated and disabled
+download. A direct local export check also returned 409. Clarified the generic
+prompt: keep existing confirmed keys and revise their values/status/sources.
+Separate review passed. Restarted only the backend with the two remaining calls,
+preserving the browser state, consumed allowance and session timer. Explicit retry
+6 succeeded; no validator was relaxed. The failed attempt remains in the record.
 
-A [separate verification](../artifacts/2026-10-30-opencode-routing-verification.json)
-records two corrected-profile standalone requests and one owned shared-session
-request. The first pair used identical fictional stdin; the later request changed
-only the new idea’s start time and ran after the earlier cooldown. All returned
-429 without a Candidate.
-The shared diagnostic verified free helper pins and deny-all permissions. After
-the failure, interrupt returned false, waiting completed, and its inbox was empty;
-active-inference cancellation was not exercised. Shared execution
-is a diagnostic only, not a supported production mode. Three of this run’s seven
-invocations were used. No automatic retry, paid fallback, or frozen case ran.
+The sixth result recommends assessing an established membership service, explains
+private member/organizer access and recovery responsibilities, and keeps budget
+and public identifiable content unknown. Its displayed brief, server export and
+downloaded `engineering-brief.json` match at revision 9. The browser event monitor
+timed out; the owner supplied the actual path and file comparison established
+success. The original intent and correction provenance are retained.
 
-The browser retained the idea and showed the request-scoped error. No live
-recommendation or token/cost report was received. Clarification, corrections,
-result views/export, permission enforcement, retention, and recommendation
-quality remain unverified live. The provider errors do not explain the owner’s
-successful native session. The owner identified the interface as terminal. Current
-interactive/login shell resolution selects the same v2.2.1 executable as the
-wrapper; another installed v1.19.4 binary was not selected. Official documentation
-supports `opencode run` for automation. Limited native source inspection did not
-establish a terminal-only eligibility rule. Next: match the effective interactive
-context before another inference comparison; the new request reported another
-cooldown. A retry time is neither an account-wide outage nor assured availability.
+Independent review found that the earlier “no analytics” restriction survived
+only in source history, not current facts. It also found questions repeating
+information explicitly marked unknown. A reviewed generic prompt clarification
+used the final call through “Show a provisional result.” The seventh response
+did not repair the constraint omission and still proposed a new question. Its
+revised export is separate from the owner’s earlier download, which was preserved.
+All seven attempts remain recorded; the server was stopped without further calls.
 
-The owner then requested Codex with Luna. Verified the official `gpt-6-luna`
-selector, Codex CLI 0.165.0 and existing ChatGPT login. Used only fictional input,
-a 300-second deadline, a read-only workspace, disabled tools, ignored user
-config/rules, and ephemeral mode. API-key environment variables were excluded;
-native subscription/credit usage and retention were not independently reconciled.
-Global native configuration was unchanged.
+Enforced explicit provisional requests in application/core code: retire pending
+questions, add no new clarification, and retain open decisions in the assessment.
+Separate review caught and verified a fix preserving the existing rejection of
+contradictory ready-plus-question output. Captured attempt 7 passes an offline
+HTTP replay with unchanged facts/turns and no new question. This is not another
+live verification, and it does not resolve the omitted constraint. The prompt
+changes alone did not establish reliable requirement retention or clarification.
 
-The [Codex record](../artifacts/2026-10-30-codex-luna-pilot.json) preserves two calls.
-The first completed in 11.4 seconds, but the wrapper rejected a startup notice
-about the deliberately disabled Code Mode host. Its Candidate passed schema,
-adoption and provisional-export checks in an offline replay. Added an exception
-only for that exact notice immediately after `thread.started`; other errors, tool
-items and incomplete output still fail. Separate review verified the captured
-stream and adversarial variants without enabling the host or any tool.
-
-A second live call passed through the fixed wrapper in about 9.9 seconds. It asked
-what visitors should learn or do and who the site serves, retained unknown risk,
-and returned `needs_answer`. Export correctly returned 409; no engineering brief
-was completed. No workspace files or tool events were observed. These checks
-verify an initial clarification, not a full conversation or product acceptance.
-Next: continue a bounded fictional flow through answers, unknowns, correction and
-export before running frozen cases.
-
-Checks: 120 Python tests, ten Node UI checks, and whitespace pass. The existing
-Starlette TestClient deprecation warning remains. Separate code and evidence
-reviews passed, as did strict Markdown, relative links and dependency checks. The
-earlier OpenCode reviews remain valid for their recorded sources. The owner
-requested committing this reviewed snapshot before continuation. The frozen cases
-remain unchanged and unrun.
+Checks: 124 Python and ten UI tests pass, along with strict Markdown, relative
+links, whitespace and dependency checks. The existing Starlette TestClient warning
+remains. Source and prompt reviews passed. A separate contributor verified calls
+1–6; the seventh-call evidence delta was self-reviewed after that reviewer reached
+a usage limit. All seven native/HTTP/state replays, source stages, offline guard,
+download and frozen-case hashes reconcile. The owner requested committing the reviewed follow-up snapshot after `438f61d`
+before addressing the remaining development findings. The seven
+[frozen cases](../artifacts/l0-acceptance-cases.json) remain unchanged and unrun.
+Next: repair and recheck non-superseded constraint retention and unknown-question
+behavior in a new bounded development run, including the provisional guard, before
+frozen cases and a matched baseline. This conversation does not pass acceptance
+or establish general recommendation quality or owner comprehension. Adult sessions
+still need their own authorization.
 
 ### T014: Repeatable fictional pilot
 

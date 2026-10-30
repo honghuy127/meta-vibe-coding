@@ -130,7 +130,9 @@ conditions. Neither disposition is permission to start implementation.
 2. **Clarify.** Ask one consequential question at a time, explaining why it matters.
    Allow a free-text answer, “I don't know,” correction of an earlier answer, or
    a request for a provisional result. Do not repeat a resolved question unless
-   new input creates a genuine conflict. Use the acceptance-plan question limits.
+   new input creates a genuine conflict. A provisional-result request adds no new
+   clarification question; keep unresolved decisions in the assessment. Use the
+   acceptance-plan question limits.
 3. **Recommend.** Show the Owner View first: understood goal, proposed solution and
    why, data/access implications, cost unknowns, owner responsibilities, and next
    action. Expose assumptions and unanswered decisions in plain language. The

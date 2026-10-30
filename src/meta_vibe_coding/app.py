@@ -74,7 +74,7 @@ def create_app(agent: Agent | None = None) -> FastAPI:
         try:
             state = reserve_call(state, limits)
             candidate, usage = await adapter.assess(state, body.provisional)
-            updated = adopt(state, candidate)
+            updated = adopt(state, candidate, allow_question=not body.provisional)
             return {"request_id": body.request_id, "state": updated.model_dump(), "usage": usage.model_dump(), "error": None}
         except (FlowError, ValidationError) as exc:
             code = exc.code if isinstance(exc, FlowError) else "invalid_output"

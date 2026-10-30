@@ -53,7 +53,7 @@ def reserve_call(state: State, limits: Limits | None = None) -> State:
     return state.model_copy(update={"agent_calls": state.agent_calls + 1})
 
 
-def adopt(state: State, candidate: Candidate) -> State:
+def adopt(state: State, candidate: Candidate, *, allow_question: bool = True) -> State:
     if candidate.assessment.based_on_revision != state.revision:
         raise FlowError("invalid_output", "The agent returned an outdated revision.")
     # Retaining unsupported confirmed assertions is not a way to remove a fact.
@@ -83,7 +83,11 @@ def adopt(state: State, candidate: Candidate) -> State:
     for question in data["questions"]:
         if question["answer_turn_id"] is None:
             question["retired"] = True
-    if candidate.question:
+    if candidate.question and candidate.assessment.disposition == "ready":
+        raise FlowError("invalid_output", "A ready result cannot ask another clarification question.")
+    # An explicit request for a result ends clarification; open decisions remain
+    # in the assessment without creating another question for the owner.
+    if candidate.question and allow_question:
         if len(data["questions"]) >= 5:
             raise FlowError("limit", "The agent requested more than five clarification questions.")
         answered = [q for q in state.questions if q.topic == candidate.question.topic and q.answer_turn_id is not None]
@@ -93,8 +97,6 @@ def adopt(state: State, candidate: Candidate) -> State:
             raise FlowError("invalid_output", "A repeated question must cite newer owner input that creates a conflict.")
         if conflict is not None and (not answered or conflict != latest_turn):
             raise FlowError("invalid_output", "A conflict must reopen an answered topic using the latest owner reply.")
-        if candidate.assessment.disposition == "ready":
-            raise FlowError("invalid_output", "A ready result cannot ask another clarification question.")
         data["questions"].append({"id": allocate_id("q", [q["id"] for q in data["questions"]]),
                                   **candidate.question.model_dump(), "answer_turn_id": None})
     # Revalidation enforces revision, provenance, enum, and readiness invariants.
