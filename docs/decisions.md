@@ -181,8 +181,10 @@ complete requirement extraction. Prompt guidance distinguishes independently
 answerable properties and asks about copies, derivatives and unattended identities
 when relevant; it does not relax confirmation, repeated-topic or unknown guards.
 Fresh scripted consequence fixtures check preservation and export of supplied
-content, not live agent discovery. Actual schema compatibility and model-quality
-improvement remain unverified live. Future preparation previews separate closed
+content, not live agent discovery. At implementation, actual schema compatibility
+and model-quality improvement were unverified live; T021–T022 record subsequent
+development and exposed-case regression evidence on the work board.
+Future preparation previews separate closed
 schemas for wrapper and transcript-only baseline; another comparison requires a
 new versioned matched plan and allowance rather than reusing T019's unused calls.
 

@@ -340,7 +340,10 @@ procedure above. Structural validation and a software smoke test do not establis
 recommendation quality or owner comprehension. Earlier direct-model smoke attempts
 remain under `artifacts/legacy/`. T019 completed and independently reviewed a live
 seven-pair Codex comparison with blocking failures; Level 0 is not accepted.
-T020's revised native response contract has deterministic checks but no live
-verification. Adult comprehension sessions have not run. Before a public demo,
+The [version 2 regression run](../artifacts/2026-10-31-codex-luna-comparison-v2.json)
+exercised T020's native response contract live on the previously exposed cases.
+Protocol/state failures and material omissions remain, with incomplete rendered
+checks and one coordinator-related deadline expiry. It does not establish Level 0
+acceptance. Adult comprehension sessions have not run. Before a public demo,
 resolve provider data handling, deployment authority, and operating cost; readiness
 must be demonstrated in the intended environment.

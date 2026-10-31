@@ -100,6 +100,20 @@ def test_new_confirmation_needs_exact_source_linked_grounding(change):
     with pytest.raises(ValueError): NativeResponse.model_validate(body).candidate(state)
 
 
+def test_quote_group_cannot_link_an_unknown_fact_without_the_cited_source():
+    state = State(raw_intent='A shared rota. Reminder preferences are undecided.')
+    body = payload(state)
+    body['facts'].append({'key': 'reminders.preference', 'value': None,
+        'status': 'unknown', 'source_turn_ids': [], 'reason': 'Undecided.'})
+    body['grounding'][0]['fact_keys'].append('reminders.preference')
+    with pytest.raises(ValueError, match='existing fact and its cited source'):
+        NativeResponse.model_validate(body).candidate(state)
+    # A quote for the confirmed goal need not also ground the unknown preference.
+    body['grounding'][0]['fact_keys'].remove('reminders.preference')
+    candidate = NativeResponse.model_validate(body).candidate(state)
+    assert candidate.facts['reminders.preference'].value is None
+
+
 def test_unchanged_fact_and_owner_explanation_question_need_no_invented_fact():
     base = State(raw_intent='A household buzzer with no stored events.')
     state = adopt(base, result(base))

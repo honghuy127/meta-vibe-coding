@@ -166,7 +166,13 @@ Codex receives a private, request-owned `response-schema.json` through its nativ
 wrapper input, not agent-created output. OpenCode and Claude receive the schema
 in stdin and use the same local validation; native constrained decoding is not
 claimed for them. Software checks cover the new encoding and failure handling;
-the new native-schema invocation has not been verified live.
+the native-schema path has also been exercised in the
+[version 2 regression run](artifacts/2026-10-31-codex-luna-comparison-v2.json).
+All fourteen attempts closed using 50 calls: five wrapper protocol/state stops,
+one baseline deadline expiry during a coordinator interruption, and eight delivered
+final responses. Delivered responses still have material omissions. All cases were
+previously exposed; this run does not establish Level 0 acceptance or superiority.
+Some rendered-view checks remain incomplete because browser access failed.
 
 ## Check and review
 

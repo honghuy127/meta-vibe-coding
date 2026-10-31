@@ -40,7 +40,9 @@ means the acceptance evidence and required review are recorded.
 | T018 | Prepare the frozen acceptance run and matched baseline | done | Codex with separate reviewer, requested by repository owner | Evaluation entry point/tests, `artifacts/`, README, Level 0 scope, this board | Frozen bytes preserved; matched plan and no-inference rehearsal recorded. Source review passed after provenance fixes; 163 Python and 12 UI tests, strict Markdown and whitespace pass. No acceptance scores at this stage; T019 records the later authorized run. |
 | T019 | Execute and review the bounded matched comparison | done | Codex with separate reviewer, requested by repository owner | Native parsing/stream capture and tests, `artifacts/`, README, Level 0 scope, this board | Owner authorized 98 native calls; all fourteen first attempts closed using 33. Source/raw/rendered-view reviews passed; one provisional case passes, eleven technical stops and two substantive failures. No retry, fallback, purchase or participant session. 166 Python and 12 UI tests pass. See result and T020. |
 | T020 | Repair observed output and requirement-contract gaps | done | Codex with separate reviewer, requested by repository owner | Native contract/agent/prompt, evaluation preview, fresh fixtures/tests, relevant docs | D010 implemented and independently reviewed. Explicit question targets, quoted source linkage and private Codex schema file preserve canonical guards and brief schema 1. All 194 Python and 12 UI tests, dependency, strict Markdown/link and whitespace checks pass. T019 bytes are intact. Scripted fixtures do not establish live discovery or acceptance; see notes. |
-| T021 | Verify the revised native contract and prepare a fresh comparison | ready | Unassigned | Agent development evidence, versioned evaluation plan, relevant docs | Review native settings and obtain a fresh bounded allowance before model calls. First verify schema compatibility and useful behavior on fresh development examples; then review a new matched plan for both schemas. Preserve T019 and report exposure of its cases. No live execution is authorized by this task row. |
+| T021 | Verify the revised native contract and prepare a fresh comparison | done | Codex, requested by repository owner | Agent development evidence, versioned evaluation plan, relevant docs | Investigation reviewed; 195 Python tests pass. Version 2 plan freezes schemas/runtime and records exposed-case limits. Independent plan/harness review passed after provenance fixes; 15 offline harness checks pass. |
+| T022 | Execute and review the revised matched comparison | done | Codex with separate reviewer, requested by repository owner | Version 2 result artifact, README, Level 0 scope, work board | All fourteen first attempts closed using 50 of 98 calls; server stopped. Five wrapper protocol/state stops, one coordinator-related baseline expiry, eight delivered final responses. Independent evidence review passed; semantic gaps and remaining view checks are explicit. Exposed regression only; Level 0 unaccepted and T019 preserved. |
+| T023 | Reduce duplicate native records and clarify partial/unknown updates | ready | Unassigned | Native contract/prompt, canonical guards, fresh development tests | Use T022's captured duplicate/conflicting targets, repeated-topic and unknown-source failures. Prefer one authoritative record per fact; retain typed conflicts, source/confirmation and explicit-unknown guards. Review design before implementation; no case-specific prompt tuning or new live allowance implied. |
 
 Proposed paths are locations for future work, not existing artifacts. Split tasks
 when contributors need independent ownership; do not reserve the whole repository
@@ -248,6 +250,62 @@ scripted consequences. They do not show live consequence discovery, complete
 extraction or semantic support. Native schema compatibility, recommendation quality,
 owner understanding and Level 0 acceptance remain open. T021 needs fresh settings,
 plan and allowance; the closed T019 run is not reopened.
+
+### T021: Revised contract development
+
+The [fictional development record](../artifacts/2026-10-30-codex-luna-contract-development.json)
+contains an initial success, a failed follow-up and a later diagnostic retry and
+correction. A separate initial success and sandbox failure are summarized only;
+the failed follow-up's raw invalid output was not captured, so its cause is unknown.
+Six top-level attempts ran in total,
+using saved Codex authentication and requested `gpt-6-luna`; actual model and cost
+are unknown. No paid fallback was selected.
+
+The successful correction retained the coordinator and volunteer permissions,
+unknown budget and alert preference, and separately recorded service-account use
+and the prohibition on sharing its credentials. This is a single fictional case,
+not evidence of broad reliability. The investigation preceded the version 2
+plan and comparison recorded in T022. T019's cases were exposed during
+repair and cannot be represented as held out. No new acceptance claim is made.
+
+The [investigation](../artifacts/2026-10-30-codex-luna-contract-investigation.json)
+captures a separate reproduction: a quote group linked `volunteer_alerts` to `t1`,
+but that unknown fact cited no source. Local validation correctly rejected it.
+The original uncaptured failure's cause remains unknown. The prompt now explicitly
+limits grounding to new or changed confirmed facts and requires each linked fact
+to cite the quote's source. Validators and canonical guards are unchanged.
+Three new native calls produced a pre-change pass/failure and one post-change pass;
+this is not a reliability estimate. A regression test covers the inconsistent
+quote group; `python -m pytest -q` using `.venv/bin/python` passes all 195 tests
+with the existing Starlette warning. Independent review passed: saved successful
+responses replay exactly, the captured failure reproduces, source/capture hashes
+reconcile and all 29 contract tests pass separately. No comparison, commit or push
+ran during this investigation. T022 records the subsequent plan and execution.
+
+### T022: Exposed-case regression comparison
+
+The [version 2 plan](../artifacts/l0-comparison-plan-v2.json) froze the runtime,
+both native schemas and a fresh 98-call maximum. Independent harness review and
+15 offline checks passed after imported-source and actual schema-file provenance
+fixes. The [result](../artifacts/2026-10-31-codex-luna-comparison-v2.json) preserves
+all fourteen first attempts and 50 calls, raw streams, HTTP/export evidence,
+three rendered DOM captures and independent judgments. The server stopped cleanly.
+
+Five wrapper attempts stopped on duplicate/conflicting facts, repeated-topic or
+unknown-source guards. H04 baseline expired during a coordinator interruption;
+this is not a model-quality failure. Eight attempts delivered final responses.
+H03 wrapper passes narrowly; H05 wrapper's uncertainty variation passes separately
+from its base risk-calibration gap. Delivered baselines still omit consequences
+such as collision handling, portable export, copied-data revocation or key rotation.
+These findings cannot be averaged into a general winner or Level 0 acceptance.
+
+Call/schema/stream/source checks and independent review passed. The separate HV04
+copy check passed seven HTTP recovery assertions without inference; its first
+expired-fixture failure is disclosed. Remaining page captures failed because browser
+access was unavailable and native Chrome returned `cgWindowNotFound`; missing view
+checks remain not checked. No full visual QA or owner comprehension is claimed.
+T019 and frozen inputs retain their hashes. Changes remain uncommitted; T023 owns
+the next contract simplification before another live run.
 
 ### T014: Repeatable fictional pilot
 

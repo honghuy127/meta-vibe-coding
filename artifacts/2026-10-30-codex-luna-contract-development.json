@@ -1,0 +1,626 @@
+{
+  "kind": "fictional-development-check",
+  "description": "Sequential checks after a failed uncaptured follow-up; diagnostic retry succeeded. Earlier sandboxed request failed and one initial request succeeded without retained raw output.",
+  "native_attempts_total": 6,
+  "additional_spending_authorized": 0,
+  "requested_model": "gpt-6-luna",
+  "actual_served_model": "unknown",
+  "records": {
+    "mvc-t021-development.json": {
+      "records": [
+        {
+          "state": {
+            "schema_version": 1,
+            "revision": 2,
+            "raw_intent": "I want a small tool for a volunteer garden to coordinate watering. Only coordinators can edit the schedule; volunteers can view it. I do not know the ongoing budget.",
+            "turns": [],
+            "facts": {
+              "goal": {
+                "value": "Create a small tool for a volunteer garden to coordinate watering.",
+                "status": "confirmed",
+                "source_turn_ids": [
+                  "t0"
+                ],
+                "reason": "Directly stated in the original request."
+              },
+              "schedule.edit_permission": {
+                "value": "Only coordinators can edit the watering schedule.",
+                "status": "confirmed",
+                "source_turn_ids": [
+                  "t0"
+                ],
+                "reason": "Directly stated in the original request."
+              },
+              "schedule.view_permission": {
+                "value": "Volunteers can view the watering schedule.",
+                "status": "confirmed",
+                "source_turn_ids": [
+                  "t0"
+                ],
+                "reason": "Directly stated in the original request."
+              },
+              "ongoing_budget": {
+                "value": null,
+                "status": "unknown",
+                "source_turn_ids": [
+                  "t0"
+                ],
+                "reason": "The owner explicitly does not know the ongoing budget."
+              }
+            },
+            "questions": [],
+            "assessment": {
+              "based_on_revision": 2,
+              "disposition": "provisional",
+              "risk": {
+                "level": "medium",
+                "reasons": [
+                  "Schedule access must distinguish coordinator editing from volunteer viewing; the implementation and access management details are unspecified.",
+                  "Ongoing costs are unknown."
+                ]
+              },
+              "hidden_requirements": [
+                {
+                  "text": "Provide a way to recover or update the schedule when a coordinator leaves or loses access.",
+                  "reason": "The schedule must remain usable as volunteer coordinators change."
+                },
+                {
+                  "text": "Decide who manages access and checks recurring costs.",
+                  "reason": "Coordinator-only editing and unknown ongoing budget require ongoing ownership."
+                }
+              ],
+              "recommendation": {
+                "kind": "existing_tool",
+                "summary": "Start with an existing shared calendar or scheduling tool configured so coordinators can edit and volunteers can view; choose one that fits the garden's budget and access needs.",
+                "rationale": [
+                  "The request describes a small coordination need that may not require custom software.",
+                  "A shared scheduling tool may support separate editing and viewing access, but suitability and price depend on the selected service and its current features."
+                ],
+                "alternatives": [
+                  "Use a paper schedule or coordinator-maintained manual workflow if digital access is unnecessary.",
+                  "Consider a small custom application only if existing tools cannot enforce the required permissions or meet the garden's workflow."
+                ],
+                "owner_responsibilities": [
+                  "Check current pricing, access controls, and recovery options before choosing a service.",
+                  "Manage coordinator and volunteer access, review charges, and transfer schedule ownership when coordinators change."
+                ]
+              },
+              "acceptance_criteria": [
+                "Coordinators can edit the watering schedule; volunteers can view it without edit access.",
+                "The schedule can be recovered and ownership transferred if a coordinator leaves or loses access.",
+                "Before adoption, verify the chosen tool's access behavior, recurring costs, and account recovery process.",
+                "Document who manages access and periodically checks schedule accuracy and costs."
+              ],
+              "open_questions": [
+                {
+                  "topic": "ongoing_budget",
+                  "text": "What ongoing budget, if any, is available for the tool?",
+                  "blocks_recommendation": false,
+                  "reason": "The owner does not know the budget, so the recommendation remains provisional and any service's cost must be checked before adoption."
+                }
+              ],
+              "limitations": [
+                "No particular service, price, account setup, or access-management capability has been verified.",
+                "The owner has not specified devices, preferred workflow, or who will administer accounts."
+              ]
+            },
+            "agent_calls": 0,
+            "started_at": 1793362179.243008,
+            "assessed_turn_count": 0,
+            "owner_unknowns": {
+              "ongoing_budget": {
+                "source_turn_id": "t0",
+                "quote": "I do not know the ongoing budget."
+              }
+            }
+          },
+          "usage": {
+            "agent": "codex",
+            "agent_version": "codex-cli 0.165.0",
+            "model": null,
+            "elapsed_seconds": 9.76564925024286,
+            "input_tokens": 12208,
+            "output_tokens": 751,
+            "cost": null
+          }
+        },
+        {
+          "error": "FlowError",
+          "message": "The agent returned invalid or incomplete structured data. Your answers are retained."
+        }
+      ],
+      "calls": 1,
+      "followup_calls": 1
+    },
+    "mvc-t021-diagnostic-result.json": {
+      "state": {
+        "schema_version": 1,
+        "revision": 4,
+        "raw_intent": "I want a small tool for a volunteer garden to coordinate watering. Only coordinators can edit the schedule; volunteers can view it. I do not know the ongoing budget.",
+        "turns": [
+          {
+            "id": "t1",
+            "text": "We use a shared spreadsheet, but I have not decided how volunteers should receive alerts."
+          }
+        ],
+        "facts": {
+          "goal": {
+            "value": "Create a small tool for a volunteer garden to coordinate watering.",
+            "status": "confirmed",
+            "source_turn_ids": [
+              "t0"
+            ],
+            "reason": "Directly stated in the original request."
+          },
+          "schedule.edit_permission": {
+            "value": "Only coordinators can edit the watering schedule.",
+            "status": "confirmed",
+            "source_turn_ids": [
+              "t0"
+            ],
+            "reason": "Directly stated in the original request."
+          },
+          "schedule.view_permission": {
+            "value": "Volunteers can view the watering schedule.",
+            "status": "confirmed",
+            "source_turn_ids": [
+              "t0"
+            ],
+            "reason": "Directly stated in the original request."
+          },
+          "ongoing_budget": {
+            "value": null,
+            "status": "unknown",
+            "source_turn_ids": [
+              "t0"
+            ],
+            "reason": "The owner explicitly does not know the ongoing budget."
+          },
+          "current_tool": {
+            "value": "A shared spreadsheet is used to coordinate watering.",
+            "status": "confirmed",
+            "source_turn_ids": [
+              "t1"
+            ],
+            "reason": "The owner said the garden currently uses a shared spreadsheet."
+          },
+          "alerts.preference": {
+            "value": null,
+            "status": "unknown",
+            "source_turn_ids": [
+              "t1"
+            ],
+            "reason": "The owner has not decided how volunteers should receive alerts."
+          }
+        },
+        "questions": [
+          {
+            "id": "q1",
+            "topic": "alerts.preference",
+            "text": "How should volunteers receive watering alerts\u2014for example, email, a messaging group, or no alerts?",
+            "decision": "The answer determines whether the shared spreadsheet is sufficient or whether another tool or manual reminder process is needed.",
+            "answer_turn_id": null,
+            "retired": false,
+            "conflict_turn_id": null
+          }
+        ],
+        "assessment": {
+          "based_on_revision": 4,
+          "disposition": "provisional",
+          "risk": {
+            "level": "medium",
+            "reasons": [
+              "Schedule access must enforce coordinator-only editing while allowing volunteers to view; the spreadsheet's current permission settings are unknown.",
+              "Alert delivery and ongoing costs are undecided, and watering schedule errors need a way to be noticed and corrected."
+            ]
+          },
+          "hidden_requirements": [
+            {
+              "text": "Verify that spreadsheet sharing settings enforce coordinator-only edits and volunteer view access.",
+              "reason": "The stated access rules require correct configuration of the existing tool."
+            },
+            {
+              "text": "Define how schedule changes, missed watering, and incorrect entries are noticed and recovered.",
+              "reason": "Coordination depends on reliable handoffs and correction when information or access fails."
+            },
+            {
+              "text": "Document an owner for access changes and maintenance if coordinators or spreadsheet operators change.",
+              "reason": "Continued operation depends on managing access and ownership over time."
+            }
+          ],
+          "recommendation": {
+            "kind": "existing_tool",
+            "summary": "Provisionally continue with the shared spreadsheet, after verifying its access settings; decide on alerts before choosing whether any additional tool is needed.",
+            "rationale": [
+              "The garden already uses a shared spreadsheet, which may be sufficient for a small watering schedule.",
+              "Alerts are undecided, and the ongoing budget is unknown, so adding a paid or custom system is not yet justified.",
+              "Spreadsheet provider capabilities and costs have not been established."
+            ],
+            "alternatives": [
+              "Use a manual reminder workflow alongside the spreadsheet.",
+              "Consider a dedicated scheduling tool if the spreadsheet cannot enforce the required access or support the chosen alert workflow."
+            ],
+            "owner_responsibilities": [
+              "Check coordinator and volunteer permissions, including when people join or leave.",
+              "Assign someone to maintain the schedule, resolve missed or incorrect entries, and recover access.",
+              "Review any alert service's cost, access, and account recovery needs before adopting it."
+            ]
+          },
+          "acceptance_criteria": [
+            "Only coordinators can change the schedule, and volunteers can view it; verify these permissions with representative accounts.",
+            "Choose and document the alert method and who receives alerts before implementing alerts.",
+            "Document how to report and correct schedule mistakes or missed watering, and how to restore access if an operator becomes unavailable.",
+            "Name an ongoing owner for permissions and maintenance, and record the next review when coordinators or operators change.",
+            "Confirm any recurring costs and who owns the associated accounts before committing to them."
+          ],
+          "open_questions": [
+            {
+              "topic": "alerts.preference",
+              "text": "How should volunteers receive watering alerts\u2014for example, email, a messaging group, or no alerts?",
+              "blocks_recommendation": false,
+              "reason": "This determines whether the spreadsheet workflow is sufficient or needs another tool or manual reminder process."
+            }
+          ],
+          "limitations": [
+            "The ongoing budget is explicitly unknown.",
+            "The spreadsheet provider, its access controls, alert capabilities, and costs are unspecified."
+          ]
+        },
+        "agent_calls": 0,
+        "started_at": 1793362179.243008,
+        "assessed_turn_count": 1,
+        "owner_unknowns": {
+          "ongoing_budget": {
+            "source_turn_id": "t0",
+            "quote": "I do not know the ongoing budget."
+          }
+        }
+      },
+      "usage": {
+        "agent": "codex",
+        "agent_version": "codex-cli 0.165.0",
+        "model": null,
+        "elapsed_seconds": 15.406392042059451,
+        "input_tokens": 12441,
+        "output_tokens": 1305,
+        "cost": null
+      }
+    },
+    "mvc-t021-correction-result.json": {
+      "state": {
+        "schema_version": 1,
+        "revision": 6,
+        "raw_intent": "I want a small tool for a volunteer garden to coordinate watering. Only coordinators can edit the schedule; volunteers can view it. I do not know the ongoing budget.",
+        "turns": [
+          {
+            "id": "t1",
+            "text": "We use a shared spreadsheet, but I have not decided how volunteers should receive alerts."
+          },
+          {
+            "id": "t2",
+            "text": "A service account will update the spreadsheet automatically; volunteers must not receive its credentials."
+          }
+        ],
+        "facts": {
+          "goal": {
+            "value": "Create a small tool for a volunteer garden to coordinate watering.",
+            "status": "confirmed",
+            "source_turn_ids": [
+              "t0"
+            ],
+            "reason": "Directly stated in the original request."
+          },
+          "schedule.edit_permission": {
+            "value": "Only coordinators can edit the watering schedule.",
+            "status": "confirmed",
+            "source_turn_ids": [
+              "t0"
+            ],
+            "reason": "Directly stated in the original request."
+          },
+          "schedule.view_permission": {
+            "value": "Volunteers can view the watering schedule.",
+            "status": "confirmed",
+            "source_turn_ids": [
+              "t0"
+            ],
+            "reason": "Directly stated in the original request."
+          },
+          "ongoing_budget": {
+            "value": null,
+            "status": "unknown",
+            "source_turn_ids": [
+              "t0"
+            ],
+            "reason": "The owner explicitly does not know the ongoing budget."
+          },
+          "current_tool": {
+            "value": "A shared spreadsheet is used to coordinate watering.",
+            "status": "confirmed",
+            "source_turn_ids": [
+              "t1"
+            ],
+            "reason": "The owner said the garden currently uses a shared spreadsheet."
+          },
+          "alerts.preference": {
+            "value": null,
+            "status": "unknown",
+            "source_turn_ids": [
+              "t1"
+            ],
+            "reason": "The owner has not decided how volunteers should receive alerts."
+          },
+          "automation.identity": {
+            "value": "A service account will update the spreadsheet automatically.",
+            "status": "confirmed",
+            "source_turn_ids": [
+              "t2"
+            ],
+            "reason": "The owner explicitly specified automatic spreadsheet updates by a service account."
+          },
+          "service_account.credential_sharing": {
+            "value": "Volunteers must not receive the service account credentials.",
+            "status": "confirmed",
+            "source_turn_ids": [
+              "t2"
+            ],
+            "reason": "The owner explicitly prohibited sharing these credentials with volunteers."
+          }
+        },
+        "questions": [
+          {
+            "id": "q1",
+            "topic": "alerts.preference",
+            "text": "How should volunteers receive watering alerts\u2014for example, email, a messaging group, or no alerts?",
+            "decision": "The answer determines whether the shared spreadsheet is sufficient or whether another tool or manual reminder process is needed.",
+            "answer_turn_id": null,
+            "retired": true,
+            "conflict_turn_id": null
+          }
+        ],
+        "assessment": {
+          "based_on_revision": 6,
+          "disposition": "provisional",
+          "risk": {
+            "level": "medium",
+            "reasons": [
+              "Automated spreadsheet updates require appropriate access and recovery arrangements; those details are not specified.",
+              "The ongoing budget and volunteer alert preference remain unknown."
+            ]
+          },
+          "hidden_requirements": [
+            {
+              "text": "Keep the service account credentials separate from volunteer access, and limit the account's access to what spreadsheet updates require.",
+              "reason": "The owner explicitly prohibits giving volunteers the service account credentials; limiting access reduces the impact of credential exposure."
+            },
+            {
+              "text": "Document who owns the service account, how credentials and access are recovered or rotated, and how updates are handled if a coordinator or operator leaves.",
+              "reason": "Automated updates and changing volunteer or coordinator access need an accountable maintenance and recovery path."
+            },
+            {
+              "text": "Define a fallback for failed automated updates and verify that schedule edits remain restricted to coordinators while volunteers can view the schedule.",
+              "reason": "The stated permission rules must persist through automation failures and access changes."
+            }
+          ],
+          "recommendation": {
+            "kind": "existing_tool",
+            "summary": "Continue with the shared spreadsheet as the schedule, with a service account performing automatic updates and volunteers receiving view access only. Decide and configure an alert method before adding alert automation.",
+            "rationale": [
+              "The garden already uses a shared spreadsheet, and the stated scheduling and access needs may be met by extending that workflow.",
+              "The owner specified service-account automation and prohibited sharing its credentials with volunteers.",
+              "Budget and alert preference are unresolved, so costs and any additional alert tool cannot yet be selected."
+            ],
+            "alternatives": [
+              "Use a manual reminder workflow if alerts are not needed or automation is not supportable.",
+              "Consider a different tool only if the spreadsheet cannot enforce the required access or support the needed update process."
+            ],
+            "owner_responsibilities": [
+              "A coordinator should manage volunteer view access and coordinator edit access.",
+              "An assigned owner should control service-account credentials, least-required permissions, rotation, recovery and offboarding.",
+              "Monitor update failures, maintain a manual schedule-update fallback, and review any recurring service costs."
+            ]
+          },
+          "acceptance_criteria": [
+            "Coordinators can edit the schedule; volunteers can view it but cannot edit it or obtain service-account credentials.",
+            "The service account performs the intended spreadsheet updates using only the access required.",
+            "A named owner and documented process cover credential custody, rotation, recovery, access changes and operator departure.",
+            "Update failures are detectable, with a documented manual recovery or fallback process.",
+            "The owner checks applicable recurring charges and chooses an alert preference before implementing volunteer alerts."
+          ],
+          "open_questions": [
+            {
+              "topic": "alerts.preference",
+              "text": "The owner has not decided how volunteers should receive alerts; keep this decision open and do not assume an alert channel.",
+              "blocks_recommendation": false,
+              "reason": "The spreadsheet can remain the schedule source while the alert choice is deferred; it affects whether another tool or reminder process is needed."
+            },
+            {
+              "topic": "ongoing_budget",
+              "text": "Ongoing budget is unknown.",
+              "blocks_recommendation": false,
+              "reason": "A provisional existing-spreadsheet approach is possible, but any recurring charges must be checked before selecting or enabling paid services."
+            }
+          ],
+          "limitations": [
+            "The spreadsheet provider, its access controls, automation capabilities, and any associated costs are unspecified.",
+            "No alert channel or delivery workflow has been selected."
+          ]
+        },
+        "agent_calls": 0,
+        "started_at": 1793362179.243008,
+        "assessed_turn_count": 2,
+        "owner_unknowns": {
+          "ongoing_budget": {
+            "source_turn_id": "t0",
+            "quote": "I do not know the ongoing budget."
+          }
+        }
+      },
+      "usage": {
+        "agent": "codex",
+        "agent_version": "codex-cli 0.165.0",
+        "model": null,
+        "elapsed_seconds": 11.005218666046858,
+        "input_tokens": 12632,
+        "output_tokens": 1060,
+        "cost": null
+      },
+      "brief": {
+        "disposition": "provisional",
+        "risk": {
+          "level": "medium",
+          "reasons": [
+            "Automated spreadsheet updates require appropriate access and recovery arrangements; those details are not specified.",
+            "The ongoing budget and volunteer alert preference remain unknown."
+          ]
+        },
+        "hidden_requirements": [
+          {
+            "text": "Keep the service account credentials separate from volunteer access, and limit the account's access to what spreadsheet updates require.",
+            "reason": "The owner explicitly prohibits giving volunteers the service account credentials; limiting access reduces the impact of credential exposure."
+          },
+          {
+            "text": "Document who owns the service account, how credentials and access are recovered or rotated, and how updates are handled if a coordinator or operator leaves.",
+            "reason": "Automated updates and changing volunteer or coordinator access need an accountable maintenance and recovery path."
+          },
+          {
+            "text": "Define a fallback for failed automated updates and verify that schedule edits remain restricted to coordinators while volunteers can view the schedule.",
+            "reason": "The stated permission rules must persist through automation failures and access changes."
+          }
+        ],
+        "recommendation": {
+          "kind": "existing_tool",
+          "summary": "Continue with the shared spreadsheet as the schedule, with a service account performing automatic updates and volunteers receiving view access only. Decide and configure an alert method before adding alert automation.",
+          "rationale": [
+            "The garden already uses a shared spreadsheet, and the stated scheduling and access needs may be met by extending that workflow.",
+            "The owner specified service-account automation and prohibited sharing its credentials with volunteers.",
+            "Budget and alert preference are unresolved, so costs and any additional alert tool cannot yet be selected."
+          ],
+          "alternatives": [
+            "Use a manual reminder workflow if alerts are not needed or automation is not supportable.",
+            "Consider a different tool only if the spreadsheet cannot enforce the required access or support the needed update process."
+          ],
+          "owner_responsibilities": [
+            "A coordinator should manage volunteer view access and coordinator edit access.",
+            "An assigned owner should control service-account credentials, least-required permissions, rotation, recovery and offboarding.",
+            "Monitor update failures, maintain a manual schedule-update fallback, and review any recurring service costs."
+          ]
+        },
+        "acceptance_criteria": [
+          "Coordinators can edit the schedule; volunteers can view it but cannot edit it or obtain service-account credentials.",
+          "The service account performs the intended spreadsheet updates using only the access required.",
+          "A named owner and documented process cover credential custody, rotation, recovery, access changes and operator departure.",
+          "Update failures are detectable, with a documented manual recovery or fallback process.",
+          "The owner checks applicable recurring charges and chooses an alert preference before implementing volunteer alerts."
+        ],
+        "open_questions": [
+          {
+            "topic": "alerts.preference",
+            "text": "The owner has not decided how volunteers should receive alerts; keep this decision open and do not assume an alert channel.",
+            "blocks_recommendation": false,
+            "reason": "The spreadsheet can remain the schedule source while the alert choice is deferred; it affects whether another tool or reminder process is needed."
+          },
+          {
+            "topic": "ongoing_budget",
+            "text": "Ongoing budget is unknown.",
+            "blocks_recommendation": false,
+            "reason": "A provisional existing-spreadsheet approach is possible, but any recurring charges must be checked before selecting or enabling paid services."
+          }
+        ],
+        "limitations": [
+          "The spreadsheet provider, its access controls, automation capabilities, and any associated costs are unspecified.",
+          "No alert channel or delivery workflow has been selected."
+        ],
+        "schema_version": 1,
+        "revision": 6,
+        "raw_intent": "I want a small tool for a volunteer garden to coordinate watering. Only coordinators can edit the schedule; volunteers can view it. I do not know the ongoing budget.",
+        "facts": {
+          "goal": {
+            "value": "Create a small tool for a volunteer garden to coordinate watering.",
+            "status": "confirmed",
+            "source_turn_ids": [
+              "t0"
+            ],
+            "reason": "Directly stated in the original request."
+          },
+          "schedule.edit_permission": {
+            "value": "Only coordinators can edit the watering schedule.",
+            "status": "confirmed",
+            "source_turn_ids": [
+              "t0"
+            ],
+            "reason": "Directly stated in the original request."
+          },
+          "schedule.view_permission": {
+            "value": "Volunteers can view the watering schedule.",
+            "status": "confirmed",
+            "source_turn_ids": [
+              "t0"
+            ],
+            "reason": "Directly stated in the original request."
+          },
+          "ongoing_budget": {
+            "value": null,
+            "status": "unknown",
+            "source_turn_ids": [
+              "t0"
+            ],
+            "reason": "The owner explicitly does not know the ongoing budget."
+          },
+          "current_tool": {
+            "value": "A shared spreadsheet is used to coordinate watering.",
+            "status": "confirmed",
+            "source_turn_ids": [
+              "t1"
+            ],
+            "reason": "The owner said the garden currently uses a shared spreadsheet."
+          },
+          "alerts.preference": {
+            "value": null,
+            "status": "unknown",
+            "source_turn_ids": [
+              "t1"
+            ],
+            "reason": "The owner has not decided how volunteers should receive alerts."
+          },
+          "automation.identity": {
+            "value": "A service account will update the spreadsheet automatically.",
+            "status": "confirmed",
+            "source_turn_ids": [
+              "t2"
+            ],
+            "reason": "The owner explicitly specified automatic spreadsheet updates by a service account."
+          },
+          "service_account.credential_sharing": {
+            "value": "Volunteers must not receive the service account credentials.",
+            "status": "confirmed",
+            "source_turn_ids": [
+              "t2"
+            ],
+            "reason": "The owner explicitly prohibited sharing these credentials with volunteers."
+          }
+        },
+        "sources": [
+          {
+            "id": "t0",
+            "text": "I want a small tool for a volunteer garden to coordinate watering. Only coordinators can edit the schedule; volunteers can view it. I do not know the ongoing budget."
+          },
+          {
+            "id": "t1",
+            "text": "We use a shared spreadsheet, but I have not decided how volunteers should receive alerts."
+          },
+          {
+            "id": "t2",
+            "text": "A service account will update the spreadsheet automatically; volunteers must not receive its credentials."
+          }
+        ]
+      }
+    }
+  },
+  "native_streams": {
+    "mvc-t021-native.jsonl": "{\"type\":\"thread.started\",\"thread_id\":\"01a18cb7-f096-7631-bfad-2891e14f9abe\"}\n{\"type\":\"item.completed\",\"item\":{\"id\":\"item_0\",\"type\":\"error\",\"message\":\"Code Mode is unavailable because code-mode host is disabled. Code mode will fail closed; enable `features.code_mode_host` and install `codex-code-mode-host`.\"}}\n{\"type\":\"turn.started\"}\n{\"type\":\"item.completed\",\"item\":{\"id\":\"item_1\",\"type\":\"agent_message\",\"text\":\"{\\\"contract_version\\\":1,\\\"facts\\\":[{\\\"key\\\":\\\"goal\\\",\\\"value\\\":\\\"Create a small tool for a volunteer garden to coordinate watering.\\\",\\\"status\\\":\\\"confirmed\\\",\\\"source_turn_ids\\\":[\\\"t0\\\"],\\\"reason\\\":\\\"Directly stated in the original request.\\\"},{\\\"key\\\":\\\"schedule.edit_permission\\\",\\\"value\\\":\\\"Only coordinators can edit the watering schedule.\\\",\\\"status\\\":\\\"confirmed\\\",\\\"source_turn_ids\\\":[\\\"t0\\\"],\\\"reason\\\":\\\"Directly stated in the original request.\\\"},{\\\"key\\\":\\\"schedule.view_permission\\\",\\\"value\\\":\\\"Volunteers can view the watering schedule.\\\",\\\"status\\\":\\\"confirmed\\\",\\\"source_turn_ids\\\":[\\\"t0\\\"],\\\"reason\\\":\\\"Directly stated in the original request.\\\"},{\\\"key\\\":\\\"ongoing_budget\\\",\\\"value\\\":null,\\\"status\\\":\\\"unknown\\\",\\\"source_turn_ids\\\":[\\\"t0\\\"],\\\"reason\\\":\\\"The owner explicitly does not know the ongoing budget.\\\"},{\\\"key\\\":\\\"current_tool\\\",\\\"value\\\":\\\"A shared spreadsheet is used to coordinate watering.\\\",\\\"status\\\":\\\"confirmed\\\",\\\"source_turn_ids\\\":[\\\"t1\\\"],\\\"reason\\\":\\\"The owner said the garden currently uses a shared spreadsheet.\\\"},{\\\"key\\\":\\\"alerts.preference\\\",\\\"value\\\":null,\\\"status\\\":\\\"unknown\\\",\\\"source_turn_ids\\\":[\\\"t1\\\"],\\\"reason\\\":\\\"The owner has not decided how volunteers should receive alerts.\\\"}],\\\"assessment\\\":{\\\"based_on_revision\\\":3,\\\"disposition\\\":\\\"provisional\\\",\\\"risk\\\":{\\\"level\\\":\\\"medium\\\",\\\"reasons\\\":[\\\"Schedule access must enforce coordinator-only editing while allowing volunteers to view; the spreadsheet's current permission settings are unknown.\\\",\\\"Alert delivery and ongoing costs are undecided, and watering schedule errors need a way to be noticed and corrected.\\\"]},\\\"hidden_requirements\\\":[{\\\"text\\\":\\\"Verify that spreadsheet sharing settings enforce coordinator-only edits and volunteer view access.\\\",\\\"reason\\\":\\\"The stated access rules require correct configuration of the existing tool.\\\"},{\\\"text\\\":\\\"Define how schedule changes, missed watering, and incorrect entries are noticed and recovered.\\\",\\\"reason\\\":\\\"Coordination depends on reliable handoffs and correction when information or access fails.\\\"},{\\\"text\\\":\\\"Document an owner for access changes and maintenance if coordinators or spreadsheet operators change.\\\",\\\"reason\\\":\\\"Continued operation depends on managing access and ownership over time.\\\"}],\\\"recommendation\\\":{\\\"kind\\\":\\\"existing_tool\\\",\\\"summary\\\":\\\"Provisionally continue with the shared spreadsheet, after verifying its access settings; decide on alerts before choosing whether any additional tool is needed.\\\",\\\"rationale\\\":[\\\"The garden already uses a shared spreadsheet, which may be sufficient for a small watering schedule.\\\",\\\"Alerts are undecided, and the ongoing budget is unknown, so adding a paid or custom system is not yet justified.\\\",\\\"Spreadsheet provider capabilities and costs have not been established.\\\"],\\\"alternatives\\\":[\\\"Use a manual reminder workflow alongside the spreadsheet.\\\",\\\"Consider a dedicated scheduling tool if the spreadsheet cannot enforce the required access or support the chosen alert workflow.\\\"],\\\"owner_responsibilities\\\":[\\\"Check coordinator and volunteer permissions, including when people join or leave.\\\",\\\"Assign someone to maintain the schedule, resolve missed or incorrect entries, and recover access.\\\",\\\"Review any alert service's cost, access, and account recovery needs before adopting it.\\\"]},\\\"acceptance_criteria\\\":[\\\"Only coordinators can change the schedule, and volunteers can view it; verify these permissions with representative accounts.\\\",\\\"Choose and document the alert method and who receives alerts before implementing alerts.\\\",\\\"Document how to report and correct schedule mistakes or missed watering, and how to restore access if an operator becomes unavailable.\\\",\\\"Name an ongoing owner for permissions and maintenance, and record the next review when coordinators or operators change.\\\",\\\"Confirm any recurring costs and who owns the associated accounts before committing to them.\\\"] ,\\\"open_questions\\\":[{\\\"topic\\\":\\\"alerts.preference\\\",\\\"text\\\":\\\"How should volunteers receive watering alerts\u2014for example, email, a messaging group, or no alerts?\\\",\\\"blocks_recommendation\\\":false,\\\"reason\\\":\\\"This determines whether the spreadsheet workflow is sufficient or needs another tool or manual reminder process.\\\"}],\\\"limitations\\\":[\\\"The ongoing budget is explicitly unknown.\\\",\\\"The spreadsheet provider, its access controls, alert capabilities, and costs are unspecified.\\\"]},\\\"question\\\":{\\\"fact\\\":{\\\"key\\\":\\\"alerts.preference\\\",\\\"value\\\":null,\\\"status\\\":\\\"unknown\\\",\\\"source_turn_ids\\\":[\\\"t1\\\"],\\\"reason\\\":\\\"The owner has not decided how volunteers should receive alerts.\\\"},\\\"text\\\":\\\"How should volunteers receive watering alerts\u2014for example, email, a messaging group, or no alerts?\\\",\\\"decision\\\":\\\"The answer determines whether the shared spreadsheet is sufficient or whether another tool or manual reminder process is needed.\\\",\\\"conflict_turn_id\\\":null},\\\"owner_unknowns\\\":[{\\\"key\\\":\\\"ongoing_budget\\\",\\\"source_turn_id\\\":\\\"t0\\\",\\\"quote\\\":\\\"I do not know the ongoing budget.\\\"}],\\\"grounding\\\":[{\\\"source_turn_id\\\":\\\"t1\\\",\\\"quote\\\":\\\"We use a shared spreadsheet, but I have not decided how volunteers should receive alerts.\\\",\\\"fact_keys\\\":[\\\"current_tool\\\",\\\"alerts.preference\\\"]}]}\"}}\n{\"type\":\"turn.completed\",\"usage\":{\"input_tokens\":12441,\"cached_input_tokens\":0,\"cache_write_input_tokens\":0,\"output_tokens\":1305,\"reasoning_output_tokens\":349}}\n",
+    "mvc-t021-correction-native.jsonl": "{\"type\":\"thread.started\",\"thread_id\":\"01a18cb8-68d9-7a50-9b9f-bc96481dec76\"}\n{\"type\":\"item.completed\",\"item\":{\"id\":\"item_0\",\"type\":\"error\",\"message\":\"Code Mode is unavailable because code-mode host is disabled. Code mode will fail closed; enable `features.code_mode_host` and install `codex-code-mode-host`.\"}}\n{\"type\":\"turn.started\"}\n{\"type\":\"item.completed\",\"item\":{\"id\":\"item_1\",\"type\":\"agent_message\",\"text\":\"{\\\"contract_version\\\":1,\\\"facts\\\":[{\\\"key\\\":\\\"goal\\\",\\\"value\\\":\\\"Create a small tool for a volunteer garden to coordinate watering.\\\",\\\"status\\\":\\\"confirmed\\\",\\\"source_turn_ids\\\":[\\\"t0\\\"],\\\"reason\\\":\\\"Directly stated in the original request.\\\"},{\\\"key\\\":\\\"schedule.edit_permission\\\",\\\"value\\\":\\\"Only coordinators can edit the watering schedule.\\\",\\\"status\\\":\\\"confirmed\\\",\\\"source_turn_ids\\\":[\\\"t0\\\"],\\\"reason\\\":\\\"Directly stated in the original request.\\\"},{\\\"key\\\":\\\"schedule.view_permission\\\",\\\"value\\\":\\\"Volunteers can view the watering schedule.\\\",\\\"status\\\":\\\"confirmed\\\",\\\"source_turn_ids\\\":[\\\"t0\\\"],\\\"reason\\\":\\\"Directly stated in the original request.\\\"},{\\\"key\\\":\\\"ongoing_budget\\\",\\\"value\\\":null,\\\"status\\\":\\\"unknown\\\",\\\"source_turn_ids\\\":[\\\"t0\\\"],\\\"reason\\\":\\\"The owner explicitly does not know the ongoing budget.\\\"},{\\\"key\\\":\\\"current_tool\\\",\\\"value\\\":\\\"A shared spreadsheet is used to coordinate watering.\\\",\\\"status\\\":\\\"confirmed\\\",\\\"source_turn_ids\\\":[\\\"t1\\\"],\\\"reason\\\":\\\"The owner said the garden currently uses a shared spreadsheet.\\\"},{\\\"key\\\":\\\"alerts.preference\\\",\\\"value\\\":null,\\\"status\\\":\\\"unknown\\\",\\\"source_turn_ids\\\":[\\\"t1\\\"],\\\"reason\\\":\\\"The owner has not decided how volunteers should receive alerts.\\\"},{\\\"key\\\":\\\"automation.identity\\\",\\\"value\\\":\\\"A service account will update the spreadsheet automatically.\\\",\\\"status\\\":\\\"confirmed\\\",\\\"source_turn_ids\\\":[\\\"t2\\\"],\\\"reason\\\":\\\"The owner explicitly specified automatic spreadsheet updates by a service account.\\\"},{\\\"key\\\":\\\"service_account.credential_sharing\\\",\\\"value\\\":\\\"Volunteers must not receive the service account credentials.\\\",\\\"status\\\":\\\"confirmed\\\",\\\"source_turn_ids\\\":[\\\"t2\\\"],\\\"reason\\\":\\\"The owner explicitly prohibited sharing these credentials with volunteers.\\\"}],\\\"assessment\\\":{\\\"based_on_revision\\\":5,\\\"disposition\\\":\\\"provisional\\\",\\\"risk\\\":{\\\"level\\\":\\\"medium\\\",\\\"reasons\\\":[\\\"Automated spreadsheet updates require appropriate access and recovery arrangements; those details are not specified.\\\",\\\"The ongoing budget and volunteer alert preference remain unknown.\\\"]},\\\"hidden_requirements\\\":[{\\\"text\\\":\\\"Keep the service account credentials separate from volunteer access, and limit the account's access to what spreadsheet updates require.\\\",\\\"reason\\\":\\\"The owner explicitly prohibits giving volunteers the service account credentials; limiting access reduces the impact of credential exposure.\\\"},{\\\"text\\\":\\\"Document who owns the service account, how credentials and access are recovered or rotated, and how updates are handled if a coordinator or operator leaves.\\\",\\\"reason\\\":\\\"Automated updates and changing volunteer or coordinator access need an accountable maintenance and recovery path.\\\"},{\\\"text\\\":\\\"Define a fallback for failed automated updates and verify that schedule edits remain restricted to coordinators while volunteers can view the schedule.\\\",\\\"reason\\\":\\\"The stated permission rules must persist through automation failures and access changes.\\\"}],\\\"recommendation\\\":{\\\"kind\\\":\\\"existing_tool\\\",\\\"summary\\\":\\\"Continue with the shared spreadsheet as the schedule, with a service account performing automatic updates and volunteers receiving view access only. Decide and configure an alert method before adding alert automation.\\\",\\\"rationale\\\":[\\\"The garden already uses a shared spreadsheet, and the stated scheduling and access needs may be met by extending that workflow.\\\",\\\"The owner specified service-account automation and prohibited sharing its credentials with volunteers.\\\",\\\"Budget and alert preference are unresolved, so costs and any additional alert tool cannot yet be selected.\\\"],\\\"alternatives\\\":[\\\"Use a manual reminder workflow if alerts are not needed or automation is not supportable.\\\",\\\"Consider a different tool only if the spreadsheet cannot enforce the required access or support the needed update process.\\\"],\\\"owner_responsibilities\\\":[\\\"A coordinator should manage volunteer view access and coordinator edit access.\\\",\\\"An assigned owner should control service-account credentials, least-required permissions, rotation, recovery and offboarding.\\\",\\\"Monitor update failures, maintain a manual schedule-update fallback, and review any recurring service costs.\\\"]},\\\"acceptance_criteria\\\":[\\\"Coordinators can edit the schedule; volunteers can view it but cannot edit it or obtain service-account credentials.\\\",\\\"The service account performs the intended spreadsheet updates using only the access required.\\\",\\\"A named owner and documented process cover credential custody, rotation, recovery, access changes and operator departure.\\\",\\\"Update failures are detectable, with a documented manual recovery or fallback process.\\\",\\\"The owner checks applicable recurring charges and chooses an alert preference before implementing volunteer alerts.\\\"],\\\"open_questions\\\":[{\\\"topic\\\":\\\"alerts.preference\\\",\\\"text\\\":\\\"The owner has not decided how volunteers should receive alerts; keep this decision open and do not assume an alert channel.\\\",\\\"blocks_recommendation\\\":false,\\\"reason\\\":\\\"The spreadsheet can remain the schedule source while the alert choice is deferred; it affects whether another tool or reminder process is needed.\\\"},{\\\"topic\\\":\\\"ongoing_budget\\\",\\\"text\\\":\\\"Ongoing budget is unknown.\\\",\\\"blocks_recommendation\\\":false,\\\"reason\\\":\\\"A provisional existing-spreadsheet approach is possible, but any recurring charges must be checked before selecting or enabling paid services.\\\"}],\\\"limitations\\\":[\\\"The spreadsheet provider, its access controls, automation capabilities, and any associated costs are unspecified.\\\",\\\"No alert channel or delivery workflow has been selected.\\\"]},\\\"question\\\":null,\\\"owner_unknowns\\\":[{\\\"key\\\":\\\"ongoing_budget\\\",\\\"source_turn_id\\\":\\\"t0\\\",\\\"quote\\\":\\\"I do not know the ongoing budget.\\\"}],\\\"grounding\\\":[{\\\"source_turn_id\\\":\\\"t2\\\",\\\"quote\\\":\\\"A service account will update the spreadsheet automatically; volunteers must not receive its credentials.\\\",\\\"fact_keys\\\":[\\\"automation.identity\\\",\\\"service_account.credential_sharing\\\"]}]}\"}}\n{\"type\":\"turn.completed\",\"usage\":{\"input_tokens\":12632,\"cached_input_tokens\":0,\"cache_write_input_tokens\":0,\"output_tokens\":1060,\"reasoning_output_tokens\":0}}\n"
+  },
+  "source_commit": "0a0b865",
+  "limits": "Single fictional case, one follow-up failed with an uncaptured invalid response; later follow-up and correction succeeded. No comparative acceptance or comprehension claim."
+}

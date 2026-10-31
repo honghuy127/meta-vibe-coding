@@ -44,7 +44,10 @@ grounding contains records with source_turn_id, quote and fact_keys. For each ne
 or changed confirmed fact, supply exact nonempty owner quotes (at most 500 characters)
 from every cited source, linking the fact's key. Unchanged confirmed facts need no
 new quote. Quotes prove text presence and linkage; do not mistake that for semantic
-support. Never invent quotes, source IDs or fact keys. t0 is raw_intent; other IDs
+support. Emit grounding only for new or changed confirmed facts. Every linked fact
+must include the grounding record's source_turn_id in its own source_turn_ids;
+do not include unrelated unknown or assumed facts in the same quote record.
+Never invent quotes, source IDs or fact keys. t0 is raw_intent; other IDs
 refer to supplied owner turns. Record owner requirements and prohibitions as
 independent facts, including maintenance and process constraints; rationale or
 acceptance criteria alone must not be their only record. Do not invent a fact just
