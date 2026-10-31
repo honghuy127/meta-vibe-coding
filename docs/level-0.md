@@ -346,7 +346,9 @@ The [version 2 regression run](../artifacts/2026-10-31-codex-luna-comparison-v2.
 exercised T020's native contract 1 live on the previously exposed cases.
 Protocol/state failures and material omissions remain, with incomplete rendered
 checks and one coordinator-related deadline expiry. It does not establish Level 0
-acceptance. T023's native contract 2 has deterministic checks but no live verification.
+acceptance. T024's [seeded five-call development check](../artifacts/2026-11-01-codex-luna-native-contract-2.json)
+exercised native contract 2 through HTTP on Codex 0.166.0; it does not establish
+unseeded extraction, stable recommendations, browser behavior or reliability.
 Adult comprehension sessions have not run. Before a public demo,
 resolve provider data handling, deployment authority, and operating cost; readiness
 must be demonstrated in the intended environment.

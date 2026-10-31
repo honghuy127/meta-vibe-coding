@@ -152,7 +152,7 @@ agent/provider retention. Invocation counts and time limits are not dollar caps;
 use the selected agent/provider's spending controls before enabling calls.
 
 CLI contracts checked: OpenCode 2.0.12, 2.2.0 and 2.2.1, Claude Code 2.1.312,
-Codex CLI 0.165.0.
+Codex CLI 0.165.0 and 0.166.0.
 Help/version inspection and mocked events do not establish live compatibility.
 Codex development checks do not establish product acceptance. Its exact
 disabled Code Mode host startup notice is accepted; other errors and tool activity
@@ -173,9 +173,12 @@ one baseline deadline expiry during a coordinator interruption, and eight delive
 final responses. Delivered responses still have material omissions. All cases were
 previously exposed; this run does not establish Level 0 acceptance or superiority.
 Some rendered-view checks remain incomplete because browser access failed.
-Current native contract 2 has deterministic checks only; its live compatibility
-and effect on those failures remain unverified. Historical responses are not
-repaired or accepted through a fallback.
+The [five-call native contract 2 check](artifacts/2026-11-01-codex-luna-native-contract-2.json)
+passed seeded HTTP development stages for carry-forward, partial answers, explicit
+unknowns and correction on Codex 0.166.0. Facts remained stable on the final
+no-change call, while recommendation wording/classification varied. This is not
+unseeded requirement discovery, browser verification or a reliability estimate.
+Historical responses are not repaired or accepted through a fallback.
 
 ## Check and review
 
