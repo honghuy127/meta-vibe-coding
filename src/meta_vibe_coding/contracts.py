@@ -1,49 +1,28 @@
 """Closed native response schemas and explicit decoding into canonical state."""
 
-import json
 from typing import Literal
 
 from pydantic import Field, field_validator
 
 from .models import (Assessment, Candidate, Fact, FactKey, Model, ProposedQuestion,
-                     Scalar, State, Text, UnknownEvidence)
+                     Scalar, State, UnknownEvidence)
 
 
-class NativeFact(Model):
+class NativeFactUpdate(Model):
     key: FactKey
     value: Scalar | list[Scalar] | None
     status: Literal['confirmed', 'assumed', 'unknown', 'not_applicable']
-    source_turn_ids: list[str]
     reason: str
-
-    def fact(self) -> Fact:
-        return Fact.model_validate(self.model_dump(exclude={'key'}))
-
-
-class NativeQuestion(Model):
-    fact: NativeFact
-    text: Text
-    decision: Text
-    conflict_turn_id: str | None
-
-
-class NativeUnknown(Model):
-    key: FactKey
-    source_turn_id: Text
-    quote: str = Field(min_length=1, max_length=500)
-
-
-class Grounding(UnknownEvidence):
-    fact_keys: list[FactKey] = Field(min_length=1, max_length=100)
+    evidence: list[UnknownEvidence] = Field(max_length=100)
+    owner_unknown: bool
 
 
 class NativeResponse(Model):
-    contract_version: Literal[1]
-    facts: list[NativeFact] = Field(max_length=100)
+    contract_version: Literal[2]
+    fact_updates: list[NativeFactUpdate] = Field(max_length=100)
+    remove_fact_keys: list[FactKey] = Field(max_length=100)
     assessment: Assessment
-    question: NativeQuestion | None
-    owner_unknowns: list[NativeUnknown] = Field(max_length=100)
-    grounding: list[Grounding] = Field(max_length=100)
+    question: ProposedQuestion | None
 
     @field_validator('contract_version', mode='before')
     @classmethod
@@ -53,53 +32,44 @@ class NativeResponse(Model):
         return value
 
     def candidate(self, state: State) -> Candidate:
-        facts = {}
-        for row in self.facts:
-            if row.key in facts:
-                raise ValueError('Duplicate native fact key')
-            facts[row.key] = row.fact()
-        question = None
-        if self.question:
-            row = self.question.fact
-            fact = row.fact()
-            if row.key in facts and json.dumps(facts[row.key].model_dump(), sort_keys=True) != json.dumps(fact.model_dump(), sort_keys=True):
-                raise ValueError('Question target conflicts with native fact')
+        # Keep the original state intact for adoption's confirmation/revision guards.
+        facts = {key: fact.model_copy(deep=True) for key, fact in state.facts.items()}
+        keys = [row.key for row in self.fact_updates]
+        if len(set(keys)) != len(keys) or len(set(self.remove_fact_keys)) != len(self.remove_fact_keys):
+            raise ValueError('Duplicate native operation key')
+        if set(keys).intersection(self.remove_fact_keys):
+            raise ValueError('A fact cannot be updated and removed together')
+        for key in self.remove_fact_keys:
+            if key not in state.facts:
+                raise ValueError('Cannot remove a missing fact')
+            if state.facts[key].status == 'confirmed' or key in state.owner_unknowns:
+                raise ValueError('Cannot remove a confirmed fact or retained owner unknown')
+            del facts[key]
+        sources = {'t0': state.raw_intent, **{turn.id: turn.text for turn in state.turns}}
+        unknowns = {}
+        for row in self.fact_updates:
+            for evidence in row.evidence:
+                if (not evidence.quote.strip() or evidence.source_turn_id not in sources
+                        or evidence.quote not in sources[evidence.source_turn_id]):
+                    raise ValueError('Evidence needs an exact nonempty owner quote')
+            source_ids = list(dict.fromkeys(e.source_turn_id for e in row.evidence))
+            fact = Fact(value=row.value, status=row.status, source_turn_ids=source_ids, reason=row.reason)
+            if row.owner_unknown:
+                if row.status != 'unknown' or len(row.evidence) != 1:
+                    raise ValueError('An owner unknown needs unknown/null and exactly one evidence record')
+                unknowns[row.key] = row.evidence[0]
+            retained = state.owner_unknowns.get(row.key)
+            if (retained and fact.status == 'unknown' and not row.owner_unknown
+                    and retained.source_turn_id not in source_ids):
+                raise ValueError('A retained owner unknown must keep its cited source')
             facts[row.key] = fact
-            question = ProposedQuestion(topic=row.key, **self.question.model_dump(exclude={'fact'}))
         if len(facts) > 100:
             raise ValueError('Too many native facts')
-        unknowns = {}
-        for row in self.owner_unknowns:
-            if row.key in unknowns:
-                raise ValueError('Duplicate native unknown key')
-            unknowns[row.key] = UnknownEvidence.model_validate(row.model_dump(exclude={'key'}))
-        candidate = Candidate(facts=facts, assessment=self.assessment, question=question, owner_unknowns=unknowns)
-        validate_grounding(state, candidate, self.grounding)
-        return candidate
-
-
-def validate_grounding(state: State, candidate: Candidate, grounding: list[Grounding]) -> None:
-    """Quotes establish source presence/linkage, not semantic support or completeness."""
-    sources = {'t0': state.raw_intent, **{turn.id: turn.text for turn in state.turns}}
-    links = set()
-    for entry in grounding:
-        if not entry.quote.strip() or entry.source_turn_id not in sources or entry.quote not in sources[entry.source_turn_id]:
-            raise ValueError('Grounding needs an exact nonempty owner quote')
-        if len(set(entry.fact_keys)) != len(entry.fact_keys):
-            raise ValueError('Duplicate grounded fact key')
-        for key in entry.fact_keys:
-            fact = candidate.facts.get(key)
-            if fact is None or entry.source_turn_id not in fact.source_turn_ids:
-                raise ValueError('Grounding must link an existing fact and its cited source')
-            links.add((key, entry.source_turn_id))
-    for key, fact in candidate.facts.items():
-        previous = state.facts.get(key)
-        unchanged = (previous is not None and previous.status == fact.status
-            and json.dumps(previous.value, sort_keys=True) == json.dumps(fact.value, sort_keys=True)
-            and set(previous.source_turn_ids) == set(fact.source_turn_ids))
-        if fact.status == 'confirmed' and not unchanged:
-            if any((key, source) not in links for source in fact.source_turn_ids):
-                raise ValueError('New or changed confirmed facts need quoted grounding for each source')
+        if 'goal' not in facts:
+            raise ValueError('The resulting facts need a goal')
+        if self.question and self.question.topic not in facts:
+            raise ValueError('Question target must reference a resulting fact')
+        return Candidate(facts=facts, assessment=self.assessment, question=self.question, owner_unknowns=unknowns)
 
 
 def native_schema(model: type[Model]) -> dict:

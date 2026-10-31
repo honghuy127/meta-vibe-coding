@@ -37,18 +37,22 @@ def native_result(state, candidate=None):
     """Serialize a scripted response into the native contract, without inference."""
     candidate = candidate or result(state)
     body = candidate.model_dump()
-    records = [{"key": key, **fact} for key, fact in body["facts"].items()]
-    question = body["question"]
-    if question:
-        question = {"fact": {"key": question["topic"], **body["facts"][question["topic"]]},
-            **{key: value for key, value in question.items() if key != "topic"}}
     sources = {"t0": state.raw_intent, **{turn.id: turn.text for turn in state.turns}}
-    grounding = [{"source_turn_id": source, "quote": sources[source][:500], "fact_keys": [key]}
-        for key, fact in candidate.facts.items() if fact.status == "confirmed"
-        for source in fact.source_turn_ids]
-    return json.dumps({"contract_version": 1, "facts": records, "assessment": body["assessment"],
-        "question": question, "owner_unknowns": [{"key": key, **value}
-            for key, value in body["owner_unknowns"].items()], "grounding": grounding})
+    records = []
+    for key, fact in candidate.facts.items():
+        if (key in state.facts and key not in candidate.owner_unknowns
+                and json.dumps(fact.model_dump(), sort_keys=True)
+                == json.dumps(state.facts[key].model_dump(), sort_keys=True)):
+            continue
+        declaration = candidate.owner_unknowns.get(key)
+        evidence = ([declaration.model_dump()] if declaration else
+            [{"source_turn_id": source, "quote": sources[source][:500]} for source in fact.source_turn_ids])
+        records.append({"key": key, "value": fact.value, "status": fact.status, "reason": fact.reason,
+            "evidence": evidence, "owner_unknown": declaration is not None})
+    return json.dumps({"contract_version": 2, "fact_updates": records,
+        "remove_fact_keys": sorted(state.facts.keys() - candidate.facts.keys()),
+        "assessment": body["assessment"], "question": body["question"]})
+
 
 def test_false_unknown_empty_and_strict_types():
     for value, status in [(False, "confirmed"), ([], "confirmed"), (None, "unknown")]:

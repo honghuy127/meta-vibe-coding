@@ -156,7 +156,7 @@ owner sessions still need separate authorization and data handling.
 
 ## D010: Separate native responses from canonical state
 
-- Date: 2026-10-30; status: accepted implementation choice, reviewed in T020.
+- Date: 2026-10-30; status: accepted in T020; native encoding superseded by D011.
 - Context: T019 exposed malformed JSON, dangling question targets, state-guard
   failures and omitted requirements. Keep that failed run and its inputs intact.
 - Choice: native response contract 1 uses keyed fact arrays and an embedded
@@ -187,6 +187,35 @@ development and exposed-case regression evidence on the work board.
 Future preparation previews separate closed
 schemas for wrapper and transcript-only baseline; another comparison requires a
 new versioned matched plan and allowance rather than reusing T019's unused calls.
+
+## D011: Return fact changes with attached evidence
+
+- Date: 2026-11-01; status: accepted implementation choice, design reviewed in T023.
+- Context: T022 rejected duplicated facts, inconsistent question copies and an
+  explicit-unknown marker whose fact lacked its source. Repeated-topic failures
+  also exposed the need to distinguish independently answerable properties.
+- Choice: native contract 2 returns `fact_updates`, `remove_fact_keys`, `assessment`
+  and a nullable question referencing a resulting fact key. Each update contains
+  its key, value, status, reason, quoted `evidence` and an `owner_unknown` flag.
+  Derive stable unique source IDs from that evidence. A new explicit unknown needs
+  unknown/null and exactly one quote; derive its marker and citation together.
+
+Carry untouched facts locally without asking the agent to reproduce them. Decode
+into a separate candidate and apply adoption guards against the original state.
+Reject duplicate/overlapping operations, removals of missing facts or missing question targets,
+confirmed/retained-unknown deletions and more than 100 resulting facts. A false
+unknown flag does not clear a retained marker; a later explicit declaration may
+refresh it under the existing source-order guard. Confirmation, typed changes,
+repeated-topic and unknown-resolution guards remain unchanged. Native contract 1
+is rejected; canonical state and exported brief schema 1 are unchanged.
+
+Carrying facts forward does not prove the agent noticed a correction: omitted
+updates can preserve stale interpretations. Semantic aliases and incomplete
+extraction still need review. Partial answers must settle their own properties
+and leave genuinely different unresolved properties explicit. Do not rename a
+topic to bypass an unknown or repeated-question guard. T023's deterministic checks
+do not establish live reliability or repair T022's historical failures; another
+live check needs a new reviewed plan and allowance.
 
 ## Open choices
 

@@ -47,11 +47,13 @@ logical contract, implemented by strict Pydantic models and application validato
 [D008](decisions.md#d008-wrap-coding-agents-only) defines the agent boundary. State
 is scoped to one idea. Persistence and import are not implied by export support.
 
-The native response contract is separate from this canonical state. It uses
-keyed fact arrays, embeds the question's target fact, and requires exact source
-quotes for new or changed confirmed facts before state adoption. These checks
-do not establish semantic support or complete extraction. Existing state guards
-still apply; see [D010](decisions.md#d010-separate-native-responses-from-canonical-state).
+Native contract 2 is separate from this canonical state. It returns only fact
+updates and explicit removals, with evidence attached to each update and questions
+referencing resulting fact keys. Untouched facts carry forward locally. Evidence
+supplies source citations and explicit-unknown markers together; confirmed updates
+need exact owner quotes. Adoption still validates against the original state.
+These checks do not establish semantic support, complete extraction, correct
+corrections or alias detection; see [D011](decisions.md#d011-return-fact-changes-with-attached-evidence).
 
 | State field | Type and meaning |
 | --- | --- |
@@ -341,9 +343,10 @@ recommendation quality or owner comprehension. Earlier direct-model smoke attemp
 remain under `artifacts/legacy/`. T019 completed and independently reviewed a live
 seven-pair Codex comparison with blocking failures; Level 0 is not accepted.
 The [version 2 regression run](../artifacts/2026-10-31-codex-luna-comparison-v2.json)
-exercised T020's native response contract live on the previously exposed cases.
+exercised T020's native contract 1 live on the previously exposed cases.
 Protocol/state failures and material omissions remain, with incomplete rendered
 checks and one coordinator-related deadline expiry. It does not establish Level 0
-acceptance. Adult comprehension sessions have not run. Before a public demo,
+acceptance. T023's native contract 2 has deterministic checks but no live verification.
+Adult comprehension sessions have not run. Before a public demo,
 resolve provider data handling, deployment authority, and operating cost; readiness
 must be demonstrated in the intended environment.

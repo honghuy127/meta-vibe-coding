@@ -124,11 +124,12 @@ settings have no supported execution path.
 
 Each request uses a fresh temporary working directory, passes the state through
 stdin, bounds output, and validates the final JSON through one native response
-contract before applying the state guards. The response uses keyed fact arrays
-and embeds each question's target fact. New or changed confirmed facts need exact
-owner quotes linked to their cited sources. Quotes establish source presence,
+contract before applying the state guards. Native contract 2 returns fact updates
+with attached evidence and questions referring to fact keys. The wrapper carries
+untouched facts forward and derives source citations and explicit-unknown markers
+from the evidence. Confirmed updates need exact owner quotes. Quotes establish source presence,
 not semantic support or complete extraction. State and exported brief schema 1
-remain unchanged; see [D010](docs/decisions.md#d010-separate-native-responses-from-canonical-state).
+remain unchanged; see [D011](docs/decisions.md#d011-return-fact-changes-with-attached-evidence).
 Stewardship policy uses each agent’s native system/developer instruction surface;
 owner text stays in the data input. The wrapper stops the process group at the
 deadline and never resumes another
@@ -165,14 +166,16 @@ Codex receives a private, request-owned `response-schema.json` through its nativ
 `--output-schema` option, with identical schema content in stdin. This file is
 wrapper input, not agent-created output. OpenCode and Claude receive the schema
 in stdin and use the same local validation; native constrained decoding is not
-claimed for them. Software checks cover the new encoding and failure handling;
-the native-schema path has also been exercised in the
+claimed for them. The schema-file invocation with native contract 1 was exercised in the
 [version 2 regression run](artifacts/2026-10-31-codex-luna-comparison-v2.json).
 All fourteen attempts closed using 50 calls: five wrapper protocol/state stops,
 one baseline deadline expiry during a coordinator interruption, and eight delivered
 final responses. Delivered responses still have material omissions. All cases were
 previously exposed; this run does not establish Level 0 acceptance or superiority.
 Some rendered-view checks remain incomplete because browser access failed.
+Current native contract 2 has deterministic checks only; its live compatibility
+and effect on those failures remain unverified. Historical responses are not
+repaired or accepted through a fallback.
 
 ## Check and review
 

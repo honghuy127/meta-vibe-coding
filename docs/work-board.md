@@ -42,7 +42,8 @@ means the acceptance evidence and required review are recorded.
 | T020 | Repair observed output and requirement-contract gaps | done | Codex with separate reviewer, requested by repository owner | Native contract/agent/prompt, evaluation preview, fresh fixtures/tests, relevant docs | D010 implemented and independently reviewed. Explicit question targets, quoted source linkage and private Codex schema file preserve canonical guards and brief schema 1. All 194 Python and 12 UI tests, dependency, strict Markdown/link and whitespace checks pass. T019 bytes are intact. Scripted fixtures do not establish live discovery or acceptance; see notes. |
 | T021 | Verify the revised native contract and prepare a fresh comparison | done | Codex, requested by repository owner | Agent development evidence, versioned evaluation plan, relevant docs | Investigation reviewed; 195 Python tests pass. Version 2 plan freezes schemas/runtime and records exposed-case limits. Independent plan/harness review passed after provenance fixes; 15 offline harness checks pass. |
 | T022 | Execute and review the revised matched comparison | done | Codex with separate reviewer, requested by repository owner | Version 2 result artifact, README, Level 0 scope, work board | All fourteen first attempts closed using 50 of 98 calls; server stopped. Five wrapper protocol/state stops, one coordinator-related baseline expiry, eight delivered final responses. Independent evidence review passed; semantic gaps and remaining view checks are explicit. Exposed regression only; Level 0 unaccepted and T019 preserved. |
-| T023 | Reduce duplicate native records and clarify partial/unknown updates | ready | Unassigned | Native contract/prompt, canonical guards, fresh development tests | Use T022's captured duplicate/conflicting targets, repeated-topic and unknown-source failures. Prefer one authoritative record per fact; retain typed conflicts, source/confirmation and explicit-unknown guards. Review design before implementation; no case-specific prompt tuning or new live allowance implied. |
+| T023 | Reduce duplicate native records and clarify partial/unknown updates | done | Codex with separate reviewer, requested by repository owner | Native contract/prompt, tests, README/scope/decisions/board | Checkpoint committed as 73089ca. D011 implements native contract 2 with fact changes, attached evidence and key-only questions; original-state guards and brief 1 preserved. Independent design/code/docs review passed; 213 Python and 12 UI tests, strict Markdown/link and whitespace checks pass. No live calls; new work uncommitted. |
+| T024 | Verify native contract 2 on fresh development examples | ready | Unassigned | Bounded live development evidence, relevant docs | Review current agent settings and a fresh call allowance before inference. Exercise unchanged-state carry, a partial answer, explicit unknown and a later correction. Keep T019/T022 closed and report every attempt; deterministic checks do not establish model compliance or semantic completeness. |
 
 Proposed paths are locations for future work, not existing artifacts. Split tasks
 when contributors need independent ownership; do not reserve the whole repository
@@ -306,6 +307,24 @@ access was unavailable and native Chrome returned `cgWindowNotFound`; missing vi
 checks remain not checked. No full visual QA or owner comprehension is claimed.
 T019 and frozen inputs retain their hashes. Changes remain uncommitted; T023 owns
 the next contract simplification before another live run.
+
+### T023: Fact changes with attached evidence
+
+Committed the reviewed investigation/comparison checkpoint as `73089ca`, then
+implemented [D011](decisions.md#d011-return-fact-changes-with-attached-evidence).
+Native contract 2 returns changes with attached evidence and question references;
+untouched facts carry locally. Sources and explicit-unknown markers derive together.
+The decoder copies the original facts and adoption still checks the original state.
+Explicit removal is limited to unconfirmed facts without retained unknown markers.
+
+Independent design, code and docs review passed. Review caught and verified a fix
+allowing a later explicit unknown declaration to refresh its marker, while same/older
+changed evidence remains rejected. All 213 Python tests and 12 UI tests pass;
+the separate reviewer also ran 167 focused tests. Strict Markdown/link and whitespace
+checks pass. The existing Starlette warning remains. Core/models/agent invocation
+and historical artifacts are unchanged; no new dependency or native call was added.
+T023 work is uncommitted. T024 owns live verification; semantic omissions, stale
+interpretations and aliases remain open rather than being repaired by the decoder.
 
 ### T014: Repeatable fictional pilot
 
