@@ -136,7 +136,7 @@ and clears after successful adoption. Failed requests retain it for explicit ret
 including a lost browser response. It counts toward the unchanged 32 KB input cap;
 oversized input stops before CLI startup. Prompt guidance asks the agent to label
 proposed policies wherever used and cite retained parts of revised aggregate facts.
-These semantic instructions are not validated as prose meaning or verified live;
+These instructions do not validate prose meaning or establish complete correction;
 see [D012](docs/decisions.md#d012-retain-one-stale-assessment-for-reconsideration).
 Stewardship policy uses each agent’s native system/developer instruction surface;
 owner text stays in the data input. The wrapper stops the process group at the
@@ -194,6 +194,14 @@ approval-policy proposal, an intermediate caveat omission and incomplete aggrega
 goal source coverage. This single development flow does not establish Level 0
 acceptance, owner comprehension or reliability.
 Historical responses are not repaired or accepted through a fallback.
+The [T027 continuity check](artifacts/2026-11-01-codex-luna-assessment-continuity.json)
+completed three actual UI-driven calls before browser automation failed. Follow-up
+inputs contained the prior assessment, and proposed approval handling was labeled.
+The current facts nevertheless retained an obsolete owner-only access rule and
+omitted new download/revocation requirements that appeared only in prose. Three
+saved pages match their exports; the last correction, closeout and actual final
+download were not performed. This partial development run does not establish
+semantic improvement or acceptance.
 
 ## Check and review
 

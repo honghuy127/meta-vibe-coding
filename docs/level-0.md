@@ -371,6 +371,12 @@ closeout. Independent review reconciled both rendered views and the downloaded
 brief with the exports. It also retained proposal-labeling, intermediate caveat
 preservation and aggregate source-coverage findings. This is one fictional
 development flow, not held-out acceptance or evidence of general reliability.
+T027's [partial continuity check](../artifacts/2026-11-01-codex-luna-assessment-continuity.json)
+recorded three actual UI transitions with prior assessment context and saved views.
+Obsolete access facts and omitted new download/revocation facts remain substantive
+failures despite successful protocol/state/export checks. Browser automation failed
+before the remaining correction, closeout and actual final download. This run does
+not establish complete semantic correction or acceptance.
 Adult comprehension sessions have not run. Before a public demo,
 resolve provider data handling, deployment authority, and operating cost; readiness
 must be demonstrated in the intended environment.

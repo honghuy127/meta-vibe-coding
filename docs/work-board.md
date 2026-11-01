@@ -46,7 +46,8 @@ means the acceptance evidence and required review are recorded.
 | T024 | Verify native contract 2 on fresh development examples | done | Codex with separate reviewer, requested by repository owner | Bounded live development evidence, relevant docs | T023 committed as 84280c7. Five of five fresh calls completed on Codex 0.166.0/Luna; seeded carry/partial/unknown/correction/no-change HTTP stages replay exactly. Independent review passed 53 checks. Semantic wording limits and no browser/unseeded/reliability claim are recorded below. No retry/fallback/purchase. |
 | T025 | Verify an unseeded owner-to-brief flow | done | Codex with separate reviewer, requested by repository owner | Fresh fictional development evidence, relevant docs | T024 committed as 2d0c27d. Five actual UI-driven Codex/Luna calls completed from empty facts through corrections and provisional closeout. Independent review passed 54 evidence checks, including both rendered views and actual download. Semantic findings remain below; no retry/fallback/purchase or acceptance claim. |
 | T026 | Clarify proposed workflow rules and preserve consequential caveats | done | Codex with separate reviewer, requested by repository owner | `models.py`, `core.py`, `prompt.txt`, browser controller, targeted tests, relevant docs | T025 committed as 63ac46e. D012 retains one stale pending assessment and adds proposal/caveat/source-coverage guidance. Independent design/code/docs review passed; 224 Python and 12 UI tests, dependency and document checks pass. Native 2/brief 1 and historical evidence preserved; no live calls or demonstrated semantic improvement. |
-| T027 | Verify revised assessment continuity on a fresh development flow | ready | Unassigned | Reviewed bounded live plan/evidence, relevant docs | Check proposed-policy labels, relevant caveat continuity and aggregate source coverage in both views and export. Freeze a fresh fictional scenario, source/configuration and a new call cap before execution; preserve failures and distinguish semantic review from structural checks. No live-call allowance yet. |
+| T027 | Verify revised assessment continuity on a fresh development flow | blocked | Codex with separate reviewer, requested by repository owner | Fresh live development evidence, README/scope/board | T026 committed as deb5997. Three actual UI calls completed before browser failure. Independent review passed 35 evidence and 17 archive checks, retaining stale access facts and missing new requirements as failures. Attempt closed; unused two calls cannot be reused. Remaining live stages/download need working browser access and a new reviewed plan/allowance. |
+| T028 | Investigate stale corrections and omitted fact updates | ready | Unassigned | Native update/clarification design, targeted regressions, relevant docs | Use exposed T027 failures to review a small correction design: update superseded access facts, record independently changeable requirements and bind approval questions to a distinct undecided property. Preserve raw history and confirmation guards; review before implementation. No live-call allowance. |
 
 Proposed paths are locations for future work, not existing artifacts. Split tasks
 when contributors need independent ownership; do not reserve the whole repository
@@ -420,9 +421,53 @@ to the frozen schema, brief 1 is unchanged, and all 19 historical artifacts matc
 the committed bytes.
 
 Independent code/docs review passed and separately ran 161 focused Python tests
-and all 12 UI tests. No blocker remains. Changes are uncommitted; no live calls,
+and all 12 UI tests. No blocker remains. Changes were committed as `deb5997`; no live calls,
 semantic improvement or acceptance claim. T027 owns fresh live verification after
 a new reviewed plan and allowance.
+
+### T027: Fresh assessment continuity check
+
+The [partial run](../artifacts/2026-11-01-codex-luna-assessment-continuity.json)
+retains the frozen plan/runtime, durable five-call claim, lossless native streams,
+HTTP journal and three saved live pages. Independent pre-live review passed 36
+checks. Codex 0.166.0 used saved ChatGPT login and requested `gpt-6-luna`; served
+model, internal calls and cost remain unknown. Source stayed at `deb5997`.
+
+After initial browser blockers, the owner's retry resumed the same harness and
+claim. The production UI started with empty facts and submitted the first two
+frozen proactive corrections to a fictional theatre-audio idea. All three advances
+and exports succeeded; each follow-up input contained the exact prior assessment.
+Three expanded saved pages preserve both views. A default-named second capture
+was identified by exact exported JSON and copied losslessly to its stage filename;
+a later overwrite confirmation was canceled before saving the third page correctly.
+No earlier response or capture was replaced.
+
+The revised goal cites original and correction sources, proposed approval handling
+is labeled, and explanations retain copy/revocation caveats. These observations
+coexist with substantive failures: an obsolete owner-only access fact remains
+current beside performer access, and the download/future-revocation update changes
+no facts despite being discussed in prose. Approval questions also bind to the
+confirmed correction-request capability rather than a distinct unknown policy.
+The risk from applying the unknown button to that different property was not tested.
+Copy limits remain in explanations, but the second stage's engineering criteria
+omit the explicit already-received-copy distinction; it returns in the third.
+
+Repeated browser/native automation failures and kernel resets blocked the fourth
+correction. The server then stopped cleanly after three of five allowed calls;
+no model call was retried and no HTTP fallback was used. The harness's sequence
+`closed` flag remains false because the sequence is incomplete; the coordinator
+closed the attempt and its unused two calls cannot be reused. Browser listening,
+provisional closeout and an actual final download are unperformed. Unrelated
+browser content is excluded from project evidence. This partial run is neither a
+semantic pass nor Level 0 acceptance.
+
+Independent review passed 35 raw/context/state/export/rendered-text checks and
+17 final archive/docs reconciliation checks, with the substantive findings retained.
+Strict Markdown/link and whitespace checks pass; all 19 earlier artifacts remain
+byte-identical to the committed versions. No production code changed, so software
+suites were not rerun. Evidence/docs remain uncommitted. T027's remaining live
+checks are blocked pending working browser access and a new reviewed plan/allowance;
+T028 is the proposed investigation of the observed state and question-target gaps.
 
 ### T014: Repeatable fictional pilot
 
