@@ -178,6 +178,13 @@ passed seeded HTTP development stages for carry-forward, partial answers, explic
 unknowns and correction on Codex 0.166.0. Facts remained stable on the final
 no-change call, while recommendation wording/classification varied. This is not
 unseeded requirement discovery, browser verification or a reliability estimate.
+The subsequent [unseeded UI flow](artifacts/2026-11-01-codex-luna-unseeded-owner-flow.json)
+completed five calls from a fictional book-loan idea through corrections and a
+provisional brief. Both rendered views matched the exports, and the actual
+download matched the final export. Independent review retained an unlabeled
+approval-policy proposal, an intermediate caveat omission and incomplete aggregate
+goal source coverage. This single development flow does not establish Level 0
+acceptance, owner comprehension or reliability.
 Historical responses are not repaired or accepted through a fallback.
 
 ## Check and review

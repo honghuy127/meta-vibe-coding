@@ -349,6 +349,12 @@ checks and one coordinator-related deadline expiry. It does not establish Level 
 acceptance. T024's [seeded five-call development check](../artifacts/2026-11-01-codex-luna-native-contract-2.json)
 exercised native contract 2 through HTTP on Codex 0.166.0; it does not establish
 unseeded extraction, stable recommendations, browser behavior or reliability.
+T025's [unseeded UI flow](../artifacts/2026-11-01-codex-luna-unseeded-owner-flow.json)
+completed five calls from empty facts through owner corrections and provisional
+closeout. Independent review reconciled both rendered views and the downloaded
+brief with the exports. It also retained proposal-labeling, intermediate caveat
+preservation and aggregate source-coverage findings. This is one fictional
+development flow, not held-out acceptance or evidence of general reliability.
 Adult comprehension sessions have not run. Before a public demo,
 resolve provider data handling, deployment authority, and operating cost; readiness
 must be demonstrated in the intended environment.

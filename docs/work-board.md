@@ -44,7 +44,8 @@ means the acceptance evidence and required review are recorded.
 | T022 | Execute and review the revised matched comparison | done | Codex with separate reviewer, requested by repository owner | Version 2 result artifact, README, Level 0 scope, work board | All fourteen first attempts closed using 50 of 98 calls; server stopped. Five wrapper protocol/state stops, one coordinator-related baseline expiry, eight delivered final responses. Independent evidence review passed; semantic gaps and remaining view checks are explicit. Exposed regression only; Level 0 unaccepted and T019 preserved. |
 | T023 | Reduce duplicate native records and clarify partial/unknown updates | done | Codex with separate reviewer, requested by repository owner | Native contract/prompt, tests, README/scope/decisions/board | Checkpoint committed as 73089ca. D011 implements native contract 2 with fact changes, attached evidence and key-only questions; original-state guards and brief 1 preserved. Independent design/code/docs review passed; 213 Python and 12 UI tests, strict Markdown/link and whitespace checks pass. No live calls during implementation; committed as 84280c7 before T024. |
 | T024 | Verify native contract 2 on fresh development examples | done | Codex with separate reviewer, requested by repository owner | Bounded live development evidence, relevant docs | T023 committed as 84280c7. Five of five fresh calls completed on Codex 0.166.0/Luna; seeded carry/partial/unknown/correction/no-change HTTP stages replay exactly. Independent review passed 53 checks. Semantic wording limits and no browser/unseeded/reliability claim are recorded below. No retry/fallback/purchase. |
-| T025 | Verify an unseeded owner-to-brief flow | ready | Unassigned | Fresh fictional development evidence, relevant docs | Start from an actual new idea through both views, then check uncertainty, correction and export. Review scope consistency and consequential omissions, including copied-data/key lifecycle when relevant. New settings/allowance review required; do not reuse closed claims or treat seeded T024 as acceptance. |
+| T025 | Verify an unseeded owner-to-brief flow | done | Codex with separate reviewer, requested by repository owner | Fresh fictional development evidence, relevant docs | T024 committed as 2d0c27d. Five actual UI-driven Codex/Luna calls completed from empty facts through corrections and provisional closeout. Independent review passed 54 evidence checks, including both rendered views and actual download. Semantic findings remain below; no retry/fallback/purchase or acceptance claim. |
+| T026 | Clarify proposed workflow rules and preserve consequential caveats | ready | Unassigned | Assessment policy/guards, targeted regressions, relevant docs | Address T025's unlabeled approval proposal and intermediate caveat omission; assess aggregate source coverage without treating quote presence as entailment. Agree a compact design and review before implementation. No live-call allowance implied. |
 
 Proposed paths are locations for future work, not existing artifacts. Split tasks
 when contributors need independent ownership; do not reserve the whole repository
@@ -348,7 +349,48 @@ question; this is not requirement discovery. Recommendation kind changed on the
 no-change call, and some prose says shared laptop despite the device-sharing fact
 remaining unknown. These wording/scope issues remain explicit. No browser, full
 visual QA, owner comprehension, held-out acceptance or reliability claim is made.
-T024 evidence/docs are uncommitted; T025 owns an unseeded flow check next.
+T024 evidence/docs were committed as `2d0c27d`; T025 records the unseeded flow check.
+
+### T025: Unseeded owner-to-brief UI flow
+
+The [five-call record](../artifacts/2026-11-01-codex-luna-unseeded-owner-flow.json)
+preserves the frozen plan/runtime, lossless native streams, HTTP journal, five
+saved live pages, actual downloaded brief and separate review. Codex 0.166.0 used
+saved ChatGPT login with requested `gpt-6-luna`; served model, internal calls and
+cost remain unknown. The source was unchanged. A reviewed temporary harness
+enforced one shared adapter, a durable five-call cap and frozen owner updates;
+its exception path was made fail-closed before the first call.
+
+The production UI began with empty facts/questions/turns and extracted a fictional
+book-loan idea. Three proactive owner corrections supplied unknown sensitivity,
+friend-specific visibility and extension requests, then recovery and readable
+exit-copy needs. These were not answers to unrelated clarification questions.
+The visible provisional control closed the flow without inventing a cloud-storage
+answer. All five advances and exports succeeded; no retry, fallback or purchase.
+
+Independent review passed 54 provenance, state-replay, rendered-text and download
+checks. Both views matched each export; the actual downloaded JSON matched the
+final export. Saved-page line endings are normalized only for text comparison.
+Pending/outdated controls and final viewports were observed by the coordinator;
+screenshots were not retained. This is not exhaustive pixel QA or comprehension.
+
+The access-correction assessment introduced owner approval for extensions without
+clearly labeling it a proposal, and temporarily omitted the existing-copy limit
+on revocation. Later stages acknowledged unspecified approval behavior and restored
+the copies/derivatives caveat; the earlier findings remain. The corrected aggregate
+goal cites the new correction alone although some context comes from the initial
+idea. Quote presence establishes linkage, not complete semantic source coverage.
+
+The final brief remains provisional with cloud-storage acceptability and personal
+details unknown. No real service permissions, recovery, retention, prices or
+implementation were verified. One fictional development flow does not establish
+held-out acceptance, reliability or owner understanding. T026 is the next proposed
+task; it has no additional live-call allowance.
+
+Final separate archive/docs review passed 19 reconciliation checks with no
+blocker. Strict Markdown/link and whitespace checks pass; historical artifact
+hashes are unchanged. No production code changed, so the software suites were not
+rerun. T025 evidence/docs remain uncommitted.
 
 ### T014: Repeatable fictional pilot
 

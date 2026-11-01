@@ -215,8 +215,9 @@ extraction still need review. Partial answers must settle their own properties
 and leave genuinely different unresolved properties explicit. Do not rename a
 topic to bypass an unknown or repeated-question guard. T023's deterministic checks
 do not establish live reliability or repair T022's historical failures; another
-live check needs a new reviewed plan and allowance. T024 records the subsequent
-seeded contract check; its scope and remaining semantic limits are on the work board.
+live check needs a new reviewed plan and allowance. T024 and T025 record subsequent
+seeded and unseeded checks; their scope and remaining semantic limits are on the
+work board.
 
 ## Open choices
 
