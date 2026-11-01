@@ -128,8 +128,16 @@ contract before applying the state guards. Native contract 2 returns fact update
 with attached evidence and questions referring to fact keys. The wrapper carries
 untouched facts forward and derives source citations and explicit-unknown markers
 from the evidence. Confirmed updates need exact owner quotes. Quotes establish source presence,
-not semantic support or complete extraction. State and exported brief schema 1
-remain unchanged; see [D011](docs/decisions.md#d011-return-fact-changes-with-attached-evidence).
+not semantic support or complete extraction. Native contract 2 and exported brief
+schema 1 remain unchanged; see [D011](docs/decisions.md#d011-return-fact-changes-with-attached-evidence).
+Pending runtime state retains one previous assessment for the agent to reconsider
+earlier caveats. It is stale context, never owner evidence or an exportable result,
+and clears after successful adoption. Failed requests retain it for explicit retry,
+including a lost browser response. It counts toward the unchanged 32 KB input cap;
+oversized input stops before CLI startup. Prompt guidance asks the agent to label
+proposed policies wherever used and cite retained parts of revised aggregate facts.
+These semantic instructions are not validated as prose meaning or verified live;
+see [D012](docs/decisions.md#d012-retain-one-stale-assessment-for-reconsideration).
 Stewardship policy uses each agent’s native system/developer instruction surface;
 owner text stays in the data input. The wrapper stops the process group at the
 deadline and never resumes another

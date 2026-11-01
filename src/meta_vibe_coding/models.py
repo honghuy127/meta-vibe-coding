@@ -105,6 +105,8 @@ class State(Model):
     facts: dict[str, Fact] = Field(default_factory=dict, max_length=100)
     questions: list[Question] = Field(default_factory=list, max_length=5)
     assessment: Assessment | None = None
+    # One stale result for reassessment, never an exportable current assessment.
+    previous_assessment: Assessment | None = None
     agent_calls: int = Field(default=0, ge=0, le=7)
     started_at: float = Field(default_factory=time.time, gt=0)
     assessed_turn_count: int = Field(default=0, ge=0)
@@ -118,6 +120,9 @@ class State(Model):
             raise ValueError("Turn and question IDs must be unique")
         if self.assessed_turn_count > len(self.turns):
             raise ValueError("Assessed turn count cannot exceed owner reply count")
+        if self.previous_assessment:
+            if self.assessment or self.previous_assessment.based_on_revision > self.revision:
+                raise ValueError("A previous assessment is pending context, never current or from a future revision")
         for key, fact in self.facts.items():
             if not re.fullmatch(FACT_KEY_PATTERN, key):
                 raise ValueError("Fact keys must be lower-case semantic keys")

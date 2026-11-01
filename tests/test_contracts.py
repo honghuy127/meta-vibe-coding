@@ -113,6 +113,49 @@ def test_source_ids_are_derived_once_in_stable_order():
     assert candidate.facts['goal'].source_turn_ids == ['t0']
 
 
+@pytest.mark.parametrize('sources', [['t0', 't1'], ['t0'], ['t1']])
+def test_aggregate_evidence_keeps_source_coverage_a_semantic_review_responsibility(sources):
+    base = State(raw_intent='Track equipment loans on my phone.')
+    state = adopt(base, result(base))
+    state = prepare(AdvanceRequest(state=state, request_id='access',
+        answer='Coworkers may view only their own loans.'))
+    aggregate = Fact(value='Track equipment loans on my phone with coworker-specific access.',
+        status='confirmed', source_turn_ids=sources)
+    candidate = NativeResponse.model_validate(payload(state,
+        result(state, facts={'goal': aggregate}, disposition='provisional'))).candidate(state)
+    if sources == ['t0']:
+        with pytest.raises(FlowError, match='new owner reply'): adopt(state, candidate)
+    else:
+        exported = export_brief(adopt(state, candidate))
+        assert exported['facts']['goal']['source_turn_ids'] == sources
+        assert [source['id'] for source in exported['sources']] == sources
+        # Latest-only quotes still pass structural checks without covering the aggregate.
+        # Prompt guidance and semantic review, not source-ID unioning, address that gap.
+
+
+def test_scripted_proposed_policy_and_copy_caveat_round_trip_without_confirmation():
+    # Supplied prose checks transport, not the agent's ability to discover or label it.
+    base = State(raw_intent='Track equipment loans.')
+    state = prepare(AdvanceRequest(state=base, request_id='sharing',
+        answer='Coworkers may see only their own loans and request extensions.'))
+    policy = 'Proposed, if you choose owner approval: extensions change dates only after approval.'
+    caveat = 'Ending future access cannot retrieve copies or derivatives already received.'
+    candidate = result(state, disposition='provisional')
+    candidate.facts['loan.approval'] = Fact(value=None, status='unknown', source_turn_ids=[],
+        reason='The owner has not selected approval handling.')
+    candidate.assessment.recommendation.summary = policy
+    candidate.assessment.recommendation.owner_responsibilities = [policy, caveat]
+    candidate.assessment.acceptance_criteria = [policy, caveat]
+    candidate.assessment.limitations = [caveat]
+    exported = export_brief(adopt(state, NativeResponse.model_validate(payload(state, candidate)).candidate(state)))
+    assert exported['facts']['loan.approval']['status'] == 'unknown'
+    assert exported['facts']['loan.approval']['source_turn_ids'] == []
+    assert exported['recommendation']['summary'] == policy
+    assert exported['recommendation']['owner_responsibilities'] == [policy, caveat]
+    assert exported['acceptance_criteria'] == [policy, caveat]
+    assert exported['limitations'] == [caveat]
+
+
 def test_unchanged_facts_need_no_updates_and_input_is_not_mutated_or_aliased():
     base = State(raw_intent='A household buzzer.')
     state = adopt(base, result(base))

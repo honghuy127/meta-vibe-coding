@@ -70,12 +70,14 @@ function assessed(payload, summary, question = null) {
       decision: 'Changes the fictional recommendation.', answer_turn_id: null, retired: false});
   }
   state.assessed_turn_count = state.turns.length;
+  state.previous_assessment = null;
   return {request_id: payload.request_id, state,
     usage: {agent: 'test-double', model: 'fictional', elapsed_seconds: 0.01}, error: null};
 }
 
 function failed(payload) {
   const state = structuredClone(payload.state);
+  state.previous_assessment = state.assessment ?? state.previous_assessment ?? null;
   state.assessment = null;
   state.agent_calls += 1;
   return {request_id: payload.request_id, state, usage: null,
@@ -124,13 +126,23 @@ for (const networkFailure of [false, true]) {
     const ui = await page();
     ui.advances.push((body) => assessed(body, 'Initial conditional result.', 'Where is it used?'));
     await ui.start('Fictional idea');
+    let previous;
     ui.advances.push((body) => {
+      previous = body.state.assessment;
       if (networkFailure) throw new Error('Fictional connection failure.');
       return failed(body);
     });
     await ui.el('provisional').fire('click');
     assert.equal(ui.el('retry').hidden, false);
-    ui.advances.push((body) => assessed(body, 'Retried conditional result.'));
+    assert.match(ui.el('disposition').textContent, /Outdated/);
+    assert.equal(ui.el('download').disabled, true);
+    ui.advances.push((body) => {
+      assert.equal(body.state.assessment, null);
+      assert.deepEqual(body.state.previous_assessment, previous);
+      assert.equal(body.state.previous_assessment.based_on_revision, body.state.revision,
+        'No-answer provisional requests may retain equal snapshot revisions');
+      return assessed(body, 'Retried conditional result.');
+    });
     await ui.el('retry').fire('click');
     const requests = ui.calls.filter((call) => call.path === '/api/advance');
     assert.deepEqual(requests.map((call) => call.body.provisional), [false, true, true]);
@@ -192,10 +204,16 @@ test('A lost reply response retains owner evidence once when retrying', async ()
   ui.advances.push((body) => assessed(body, 'Initial result.', 'Where will you use it?'));
   await ui.start('Fictional idea');
   ui.el('answer').value = 'On my phone and laptop.';
-  ui.advances.push(() => { throw new Error('Fictional lost response.'); });
+  let previous;
+  ui.advances.push((body) => { previous = body.state.assessment; throw new Error('Fictional lost response.'); });
   await ui.el('reply-form').fire('submit');
   assert.equal(ui.el('retry').hidden, false);
-  ui.advances.push((body) => assessed(body, 'Current result.'));
+  ui.advances.push((body) => {
+    assert.equal(body.state.assessment, null);
+    assert.deepEqual(body.state.previous_assessment, previous);
+    assert.ok(body.state.previous_assessment.based_on_revision < body.state.revision);
+    return assessed(body, 'Current result.');
+  });
   await ui.el('retry').fire('click');
   const requests = ui.calls.filter((call) => call.path === '/api/advance');
   const retry = requests[2].body;

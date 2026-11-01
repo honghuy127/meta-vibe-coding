@@ -109,7 +109,8 @@ async function advance(answer = null, questionId = null, provisional = false, de
     }
     state.revision += 1;
   }
-  state = {...state, assessment: null, agent_calls: Math.min(7, state.agent_calls + 1)};
+  state = {...state, previous_assessment: state.assessment ?? state.previous_assessment ?? null,
+    assessment: null, agent_calls: Math.min(7, state.agent_calls + 1)};
   brief = null;
   $('result').hidden = !previousResult;
   if (previousResult) $('disposition').textContent = 'Outdated · updating';

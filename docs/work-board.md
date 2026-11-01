@@ -45,7 +45,8 @@ means the acceptance evidence and required review are recorded.
 | T023 | Reduce duplicate native records and clarify partial/unknown updates | done | Codex with separate reviewer, requested by repository owner | Native contract/prompt, tests, README/scope/decisions/board | Checkpoint committed as 73089ca. D011 implements native contract 2 with fact changes, attached evidence and key-only questions; original-state guards and brief 1 preserved. Independent design/code/docs review passed; 213 Python and 12 UI tests, strict Markdown/link and whitespace checks pass. No live calls during implementation; committed as 84280c7 before T024. |
 | T024 | Verify native contract 2 on fresh development examples | done | Codex with separate reviewer, requested by repository owner | Bounded live development evidence, relevant docs | T023 committed as 84280c7. Five of five fresh calls completed on Codex 0.166.0/Luna; seeded carry/partial/unknown/correction/no-change HTTP stages replay exactly. Independent review passed 53 checks. Semantic wording limits and no browser/unseeded/reliability claim are recorded below. No retry/fallback/purchase. |
 | T025 | Verify an unseeded owner-to-brief flow | done | Codex with separate reviewer, requested by repository owner | Fresh fictional development evidence, relevant docs | T024 committed as 2d0c27d. Five actual UI-driven Codex/Luna calls completed from empty facts through corrections and provisional closeout. Independent review passed 54 evidence checks, including both rendered views and actual download. Semantic findings remain below; no retry/fallback/purchase or acceptance claim. |
-| T026 | Clarify proposed workflow rules and preserve consequential caveats | ready | Unassigned | Assessment policy/guards, targeted regressions, relevant docs | Address T025's unlabeled approval proposal and intermediate caveat omission; assess aggregate source coverage without treating quote presence as entailment. Agree a compact design and review before implementation. No live-call allowance implied. |
+| T026 | Clarify proposed workflow rules and preserve consequential caveats | done | Codex with separate reviewer, requested by repository owner | `models.py`, `core.py`, `prompt.txt`, browser controller, targeted tests, relevant docs | T025 committed as 63ac46e. D012 retains one stale pending assessment and adds proposal/caveat/source-coverage guidance. Independent design/code/docs review passed; 224 Python and 12 UI tests, dependency and document checks pass. Native 2/brief 1 and historical evidence preserved; no live calls or demonstrated semantic improvement. |
+| T027 | Verify revised assessment continuity on a fresh development flow | ready | Unassigned | Reviewed bounded live plan/evidence, relevant docs | Check proposed-policy labels, relevant caveat continuity and aggregate source coverage in both views and export. Freeze a fresh fictional scenario, source/configuration and a new call cap before execution; preserve failures and distinguish semantic review from structural checks. No live-call allowance yet. |
 
 Proposed paths are locations for future work, not existing artifacts. Split tasks
 when contributors need independent ownership; do not reserve the whole repository
@@ -390,7 +391,38 @@ task; it has no additional live-call allowance.
 Final separate archive/docs review passed 19 reconciliation checks with no
 blocker. Strict Markdown/link and whitespace checks pass; historical artifact
 hashes are unchanged. No production code changed, so the software suites were not
-rerun. T025 evidence/docs remain uncommitted.
+rerun. T025 evidence/docs were committed as `63ac46e`.
+
+### T026: Proposed policies and consequential caveats
+
+Separate design review approved [D012](decisions.md#d012-retain-one-stale-assessment-for-reconsideration)
+before implementation. Pending state now retains one `previous_assessment` through
+failure and explicit retry, including a lost browser response, then clears it on
+successful adoption. Simultaneous current and previous assessments, and future
+snapshots, are rejected; equal revisions are valid for no-answer requests. Stale
+advice never supplies owner confirmation
+or an exportable result. No history, automatic merge or brief migration was added.
+
+The prompt requires labels on unconfirmed policies wherever used, asks to retain
+still-relevant caveats in explanation and engineering checks, and requires aggregate evidence for
+retained components as well as the latest correction. Obsolete advice and sources
+must be reconsidered. Meaning remains subject to semantic review, not keyword
+guards or indiscriminate source unions.
+
+Checks: all 224 Python tests and 12 UI tests pass, as do dependency consistency,
+strict Markdown/link and whitespace checks. The existing Starlette deprecation
+warning remains. New regressions cover context lifecycle, failed adoption, retries,
+lost replies, stale evidence, aggregate citations and supplied proposal/caveat
+export. Oversized snapshots retain input and stop before any CLI process under the
+unchanged 32 KB cap. Offline serialization of the five archived T025 requests also
+fits that cap; this is not a new inference run. Native response 2 is byte-identical
+to the frozen schema, brief 1 is unchanged, and all 19 historical artifacts match
+the committed bytes.
+
+Independent code/docs review passed and separately ran 161 focused Python tests
+and all 12 UI tests. No blocker remains. Changes are uncommitted; no live calls,
+semantic improvement or acceptance claim. T027 owns fresh live verification after
+a new reviewed plan and allowance.
 
 ### T014: Repeatable fictional pilot
 

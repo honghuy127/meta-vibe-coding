@@ -9,7 +9,7 @@ from fastapi.testclient import TestClient
 from pydantic import ValidationError
 
 from meta_vibe_coding.app import create_app
-from meta_vibe_coding.core import FlowError, adopt, export_brief, prepare, reserve_call
+from meta_vibe_coding.core import FlowError, adopt, export_brief, model_input, prepare, reserve_call
 from meta_vibe_coding.models import AdvanceRequest, Candidate, Fact, Question, State, Turn, Usage
 
 
@@ -97,6 +97,95 @@ def test_correction_invalidates_export_and_requires_fresh_source():
     assert updated.revision > revised.revision
     assert updated.assessment.based_on_revision == updated.revision
     assert updated.turns[0].text == revised.turns[0].text
+
+
+@pytest.mark.parametrize("answer", [None, "Coworkers should see only their own loans."])
+def test_previous_assessment_is_stale_context_until_successful_adoption(answer):
+    base = State(raw_intent="Manage equipment loans.")
+    old = result(base, disposition="provisional")
+    old.assessment.limitations = ["Revoking future access cannot retrieve existing copies."]
+    state = adopt(base, old)
+    before = state.model_dump()
+    pending = prepare(AdvanceRequest(state=state, request_id="reassess", answer=answer))
+    context = json.loads(model_input(pending, True))["state"]
+    assert context["assessment"] is None
+    assert context["previous_assessment"] == before["assessment"]
+    assert pending.previous_assessment.based_on_revision <= pending.revision
+    with pytest.raises(FlowError): export_brief(pending)
+
+    # A supplied replacement may revise old advice; the wrapper does not merge it.
+    candidate = result(pending, facts=pending.facts, disposition="provisional")
+    candidate.assessment.limitations = ["Fresh scripted limitation."]
+    updated = adopt(pending, candidate)
+    exported = export_brief(updated)
+    assert updated.previous_assessment is None
+    assert "previous_assessment" not in exported
+    assert exported["limitations"] == ["Fresh scripted limitation."]
+    assert "existing copies" not in json.dumps(exported)
+    pending.previous_assessment.limitations.append("Changed only in the pending copy.")
+    assert state.model_dump() == before
+
+
+@pytest.mark.parametrize("invalid", ["future", "simultaneous"])
+def test_previous_assessment_cannot_be_current_or_from_a_future_revision(invalid):
+    base = State(raw_intent="Manage equipment loans.")
+    state = adopt(base, result(base))
+    data = prepare(AdvanceRequest(state=state, request_id="pending")).model_dump()
+    if invalid == "future": data["previous_assessment"]["based_on_revision"] = data["revision"] + 1
+    else: data["assessment"] = state.assessment.model_dump()
+    with pytest.raises(ValidationError, match="pending context"): State.model_validate(data)
+    # Older state envelopes have no stale snapshot to migrate.
+    del data["previous_assessment"]
+    assert State.model_validate(data).previous_assessment is None
+
+
+def test_previous_advice_does_not_confirm_an_assumed_policy():
+    base = State(raw_intent="Manage equipment loans.")
+    candidate = result(base, disposition="provisional")
+    candidate.facts["loan.approval"] = Fact(value=True, status="assumed", source_turn_ids=[],
+        reason="A proposed workflow, not an owner decision.")
+    candidate.assessment.acceptance_criteria = ["Proposed: an extension needs owner approval."]
+    state = adopt(base, candidate)
+    pending = prepare(AdvanceRequest(state=state, request_id="continue", answer="Continue."))
+    assert pending.previous_assessment.acceptance_criteria == candidate.assessment.acceptance_criteria
+    confirmation = result(pending, facts={**pending.facts, "loan.approval": Fact(
+        value=True, status="confirmed", source_turn_ids=["t0"])})
+    with pytest.raises(FlowError, match="substantive owner confirmation"): adopt(pending, confirmation)
+
+
+def test_http_failures_retain_one_snapshot_through_retry_and_later_correction():
+    base = State(raw_intent="Manage equipment loans.")
+    original = adopt(base, result(base, disposition="provisional"))
+    snapshot = original.assessment.model_dump()
+
+    class ReassessingAgent(FakeAgent):
+        calls = 0
+        async def assess(self, state, provisional):
+            self.calls += 1
+            assert state.assessment is None
+            assert json.loads(model_input(state, provisional))["state"]["previous_assessment"] == snapshot
+            if self.calls == 1: raise FlowError("timeout", "Scripted timeout, no native call.")
+            if self.calls == 2:
+                return result(state, facts=state.facts, question={"topic": "loan.approval",
+                    "text": "Who approves requests?", "decision": "Changes the proposed workflow."}), Usage(
+                        agent="test-double", elapsed_seconds=0.0)
+            return result(state, facts=state.facts), Usage(agent="test-double", elapsed_seconds=0.0)
+
+    with TestClient(create_app(ReassessingAgent())) as client:
+        state = original.model_dump()
+        for index, answer in enumerate(["Only coworkers' own loans.", None, "No extension requests needed."]):
+            response = client.post('/api/advance', json={"state": state,
+                "request_id": f"snapshot-{index}", "answer": answer}).json()
+            state = response["state"]
+            if index < 2:
+                assert response["error"]["code"] == ("timeout" if index == 0 else "invalid_output")
+                assert state["assessment"] is None and state["previous_assessment"] == snapshot
+                assert client.post('/api/export', json=state).status_code == 409
+            else:
+                assert response["error"] is None and state["previous_assessment"] is None
+                assert client.post('/api/export', json=state).status_code == 200
+        assert [turn["id"] for turn in state["turns"]] == ["t1", "t2"]
+        assert state["agent_calls"] == 3
 
 
 def test_cannot_drop_confirmed_fact_or_adopt_stale_assessment():

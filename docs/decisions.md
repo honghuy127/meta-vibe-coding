@@ -219,6 +219,30 @@ live check needs a new reviewed plan and allowance. T024 and T025 record subsequ
 seeded and unseeded checks; their scope and remaining semantic limits are on the
 work board.
 
+## D012: Retain one stale assessment for reconsideration
+
+- Date: 2026-11-01; status: accepted implementation choice, design reviewed in T026.
+- Context: T025 introduced an unlabeled approval policy, temporarily lost an
+  existing-copy caveat and incompletely cited a revised aggregate goal. Preparing
+  a request discarded the previous assessment, leaving earlier advice unavailable
+  for comparison.
+- Choice: pending runtime state carries one optional `previous_assessment`, never
+  alongside a current assessment or from a future revision. Preserve it through
+  failed requests and explicit retry, including a lost browser response; clear it
+  on successful adoption. It is stale agent-written data, not owner evidence.
+  Older states default to null; native contract 2 and exported brief 1 are unchanged.
+
+Keep the existing input cap, including this context, and fail before CLI startup
+when it is exceeded. Do not truncate context or automatically merge stale advice.
+The prompt requires proposed policies to be labeled wherever used, still-relevant
+consequences to remain in explanations and acceptance checks, and revised aggregate
+facts to cite retained components as well as the correction. Latest owner sources
+take priority over obsolete or erroneous agent advice. Existing source/confirmation
+guards remain; keyword checks or unconditional source unions cannot establish
+semantic correctness. Deterministic checks verify context handling and supplied
+output only. Live improvement, complete source coverage and Level 0 acceptance
+remain unestablished.
+
 ## Open choices
 
 | Choice | Resolve in | Needed before |

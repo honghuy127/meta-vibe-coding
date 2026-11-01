@@ -49,6 +49,8 @@ def prepare(request: AdvanceRequest) -> State:
         # be exported with an old recommendation while this input is pending.
     elif request.question_id:
         raise FlowError("invalid_input", "A question ID requires an answer.")
+    if state["assessment"] is not None:
+        state["previous_assessment"] = state["assessment"]
     state["assessment"] = None
     return State.model_validate(state)
 
@@ -110,6 +112,7 @@ def adopt(state: State, candidate: Candidate, *, allow_question: bool = True) ->
     data["facts"] = facts
     data["owner_unknowns"] = {key: value.model_dump() for key, value in unknowns.items()}
     data["assessment"] = candidate.assessment.model_dump()
+    data["previous_assessment"] = None
     data["assessment"]["based_on_revision"] = data["revision"]
     data["assessed_turn_count"] = len(state.turns)
     for question in data["questions"]:

@@ -65,9 +65,17 @@ corrections or alias detection; see [D011](decisions.md#d011-return-fact-changes
 | `assessment` | Null until a valid current result is available; otherwise the assessment below with matching `based_on_revision`. The UI may retain the previous snapshot as visibly stale. |
 
 Runtime state also carries `agent_calls` (assessment attempts), `started_at` (Unix
-seconds), `assessed_turn_count` (covered owner replies), and `owner_unknowns`.
-These fields are not exported. A retry cannot turn an already assessed reply into
-new confirmation; new input retained after failure can still be assessed.
+seconds), `assessed_turn_count` (covered owner replies), `owner_unknowns`, and an
+optional `previous_assessment`. These fields are not exported. A retry cannot turn
+an already assessed reply into new confirmation; new input retained after failure
+can still be assessed.
+
+`previous_assessment` retains one stale result while the current assessment is
+null, including after a failure or lost browser response. Its revision may equal
+the current revision but cannot be newer. It supplies comparison context, never
+owner evidence or permission to export. Successful adoption clears it; older
+states default to null. The unchanged input cap includes this snapshot. Prior
+advice may be wrong or obsolete, so the wrapper does not merge it into new results.
 
 `owner_unknowns` maps a fact key to `source_turn_id` and a nonempty exact `quote`
 of at most 500 characters from that owner source. The fact must remain unknown
@@ -103,7 +111,10 @@ needs a reason. Null is reserved for unknown/not-applicable facts. Missing keys
 mean not yet considered; they never imply false. `source_turn_ids` is an array of
 existing owner turn IDs, nonempty for confirmed facts. A bare “continue” does not
 confirm every assumption. When a later answer supersedes an earlier one, use its
-source ID for the current fact and retain the earlier text in `turns`.
+source ID for the current fact and retain the earlier text in `turns`. A revised
+aggregate should also cite owner sources for retained components; do not preserve
+superseded claims by blindly combining old source IDs. Quote validation cannot
+establish that every component is supported.
 
 For example, these are different fictional fact records:
 
@@ -128,6 +139,11 @@ Each open question has `topic`, `text`, `blocks_recommendation` (boolean), and
 other questions may be carried forward explicitly. Rationale, alternatives, owner
 responsibilities, acceptance criteria, and limitations are arrays of plain-language
 strings. An empty collection means none identified, not proof of completeness.
+Unconfirmed workflow rules must be labeled as proposed or conditional wherever
+used, including acceptance criteria. Still-relevant consequences should remain
+in the explanation and engineering checks after corrections; obsolete advice
+should be revised. These are agent instructions subject to semantic review, not
+deterministic prose guarantees; see [D012](decisions.md#d012-retain-one-stale-assessment-for-reconsideration).
 
 The engineering brief includes `schema_version`, `revision`, `raw_intent`, `facts`,
 and every assessment field except `based_on_revision`. Preserve fact statuses and

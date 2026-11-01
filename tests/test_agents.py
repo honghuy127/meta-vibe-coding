@@ -13,7 +13,7 @@ from fastapi.testclient import TestClient
 from meta_vibe_coding import agents as module
 from meta_vibe_coding import process, settings
 from meta_vibe_coding.app import create_app
-from meta_vibe_coding.core import FlowError, reserve_call
+from meta_vibe_coding.core import FlowError, adopt, model_input, reserve_call
 from meta_vibe_coding.models import State
 from test_flow import result, native_result
 
@@ -97,6 +97,28 @@ def test_three_wrappers_share_state_and_delegate_models(configured, monkeypatch,
     assert not os.path.exists(calls[-1][1]["cwd"])
     with pytest.raises(FlowError) as error: asyncio.run(wrapper.assess(State(raw_intent="New tab"), False))
     assert error.value.code == "limit" and len(calls) == 3
+
+
+def test_oversized_previous_assessment_stops_before_any_process_and_is_retained(configured, monkeypatch):
+    monkeypatch.setenv("MVC_AGENT", "codex")
+    async def forbidden(*args, **kwargs): raise AssertionError("Input cap must precede help, version and inference")
+    monkeypatch.setattr(module, "run_cli", forbidden)
+    base = State(raw_intent="Manage equipment loans.")
+    candidate = result(base, disposition="provisional")
+    candidate.assessment.limitations = ["Fictional long prior advice. " * 250] * 5
+    state = adopt(base, candidate)
+    snapshot = state.assessment.model_dump()
+    wrapper = module.CodingAgent()
+    with TestClient(create_app(wrapper)) as client:
+        response = client.post('/api/advance', json={"state": state.model_dump(),
+            "request_id": "oversized-context", "answer": "Only coworkers should see records."}).json()
+        assert response["error"]["code"] == "limit"
+        retained = State.model_validate(response["state"])
+        assert retained.assessment is None and retained.previous_assessment.model_dump() == snapshot
+        assert retained.turns[-1].text == "Only coworkers should see records."
+        assert len(model_input(retained, False).encode()) > 32_000
+        assert wrapper.calls == 0
+        assert client.post('/api/export', json=response["state"]).status_code == 409
 
 
 @pytest.mark.parametrize("agent", ["opencode", "claude", "codex"])
