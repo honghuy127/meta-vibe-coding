@@ -41,6 +41,8 @@ def prepare(request: AdvanceRequest) -> State:
                 key = question["topic"]
                 if key not in state["facts"]:
                     raise FlowError("invalid_input", "This question is from an older session. Start a new idea to continue.")
+                if state["facts"][key]["status"] not in {"unknown", "assumed"}:
+                    raise FlowError("invalid_input", "This question no longer matches an unresolved detail. Use a correction instead.")
                 state["facts"][key] = {"value": None, "status": "unknown", "source_turn_ids": [turn_id],
                     "reason": "The owner does not know yet."}
                 state["owner_unknowns"][key] = {"source_turn_id": turn_id, "quote": request.answer}
@@ -70,6 +72,8 @@ def adopt(state: State, candidate: Candidate, *, allow_question: bool = True) ->
         raise FlowError("invalid_output", "The agent did not provide a usable goal. Your answers are retained.")
     if candidate.question and candidate.question.topic not in candidate.facts:
         raise FlowError("invalid_output", "The agent returned a question that does not match the current understanding.")
+    if candidate.question and candidate.facts[candidate.question.topic].status not in {"unknown", "assumed"}:
+        raise FlowError("invalid_output", "The agent asked about a settled detail. Your answers are retained.")
     # Retaining unsupported confirmed assertions is not a way to remove a fact.
     removed = {k for k, f in state.facts.items() if f.status == "confirmed"} - candidate.facts.keys()
     if removed:

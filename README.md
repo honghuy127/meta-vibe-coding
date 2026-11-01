@@ -14,9 +14,10 @@ only through a configured coding agent, such as OpenCode.
 and developer views, and JSON export. All three CLI wrappers have deterministic
 contract tests. A [four-call Codex/Luna browser check](artifacts/2026-10-30-codex-luna-known-state.json)
 verified goal display, retained explicit unknowns, distinct public/private data
-requirements and a provisional export. Questions now identify facts; a retained
-“I don’t know” declaration prevents another question for the same key. Quoted
-sources prove presence, not meaning, and aliases remain a semantic limitation.
+requirements and a provisional export. New questions require unknown or assumed
+fact targets; a retained “I don’t know” declaration prevents another question for
+the same key. Quoted sources prove presence, not meaning; aliases remain a semantic
+limitation.
 The [seven-pair acceptance run](artifacts/2026-10-30-codex-luna-acceptance.json)
 used 33 of 98 authorized native calls. One provisional wrapper case passed;
 eleven attempts stopped technically and two completed outputs missed substantive
@@ -138,6 +139,12 @@ oversized input stops before CLI startup. Prompt guidance asks the agent to labe
 proposed policies wherever used and cite retained parts of revised aggregate facts.
 These instructions do not validate prose meaning or establish complete correction;
 see [D012](docs/decisions.md#d012-retain-one-stale-assessment-for-reconsideration).
+Settled question targets fail before adoption, even when a provisional request
+would suppress the question. Older mismatched questions remain readable, but the
+unknown action cannot replace their settled facts. Correction guidance asks the
+agent to update superseded values at existing keys and record new requirements
+separately from advice; semantic omissions remain undetected by these guards.
+See [D013](docs/decisions.md#d013-ask-only-about-unresolved-properties).
 Stewardship policy uses each agent’s native system/developer instruction surface;
 owner text stays in the data input. The wrapper stops the process group at the
 deadline and never resumes another

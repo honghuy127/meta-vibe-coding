@@ -69,6 +69,8 @@ async function render() {
       $('clarification').hidden = false;
       $('question').textContent = question.text;
       $('why').textContent = `Why this matters: ${question.decision}`;
+      $('unknown').disabled = !['unknown', 'assumed'].includes(state.facts[question.topic]?.status);
+      if ($('unknown').disabled) $('why').textContent += ' This question needs reassessment. Use the correction box or request a provisional result.';
     }
     $('provisional').hidden = !state.assessment || (!question && assessment.disposition !== 'needs_answer');
     if (state.assessment && assessment.disposition !== 'needs_answer') {
@@ -85,6 +87,13 @@ async function render() {
 }
 async function advance(answer = null, questionId = null, provisional = false, declaresUnknown = false) {
   if (!state || pending) return;
+  if (declaresUnknown) {
+    const question = state.questions.find((q) => q.id === questionId);
+    if (!['unknown', 'assumed'].includes(state.facts[question?.topic]?.status)) {
+      status('This question no longer matches an unresolved detail. Use the correction box instead.');
+      return;
+    }
+  }
   lastProvisional = provisional;
   const requestId = crypto.randomUUID();
   currentRequest = requestId;

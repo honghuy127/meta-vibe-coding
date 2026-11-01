@@ -243,6 +243,28 @@ semantic correctness. Deterministic checks verify context handling and supplied
 output only. Live improvement, complete source coverage and Level 0 acceptance
 remain unestablished.
 
+## D013: Ask only about unresolved properties
+
+- Date: 2026-11-01; status: accepted implementation choice, design reviewed in T028.
+- Context: T027 bound approval questions to a confirmed ability to request changes.
+  An unknown-button answer could then replace that different known property.
+  The same run retained an obsolete access fact and omitted new requirements.
+- Choice: new proposed questions require an unknown or assumed target, checked
+  before suppression or adoption. A genuine conflict must first make its same
+  target unresolved using a later owner source under the existing guards.
+  Preserve legacy state readability; reject unknown-button actions on settled
+  targets in preparation and before browser optimistic edits. Disable that action
+  for older mismatched questions and explain the correction/provisional route.
+
+Keep native response 2 and brief 1. Refine the prompt to review affected current
+facts, update superseded values at existing keys, and record independently
+changeable requirements outside assessment prose. Do not automatically delete old
+confirmed facts, force updates for no-change replies or use domain-specific text
+matching to infer contradictions. Offline exposed-case checks verify the narrower
+question rejection; scripted corrections verify supplied valid transitions. These
+checks do not establish complete extraction, semantic consistency or live model
+improvement. T027's raw failures remain unchanged.
+
 ## Open choices
 
 | Choice | Resolve in | Needed before |

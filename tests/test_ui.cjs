@@ -349,3 +349,37 @@ test('Unknown goals and inapplicable facts use readable owner-facing text', asyn
   assert.match(ui.el('owner').textContent, /not applicable/);
   assert.doesNotMatch(ui.el('owner').textContent, /null \(unknown\)|not_applicable/);
 });
+
+for (const knownStatus of ['confirmed', 'not_applicable']) {
+  test(`A legacy ${knownStatus} question target cannot be erased by the unknown action`, async () => {
+    const ui = await page();
+    ui.advances.push((body) => {
+      // An older server could return a question bound to this different, settled property.
+      const reply = assessed(body, 'Legacy result.', 'Who approves requests?');
+      reply.state.facts.usage = {value: knownStatus === 'confirmed' ? true : null,
+        status: knownStatus, source_turn_ids: ['t0'], reason: 'Scripted legacy state.'};
+      return reply;
+    });
+    await ui.start('Fictional editorial requests.');
+    assert.equal(ui.el('unknown').disabled, true);
+    assert.match(ui.el('why').textContent, /needs reassessment/);
+    const count = ui.calls.length;
+    // Check the action boundary too, even if an old page/event bypasses disabled presentation.
+    ui.el('unknown').disabled = false;
+    await ui.el('unknown').fire('click');
+    assert.equal(ui.calls.length, count, 'No HTTP request or optimistic edit is allowed');
+    assert.match(ui.el('status').textContent, /correction box/);
+    assert.equal(ui.el('download').disabled, false, 'The unchanged legacy snapshot stays available');
+    ui.advances.push((body) => {
+      assert.equal(body.state.facts.usage.status, knownStatus);
+      assert.equal(body.state.turns.length, 0);
+      assert.equal(body.state.agent_calls, 1);
+      assert.equal(body.state.assessment.recommendation.summary, 'Legacy result.');
+      assert.equal(Object.keys(body.state.owner_unknowns || {}).length, 0);
+      return assessed(body, 'Fresh provisional result.');
+    });
+    await ui.el('provisional').fire('click');
+    assert.equal(ui.el('download').disabled, false);
+    assert.match(ui.el('owner').textContent, /Fresh provisional result/);
+  });
+}

@@ -93,7 +93,13 @@ decision must still appear in assessment open questions. This is exact-key
 control, not semantic alias detection. Retire unanswered questions when a new
 result supersedes them, while preserving history. Reopening an answered topic
 requires `conflict_turn_id` citing a later owner reply, with the conflict explained
-in `decision`. Source IDs alone do not establish a genuine conflict.
+in `decision`. New proposed questions must target unknown or assumed facts, even
+when clarification would be suppressed. A confirmed capability to request a change
+does not encode an undecided approval policy; that policy needs its own unresolved
+property. Conflict reopening first makes the same target unresolved using newer
+owner evidence under the confirmation guards. Source IDs alone do not establish a
+genuine conflict. Older states remain readable, but the unknown button cannot
+replace a confirmed or not-applicable fact. See [D013](decisions.md#d013-ask-only-about-unresolved-properties).
 
 Each fact has `value`, `status`, and `source_turn_ids`. Values are JSON scalars or
 arrays of scalars; use separate semantic keys for independently revisable facts.
@@ -111,7 +117,9 @@ needs a reason. Null is reserved for unknown/not-applicable facts. Missing keys
 mean not yet considered; they never imply false. `source_turn_ids` is an array of
 existing owner turn IDs, nonempty for confirmed facts. A bare “continue” does not
 confirm every assumption. When a later answer supersedes an earlier one, use its
-source ID for the current fact and retain the earlier text in `turns`. A revised
+source ID for the current fact and retain the earlier text in `turns`. Update its
+existing key when the value is superseded; changing the goal or adding a scoped
+permission does not correct an obsolete broad rule. A revised
 aggregate should also cite owner sources for retained components; do not preserve
 superseded claims by blindly combining old source IDs. Quote validation cannot
 establish that every component is supported.

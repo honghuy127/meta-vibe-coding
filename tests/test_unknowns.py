@@ -149,3 +149,66 @@ def test_goal_and_question_binding_are_canonical_and_legacy_marker_default_is_em
     with pytest.raises(FlowError): adopt(state, candidate)
     with pytest.raises(ValidationError):
         AdvanceRequest(state=state, request_id="bad-action", declares_unknown=True)
+
+
+@pytest.mark.parametrize("status", ["confirmed", "not_applicable"])
+@pytest.mark.parametrize("allow_question", [True, False])
+def test_settled_question_targets_fail_even_when_the_question_would_be_suppressed(status, allow_question):
+    state = State(raw_intent="Editors may request changes.", facts={
+        "goal": Fact(value="Track editorial requests.", status="confirmed", source_turn_ids=["t0"]),
+        "workflow.requests": Fact(value=True if status == "confirmed" else None, status=status,
+            source_turn_ids=["t0"], reason="Scripted applicability decision.")})
+    before = state.model_dump()
+    with pytest.raises(FlowError, match="settled detail"):
+        adopt(state, questioning(state, "workflow.requests"), allow_question=allow_question)
+    assert state.model_dump() == before
+
+
+@pytest.mark.parametrize("status", ["confirmed", "not_applicable"])
+def test_unknown_action_on_a_legacy_settled_target_cannot_erase_it_or_call_an_agent(status):
+    class ForbiddenAgent:
+        async def assess(self, state, provisional): raise AssertionError("Reject before inference")
+    state = State(raw_intent="A fictional editorial workflow.", facts={
+        "goal": Fact(value="Track requests.", status="confirmed", source_turn_ids=["t0"]),
+        "workflow.requests": Fact(value=True if status == "confirmed" else None, status=status,
+            source_turn_ids=["t0"], reason="Scripted applicability decision.")},
+        questions=[Question(id="q1", topic="workflow.requests", text="Who approves requests?",
+            decision="This older question mistakenly targets the request capability.")])
+    before = state.model_dump()
+    request = AdvanceRequest(state=state, request_id="mismatched-unknown", question_id="q1",
+        answer="I don't know.", declares_unknown=True)
+    with pytest.raises(FlowError, match="unresolved detail"): prepare(request)
+    with TestClient(create_app(ForbiddenAgent())) as client:
+        response = client.post('/api/advance', json=request.model_dump())
+        assert response.status_code == 422 and response.json()["code"] == "invalid_input"
+    assert state.model_dump() == before
+    assert state.turns == [] and state.owner_unknowns == {} and state.agent_calls == 0
+
+
+def test_a_confirmed_fact_can_reopen_only_after_a_later_sourced_conflict_makes_it_unresolved():
+    base = State(raw_intent="Share fictional design sketches.")
+    question = {"topic": "access.visibility", "text": "Who should see the sketches?",
+        "decision": "Changes access requirements."}
+    state = adopt(base, result(base, question=question, disposition="provisional"))
+    answered = prepare(AdvanceRequest(state=state, request_id="private", question_id="q1", answer="Only me."))
+    state = adopt(answered, result(answered, facts={**answered.facts, "access.visibility": Fact(
+        value="Only the owner.", status="confirmed", source_turn_ids=["t1"])}, disposition="provisional"))
+    assert state.facts["access.visibility"].status == "confirmed"
+    repeated = {**question, "conflict_turn_id": "t1"}
+    unresolved = Fact(value=None, status="unknown", source_turn_ids=["t1"], reason="Conflicting access needs.")
+    with pytest.raises(FlowError, match="new owner reply"):
+        adopt(state, result(state, facts={**state.facts, "access.visibility": unresolved},
+            question=repeated, disposition="provisional"))
+
+    changed = prepare(AdvanceRequest(state=state, request_id="mixed", answer="Let reviewers see part, but keep the rest private."))
+    repeated.update(conflict_turn_id="t2", decision="Your later mixed-access request needs a boundary for public and private sketches.")
+    with pytest.raises(FlowError, match="new owner reply"):
+        adopt(changed, result(changed, facts={**changed.facts, "access.visibility": unresolved},
+            question=repeated, disposition="provisional"))
+    unresolved.source_turn_ids = ["t2"]
+    updated = adopt(changed, result(changed, facts={**changed.facts, "access.visibility": unresolved},
+        question=repeated, disposition="provisional"))
+    assert updated.questions[-1].topic == "access.visibility"
+    assert updated.questions[-1].conflict_turn_id == "t2"
+    assert updated.facts["access.visibility"].status == "unknown"
+    assert state.facts["access.visibility"].status == "confirmed"

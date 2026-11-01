@@ -1,7 +1,9 @@
 """Fact-update contracts and process doubles; no native inference."""
 
+import base64
 import copy
 import json
+from pathlib import Path
 
 import pytest
 from pydantic import ValidationError
@@ -22,6 +24,80 @@ def payload(state=None, candidate=None):
 def update(key, *, value=None, status='unknown', evidence=None, owner_unknown=False):
     return {'key': key, 'value': value, 'status': status, 'reason': 'Scripted fixture.',
         'evidence': evidence or [], 'owner_unknown': owner_unknown}
+
+
+def exposed_continuity_response(stage):
+    # Recorded development output, already exposed; never inference or held-out evidence.
+    path = Path(__file__).resolve().parents[1] / 'artifacts/2026-11-01-codex-luna-assessment-continuity.json'
+    events = json.loads(path.read_text())['journal']['events']
+    request = next(e['request'] for e in events if e['kind'] == 'http' and e.get('stage') == stage)
+    state = prepare(AdvanceRequest.model_validate(request))
+    state = state.model_copy(update={'agent_calls': state.agent_calls + 1})
+    finished = next(e for e in events if e['kind'] == 'native_finished' and e['stage'] == stage)
+    text, _ = agents.parse_completion('codex', base64.b64decode(finished['stdout_bytes_b64']))
+    return state, json.loads(text)
+
+
+@pytest.mark.parametrize('stage', ['scoped_sharing', 'download_access'])
+def test_exposed_settled_question_is_rejected_without_claiming_semantic_omissions_are_detected(stage):
+    state, body = exposed_continuity_response(stage)
+    before = state.model_dump()
+    candidate = NativeResponse.model_validate(body).candidate(state)
+    with pytest.raises(FlowError, match='settled detail'): adopt(state, candidate)
+    assert state.model_dump() == before and state.assessment is None
+    with pytest.raises(FlowError, match='current recommendation'): export_brief(state)
+    # Removing the bad question only diagnoses the remaining guard limit. It does
+    # not repair or reclassify the historical response as an accepted result.
+    candidate.question = None
+    exported = export_brief(adopt(state, candidate))
+    assert exported['facts']['access.catalogue_and_files']['value'] == 'Only the owner can see the catalogue and files for now.'
+    assert exported['facts']['access.performer_clip_visibility']['status'] == 'confirmed'
+    if stage == 'download_access':
+        assert body['fact_updates'] == [] and candidate.facts == state.facts
+        assert 't2' not in {source['id'] for source in exported['sources']}
+
+
+def test_scripted_correction_updates_existing_access_and_separates_approval_from_request_capability():
+    state, body = exposed_continuity_response('scoped_sharing')
+    policy = 'workflow.title_correction_approval'
+    body['question']['topic'] = policy
+    for question in body['assessment']['open_questions']:
+        if question['topic'] == 'workflow.performer_title_corrections': question['topic'] = policy
+    body['fact_updates'].extend([
+        update('access.catalogue_and_files', value='Owner access plus assigned-clip access for performers; private notes remain owner-only.',
+            status='confirmed', evidence=[{'source_turn_id': 't0', 'quote': state.raw_intent},
+                {'source_turn_id': 't1', 'quote': state.turns[-1].text}]),
+        update(policy)])
+    updated = adopt(state, NativeResponse.model_validate(body).candidate(state))
+    assert updated.facts['access.catalogue_and_files'].source_turn_ids == ['t0', 't1']
+    assert updated.facts['access.catalogue_and_files'].value != state.facts['access.catalogue_and_files'].value
+    ability = updated.facts['workflow.performer_title_corrections'].model_dump()
+    assert ability['status'] == 'confirmed' and updated.facts[policy].status == 'unknown'
+    declared = prepare(AdvanceRequest(state=updated, request_id='approval-unknown', question_id=updated.questions[-1].id,
+        answer="I don't know.", declares_unknown=True))
+    assert declared.facts['workflow.performer_title_corrections'].model_dump() == ability
+    assert declared.owner_unknowns[policy].source_turn_id == 't2'
+    exported = export_brief(adopt(declared, result(declared, facts=declared.facts, disposition='provisional')))
+    assert exported['facts'][policy]['status'] == 'unknown'
+    assert exported['facts']['workflow.performer_title_corrections'] == ability
+    assert exported['schema_version'] == 1
+
+
+def test_scripted_permissions_and_operating_requirements_are_separate_sourced_facts():
+    base = State(raw_intent='Organize fictional design documents for assigned reviewers.')
+    state = adopt(base, result(base, disposition='provisional'))
+    state = prepare(AdvanceRequest(state=state, request_id='requirements',
+        answer='Reviewers may download assigned files. Removing their access must stop future access.'))
+    keys = ['access.reviewer_downloads', 'access.future_revocation']
+    supplied = {**state.facts, **{key: Fact(value=True, status='confirmed', source_turn_ids=['t1']) for key in keys}}
+    candidate = NativeResponse.model_validate(payload(state, result(state, facts=supplied,
+        disposition='provisional'))).candidate(state)
+    exported = export_brief(adopt(state, candidate))
+    for key in keys:
+        assert exported['facts'][key]['value'] is True
+        assert exported['facts'][key]['source_turn_ids'] == ['t1']
+    assert exported['sources'][-1] == {'id': 't1', 'text': state.turns[-1].text}
+    # Supplied output tests representation/transport, not successful agent extraction.
 
 
 def test_native_schemas_are_closed_required_and_keep_local_bounds_separate():
@@ -324,7 +400,7 @@ def test_partial_context_can_be_followed_by_a_distinct_preference_but_not_same_t
     assert updated.facts['use.location'].value == 'kitchen counter'
     assert updated.questions[-1].topic == 'use.alert_preference'
     body['question']['topic'] = 'use.location'
-    with pytest.raises(FlowError, match='repeated question'):
+    with pytest.raises(FlowError, match='settled detail'):
         adopt(state, NativeResponse.model_validate(body).candidate(state))
 
 
@@ -361,7 +437,7 @@ def test_fresh_handoff_and_automation_fixtures_preserve_supplied_consequences(id
     assert exported['schema_version'] == 1 and 'grounding' not in exported
 
 
-@pytest.mark.parametrize('failure', ['refusal', 'truncation', 'wire', 'grounding', 'target_missing'])
+@pytest.mark.parametrize('failure', ['refusal', 'truncation', 'wire', 'grounding', 'target_missing', 'target_settled'])
 def test_bad_native_reply_retains_owner_input_and_closes_export(monkeypatch, failure):
     from pathlib import Path
     from fastapi.testclient import TestClient
@@ -386,6 +462,9 @@ def test_bad_native_reply_retains_owner_input_and_closes_export(monkeypatch, fai
         if failure == 'grounding': body['fact_updates'][-1]['evidence'][0]['quote'] = 'Not an owner quote.'
         if failure == 'target_missing':
             body['question'] = {'topic': 'missing.fact', 'text': 'Where?', 'decision': 'Changes portability.', 'conflict_turn_id': None}
+        if failure == 'target_settled':
+            body['question'] = {'topic': 'goal', 'text': 'Which approval policy?',
+                'decision': 'This question targets a different confirmed property.', 'conflict_turn_id': None}
         events = [{'type': 'thread.started'},
             {'type': 'item.completed', 'item': {'type': 'agent_message', 'text': json.dumps(body)}},
             {'type': 'turn.failed' if failure == 'refusal' else 'turn.completed'}]
@@ -401,6 +480,7 @@ def test_bad_native_reply_retains_owner_input_and_closes_export(monkeypatch, fai
         assert failed['error']['code'] == 'invalid_output'
         assert failed['state']['turns'] == [{'id': 't1', 'text': 'On my kitchen counter.'}]
         assert failed['state']['assessment'] is None
+        assert failed['state']['previous_assessment'] == state.assessment.model_dump()
         assert client.post('/api/export', json=failed['state']).status_code == 409
     assert len(calls) == adapter.calls == 1
     assert not Path(calls[0]).exists(), 'Private schema and workspace must be removed on failure'

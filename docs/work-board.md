@@ -47,7 +47,8 @@ means the acceptance evidence and required review are recorded.
 | T025 | Verify an unseeded owner-to-brief flow | done | Codex with separate reviewer, requested by repository owner | Fresh fictional development evidence, relevant docs | T024 committed as 2d0c27d. Five actual UI-driven Codex/Luna calls completed from empty facts through corrections and provisional closeout. Independent review passed 54 evidence checks, including both rendered views and actual download. Semantic findings remain below; no retry/fallback/purchase or acceptance claim. |
 | T026 | Clarify proposed workflow rules and preserve consequential caveats | done | Codex with separate reviewer, requested by repository owner | `models.py`, `core.py`, `prompt.txt`, browser controller, targeted tests, relevant docs | T025 committed as 63ac46e. D012 retains one stale pending assessment and adds proposal/caveat/source-coverage guidance. Independent design/code/docs review passed; 224 Python and 12 UI tests, dependency and document checks pass. Native 2/brief 1 and historical evidence preserved; no live calls or demonstrated semantic improvement. |
 | T027 | Verify revised assessment continuity on a fresh development flow | blocked | Codex with separate reviewer, requested by repository owner | Fresh live development evidence, README/scope/board | T026 committed as deb5997. Three actual UI calls completed before browser failure. Independent review passed 35 evidence and 17 archive checks, retaining stale access facts and missing new requirements as failures. Attempt closed; unused two calls cannot be reused. Remaining live stages/download need working browser access and a new reviewed plan/allowance. |
-| T028 | Investigate stale corrections and omitted fact updates | ready | Unassigned | Native update/clarification design, targeted regressions, relevant docs | Use exposed T027 failures to review a small correction design: update superseded access facts, record independently changeable requirements and bind approval questions to a distinct undecided property. Preserve raw history and confirmation guards; review before implementation. No live-call allowance. |
+| T028 | Investigate stale corrections and omitted fact updates | done | Codex with separate reviewer, requested by repository owner | Core question/unknown guards, prompt, browser controller, targeted regressions, relevant docs | T027 committed as e364da7. D013 implements unresolved question targets, protected settled unknown actions and correction/extraction guidance. Independent design/code/docs review passed; 236 Python and 14 UI tests plus dependency/docs checks pass. Native 2/brief 1 and all 20 historical artifacts preserved; no live calls or demonstrated extraction improvement. |
+| T029 | Prepare fresh correction verification | ready | Unassigned | Reviewed development plan/harness, relevant docs | Freeze a fresh fictional correction flow, current source/settings and a new call cap. Review a feasible native HTTP and browser-check strategy so browser focus failures do not masquerade as model failures; label any UI replay separately. T027 remains partial and its unused calls stay closed; no allowance yet. |
 
 Proposed paths are locations for future work, not existing artifacts. Split tasks
 when contributors need independent ownership; do not reserve the whole repository
@@ -465,9 +466,41 @@ Independent review passed 35 raw/context/state/export/rendered-text checks and
 17 final archive/docs reconciliation checks, with the substantive findings retained.
 Strict Markdown/link and whitespace checks pass; all 19 earlier artifacts remain
 byte-identical to the committed versions. No production code changed, so software
-suites were not rerun. Evidence/docs remain uncommitted. T027's remaining live
+suites were not rerun. Evidence/docs were committed as `e364da7`. T027's remaining live
 checks are blocked pending working browser access and a new reviewed plan/allowance;
-T028 is the proposed investigation of the observed state and question-target gaps.
+T028 records the investigation of the observed state and question-target gaps.
+
+### T028: Corrections, extraction and question targets
+
+T027's stale access and omitted download/revocation facts were model omissions
+accepted by structural checks, not mutations introduced by carry-forward. Separate
+design review approved [D013](decisions.md#d013-ask-only-about-unresolved-properties)
+before implementation. The prompt now explicitly asks to update superseded values
+at existing keys and record independently changeable requirements outside advice.
+No automatic deletion, domain-specific contradiction detector, forced update for a
+no-change reply or native field was added.
+
+New questions require unknown or assumed targets before any suppression/adoption.
+The unknown button cannot replace settled facts in core preparation or browser
+optimistic edits; older mismatched questions disable that action and explain the
+correction/provisional route. Legacy state remains readable. A genuine conflict
+can reopen the same property only after newer owner evidence makes it unresolved;
+the existing confirmation and repeated-topic guards remain.
+
+All 236 Python and 14 UI tests pass, including exposed T027 known-target rejection,
+failed HTTP adoption with retained context, settled legacy unknown actions and
+genuine confirmed-fact conflict reopening. Supplied corrections/requirements check
+representation and source handling, not extraction. A diagnostic copy with the bad
+question removed still passes structural checks while retaining stale/missing facts;
+this documents the semantic limit and does not repair the historical response.
+Dependency consistency, strict Markdown/link and whitespace checks pass; the
+existing Starlette warning remains. Native response 2 is byte-identical to the
+frozen schema, brief 1 is unchanged, and all 20 historical artifacts match HEAD.
+Independent code/docs review passed and separately ran 128 focused Python tests
+and all 14 UI tests, with no blocker. No live calls, semantic improvement or
+acceptance claim; T027's unused allowance remains closed. Changes are uncommitted.
+Next: T029 prepares fresh verification; unresolved status and key equality still
+cannot establish that a question asks about the correct semantic property.
 
 ### T014: Repeatable fictional pilot
 
