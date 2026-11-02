@@ -48,7 +48,8 @@ means the acceptance evidence and required review are recorded.
 | T026 | Clarify proposed workflow rules and preserve consequential caveats | done | Codex with separate reviewer, requested by repository owner | `models.py`, `core.py`, `prompt.txt`, browser controller, targeted tests, relevant docs | T025 committed as 63ac46e. D012 retains one stale pending assessment and adds proposal/caveat/source-coverage guidance. Independent design/code/docs review passed; 224 Python and 12 UI tests, dependency and document checks pass. Native 2/brief 1 and historical evidence preserved; no live calls or demonstrated semantic improvement. |
 | T027 | Verify revised assessment continuity on a fresh development flow | blocked | Codex with separate reviewer, requested by repository owner | Fresh live development evidence, README/scope/board | T026 committed as deb5997. Three actual UI calls completed before browser failure. Independent review passed 35 evidence and 17 archive checks, retaining stale access facts and missing new requirements as failures. Attempt closed; unused two calls cannot be reused. Remaining live stages/download need working browser access and a new reviewed plan/allowance. |
 | T028 | Investigate stale corrections and omitted fact updates | done | Codex with separate reviewer, requested by repository owner | Core question/unknown guards, prompt, browser controller, targeted regressions, relevant docs | T027 committed as e364da7. D013 implements unresolved question targets, protected settled unknown actions and correction/extraction guidance. Independent design/code/docs review passed; 236 Python and 14 UI tests plus dependency/docs checks pass. Native 2/brief 1 and all 20 historical artifacts preserved; no live calls or demonstrated extraction improvement. |
-| T029 | Prepare fresh correction verification | ready | Unassigned | Reviewed development plan/harness, relevant docs | Freeze a fresh fictional correction flow, current source/settings and a new call cap. Review a feasible native HTTP and browser-check strategy so browser focus failures do not masquerade as model failures; label any UI replay separately. T027 remains partial and its unused calls stay closed; no allowance yet. |
+| T029 | Prepare fresh correction verification | done | Codex with separate reviewer, requested by repository owner | Frozen development plan/harness artifact, README/scope/decisions/board | T028 committed as 37c25a0. Frozen craft-club plan and HTTP/read-only replay harness prepared; 56 offline, 19 independent and 14 final reconciliation checks pass. Zero native calls; proposed cap five requires later execution instruction/settings review. T027 stays partial and closed. |
+| T030 | Execute the fresh correction check and review recorded views | ready | Unassigned | Bounded result evidence, recorded-view checks, relevant docs | Use T029's exact reviewed plan after a later execution instruction and native settings/cap review. Propose at most five fresh Codex/Luna calls through saved ChatGPT login; preserve every failure and separate semantic, HTTP and replay findings. No new purchase, fallback, retry or reuse of T027's allowance. |
 
 Proposed paths are locations for future work, not existing artifacts. Split tasks
 when contributors need independent ownership; do not reserve the whole repository
@@ -498,9 +499,42 @@ existing Starlette warning remains. Native response 2 is byte-identical to the
 frozen schema, brief 1 is unchanged, and all 20 historical artifacts match HEAD.
 Independent code/docs review passed and separately ran 128 focused Python tests
 and all 14 UI tests, with no blocker. No live calls, semantic improvement or
-acceptance claim; T027's unused allowance remains closed. Changes are uncommitted.
+acceptance claim; T027's unused allowance remains closed. Changes were committed as `37c25a0`.
 Next: T029 prepares fresh verification; unresolved status and key equality still
 cannot establish that a question asks about the correct semantic property.
+
+### T029: Prepare fresh correction verification
+
+The [frozen plan](../artifacts/2026-11-01-codex-luna-correction-plan.json)
+retains source `37c25a0`, prompt/schema, lock, harness and separate timer-fixture
+rehearsal. Its fresh fictional craft-club scenario covers changed member access,
+correction requests, service download/revocation, browser preview and portability.
+[D014](decisions.md#d014-separate-development-http-checks-from-recorded-view-review)
+separates sequential production ASGI/HTTP checks from later recorded-view review.
+This remains targeted development, not held-out acceptance or a matched comparison.
+
+The proposed allowance is five Codex/Luna calls, 300 seconds per request and 1,800
+per idea. Preparation makes zero native calls or native authentication/environment
+reads; no live claim exists. Later execution needs an explicit instruction and
+settings/cap review, exact plan-byte hash and one fixed exclusive claim before
+native startup. Every partial failure is retained; no retry, fallback or reuse of
+T027's closed allowance. The viewer has no agent and rejects start/advance; its
+altered controller, views and downloads are labeled replay. Original HTTP statuses,
+not disabled viewer controls, establish export gating.
+
+All 56 offline checks and 19 independent checks pass. Review found and verified
+fixes for typed replay matching (`false` versus `0`, `1` versus `1.0`) and a final
+source-freeze check after HTTP/export. Rehearsal covers optional four/five-step
+completion, first-error stopping, retained context, durable limits, stream capture,
+source drift and read-only routes with real native access denied. No production
+code changed; existing historical artifacts remain unchanged. Actual model outputs,
+browser rendering/download, comprehension and general semantic quality are untested.
+Final archive/docs reconciliation passed 14 checks. Plan SHA-256 is
+`cd05f816b6638ac0a12625ecf0e9882cdc3896b62463d1dc29d6b6999033880f`.
+Strict Markdown/link and whitespace checks pass; all 20 earlier artifacts remain
+byte-identical to HEAD. No production code changed, so software suites were not
+rerun. T030 owns later authorized execution and recorded
+view checks; this preparation establishes no active allowance.
 
 ### T014: Repeatable fictional pilot
 

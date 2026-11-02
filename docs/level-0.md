@@ -385,6 +385,8 @@ Obsolete access facts and omitted new download/revocation facts remain substanti
 failures despite successful protocol/state/export checks. Browser automation failed
 before the remaining correction, closeout and actual final download. This run does
 not establish complete semantic correction or acceptance.
+T029's [fresh correction plan](../artifacts/2026-11-01-codex-luna-correction-plan.json)
+prepares separate native HTTP and recorded-view checks without new model results.
 Adult comprehension sessions have not run. Before a public demo,
 resolve provider data handling, deployment authority, and operating cost; readiness
 must be demonstrated in the intended environment.

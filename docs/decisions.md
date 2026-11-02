@@ -265,6 +265,22 @@ question rejection; scripted corrections verify supplied valid transitions. Thes
 checks do not establish complete extraction, semantic consistency or live model
 improvement. T027's raw failures remain unchanged.
 
+## D014: Separate development HTTP checks from recorded-view review
+
+- Date: 2026-11-01; status: accepted preparation choice, design reviewed in T029.
+- Context: T027's browser failures interrupted a bounded model check and left its
+  remaining stages unperformed.
+- Choice: targeted development runs may use sequential production in-process
+  ASGI/HTTP handlers with one coding agent. Inspect recorded results separately in
+  a replay viewer with no agent or inference routes. Label its controller changes,
+  rendered views and downloads as replay; original HTTP responses establish export
+  gating. A viewer failure neither consumes nor restarts model calls.
+
+This changes development procedure, not Level 0 acceptance or owner-comprehension
+requirements. Freeze and review source, settings and limits before a later
+authorized execution. Preparation, scripted rehearsal and replay alone establish
+no model-quality result or actual live UI flow.
+
 ## Open choices
 
 | Choice | Resolve in | Needed before |

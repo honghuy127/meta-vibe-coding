@@ -246,6 +246,13 @@ Another live run needs a new versioned matched plan, reviewed settings and an
 invocation allowance. It must account for the changed schemas and native flags.
 Owner sessions remain separate.
 
+The [fresh correction plan](artifacts/2026-11-01-codex-luna-correction-plan.json)
+retains a separate development harness and a no-inference rehearsal. It proposes
+up to five sequential coding-agent calls through production in-process HTTP
+handlers, followed by separately labeled recorded-view checks. Its replay viewer
+cannot invoke an agent. Preparation authorizes no live run; see T029 on the work
+board for review evidence and the next action.
+
 Earlier direct-model experiments are retained under `artifacts/legacy/`; they are
 historical evidence, not acceptance of the current agent wrappers. Their Git
 SHAs identify the design baseline; the prior uncommitted implementation snapshots
