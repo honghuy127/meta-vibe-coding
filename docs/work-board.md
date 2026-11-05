@@ -16,6 +16,38 @@ enough scope to begin. A blocked task names the dependency or question that must
 be resolved. Review means the result exists but needs the required review. Done
 means the acceptance evidence and required review are recorded.
 
+## Next phase: complete Level 0 correction and recovery
+
+Updated 2026-11-06 under T036. This sequence supersedes the pending-work
+instructions in T033; its dated evidence remains historical. Stay within Level 0.
+The next implementation target is a usable correction and failure flow, followed
+by a bounded live check and independent adult sessions. Do not begin Level 1 or
+another broad comparison merely because the last browser flow completed.
+
+Current evidence: plan 7 closed all fourteen first attempts using 39 calls, with
+six wrapper continuity stops and one baseline quota stop retained. D021 and its
+prompt follow-up postdate that frozen comparison. T035 completed one exposed
+browser flow, including recovery and a matching download, but left contradictory
+access uncertainty and unclear counters. S01 completed three of five tasks; the
+correction failed and the owner twice mistook failure for ongoing work. Its five
+readable teach-back answers came from the product designer, not an independent
+participant. These results support focused repair, not acceptance or superiority.
+
+| Order | Owner and work | Exit evidence and dependency |
+| --- | --- | --- |
+| 1 | Technical implementer, then a separate contributor: repair failure feedback and counter labels using S01/T035. Likely paths: browser controller/views and UI tests. Show stopped versus running, retained submitted correction, and actionable recovery. Distinguish assessment attempts per idea from native invocations per server; do not suggest a new idea bypasses an exhausted server cap. | Focused UI/process-double checks cover continuity refusal, timeout, exhausted limits and pending correction; outdated export stays disabled. Review wording and behavior before live use. No new persistence or personal-data logging. |
+| 2 | Technical implementer and reviewer: investigate stale access uncertainty and continuity refusals using the archived T035 states. Likely paths: core/contracts/prompt and targeted tests. Distinguish resolved public/member access from still-unknown membership administration; preserve valid unknowns. | Reproduce the contradictory state and valid revision cases offline. Review the smallest generic repair, including provenance and advice labeling. Any contract change needs a decision-log entry; do not weaken accounting merely to obtain completion or claim semantic correctness from fixtures. |
+| 3 | Operator and separate evidence reviewer: prepare a bounded fresh fictional browser check after steps 1–2. Bind source/native versions, input sequence, call/assessment caps, declared faults and stop rules before execution. | Exercise unknown, correction, failure feedback, recovery, both views and actual download. Review retained facts/questions/advice by meaning as well as bytes. Preserve every first failure; closed allowances do not transfer. Confirm authorization covers the exact new plan and native settings before calls. If it fails, return to the specific defect rather than repeating until success. |
+| 4 | Facilitator and repository owner: arrange independent adult sessions under T011 after the technical flow is reviewed. | Confirm participation, consent, destination/retention and private deletion arrangements. Record the five tasks and first teach-back answers, assistance and incomplete tasks. Keep S01 as formative evidence. AI reading of T035 step 8 may help rehearse wording, but remains optional synthetic work and cannot close this gate. |
+| 5 | Evaluation author/reviewer, then repository owner: reassess T031 and assemble T032. | Decide whether repaired-source evidence warrants a new frozen comparison; specify exposed versus fresh cases and report validation stops separately from semantic failures. Do not reopen v7. Reconcile all Level 0 criteria, remaining operating choices and adult evidence, then request explicit owner sign-off. |
+
+Immediate next action: claim a focused implementation task for step 1 and inspect
+the relevant UI state transitions. Step 2 can be investigated without live calls;
+keep changes individually reviewable. T035 remains open for its semantic/wording
+findings and unfinished synthetic step. T031, T011, T032 and T033 remain blocked
+on the evidence above. This plan does not authorize a release, spending or access
+to personal data. No deadline assumes reviewer or participant availability.
+
 ## Tasks
 
 | ID | Outcome | Status | Owner | Affected paths | Dependency / evidence / next action |
@@ -53,11 +85,13 @@ means the acceptance evidence and required review are recorded.
 | T031 | Complete current-version Level 0 acceptance and comparison | blocked | Codex with separate case author, operator and reviewer; requested by repository owner | `scripts/`, tests, native Claude schema delivery, D015 and D016 fixes, plans 4 to 6, results, relevant docs | [Plan 7](../artifacts/l0-comparison-plan-v7.json) now has all fourteen first attempts closed using 39 calls after reviewed recovery. Original [28-call partial evidence](../artifacts/2026-11-03-claude-sonnet-acceptance-v7.json) is unchanged. Six wrapper continuity stops and one baseline quota stop remain failures; separate semantic review and scoped adjudication are complete. The [complete archive](../artifacts/2026-11-05-claude-sonnet-acceptance-v7-complete.json) binds the final journal. D021 follows this frozen run; Level 0 remains unaccepted. |
 | T032 | Review Level 0 readiness and obtain owner sign-off | blocked | Codex prepares review; repository owner decides | Existing scope, proposal, work board, setup/data/usage evidence | Owner requested the final gate; prepare concrete review evidence after T030/T031 and T011. Actual owner approval, participant consent and unresolved operating choices cannot be supplied by an agent. No public deployment or release authorized. |
 
-| T033 | Execute the plan for remaining Level 0 gaps | blocked | Codex with separate author/operator/reviewer; repository owner handles human gates | Core/models/contracts/prompt, evaluation, targeted tests, new v7 and human-review artifacts, README/scope/decisions/board | Continuity guard implemented/reviewed; partial v7 comparison, adjudication, recovery checks, N06 packet and consent materials retained. N06 blocking omission confirmed by the repository owner on 2026-11-04. Quota/recovery, native bookkeeping reliability, actual UI/download and T011/T032 gates remain unresolved. No sign-off. |
+| T033 | Execute the plan for remaining Level 0 gaps | blocked | Codex with separate author/operator/reviewer; repository owner handles human gates | Core/models/contracts/prompt, evaluation, targeted tests, new v7 and human-review artifacts, README/scope/decisions/board | Continuity guard implemented/reviewed; all v7 attempts now closed and T035 browser correction/recovery/download completed. N06 blocking omission confirmed on 2026-11-04. Remaining correction semantics, failure usability, independent adult evidence and acceptance/sign-off follow the updated next-phase sequence above. Historical evidence below is retained. |
 
 | T034 | Rehearse owner sessions with AI readers | done | Codex coordinates three separate AI reader contexts and an evidence reviewer; requested by repository owner | Synthetic rehearsal artifact, README, Level 0 scope, decisions and this board | Three separate-context AI readers completed the [synthetic rehearsal](../artifacts/2026-11-04-ai-owner-rehearsal.json); first answers and separate evidence review retained. Source/view/hash checks pass. No actual participants, product calls, browser tasks or downloads; T011/T032 remain incomplete. |
 
 | T035 | Finish frozen attempts, repair continuity and sharing checks, verify browser flow and full-interface AI walkthrough | active | Codex with separate recovery/operator/code/evidence reviewers; requested by repository owner | Recovery/result artifacts first; then core/prompt/tests, browser evidence and existing docs | Owner authorized all three next steps on 2026-11-04. Frozen v7 execution/review complete; D021 implemented and separately reviewed, 366 Python and 14 UI tests pass. Browser access recovered; live check stopped on a real continuity failure after two calls. Full-interface AI reading completed as synthetic only. A focused prompt example is added. The new bounded check completed within caps: the unknown reply was accepted, the correction survived declared-timeout recovery, and the actual download matches the export. Open: a stale access question after the correction, unclear call-counter labels, and no AI reading of this flow's final page. Separate evidence review passed. See [current evidence](#t035-frozen-comparison-repair-and-browser-verification). No human acceptance inferred. |
+
+| T036 | Refresh the next-phase plan from current evidence | done | Codex, requested by repository owner on 2026-11-06 | `docs/work-board.md` | Updated the next-phase sequence above and reconciled T033 status. Checked local links, headings and whitespace; self-review only. No runtime changes or live calls. Next: claim the focused failure-feedback repair. |
 
 Proposed paths are locations for future work, not existing artifacts. Split tasks
 when contributors need independent ownership; do not reserve the whole repository
