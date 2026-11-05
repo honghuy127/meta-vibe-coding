@@ -57,7 +57,7 @@ means the acceptance evidence and required review are recorded.
 
 | T034 | Rehearse owner sessions with AI readers | done | Codex coordinates three separate AI reader contexts and an evidence reviewer; requested by repository owner | Synthetic rehearsal artifact, README, Level 0 scope, decisions and this board | Three separate-context AI readers completed the [synthetic rehearsal](../artifacts/2026-11-04-ai-owner-rehearsal.json); first answers and separate evidence review retained. Source/view/hash checks pass. No actual participants, product calls, browser tasks or downloads; T011/T032 remain incomplete. |
 
-| T035 | Finish frozen attempts, repair continuity and sharing checks, verify browser flow and full-interface AI walkthrough | blocked | Codex with separate recovery/operator/code/evidence reviewers; requested by repository owner | Recovery/result artifacts first; then core/prompt/tests, browser evidence and existing docs | Owner authorized all three next steps on 2026-11-04. Frozen v7 execution/review complete; D021 implemented and separately reviewed, 366 Python and 14 UI tests pass. Browser development stopped at zero assessments because browser control is unavailable; full-interface AI walkthrough awaits it. See [current evidence](#t035-frozen-comparison-repair-and-browser-verification). No human acceptance inferred. |
+| T035 | Finish frozen attempts, repair continuity and sharing checks, verify browser flow and full-interface AI walkthrough | active | Codex with separate recovery/operator/code/evidence reviewers; requested by repository owner | Recovery/result artifacts first; then core/prompt/tests, browser evidence and existing docs | Owner authorized all three next steps on 2026-11-04. Frozen v7 execution/review complete; D021 implemented and separately reviewed, 366 Python and 14 UI tests pass. Browser access recovered; live check stopped on a real continuity failure after two calls. Full-interface AI reading completed as synthetic only. A focused prompt example is added. The new bounded check completed within caps: the unknown reply was accepted, the correction survived declared-timeout recovery, and the actual download matches the export. Open: a stale access question after the correction, unclear call-counter labels, and no AI reading of this flow's final page. Separate evidence review passed. See [current evidence](#t035-frozen-comparison-repair-and-browser-verification). No human acceptance inferred. |
 
 Proposed paths are locations for future work, not existing artifacts. Split tasks
 when contributors need independent ownership; do not reserve the whole repository
@@ -1242,3 +1242,183 @@ Four changed Markdown documents pass 128 relative link/anchor checks, heading
 and fence checks; both new archives pass embedded byte/hash checks, and
 `git diff --check` passes. The human-session template remains unchanged/unfilled.
 No commit, push, deployment or global agent-setting change occurred.
+
+
+T035 continuation: the owner requested a local commit and the next step. Commit
+`9041d9a` records the reviewed repair/evidence; nothing was pushed. Native Chrome
+navigation works again in a separate verification window although browser-host
+access remains unavailable. Codex owns the board and actual UI evidence; a
+separate operator prepares only the private append-only recovery helper and
+synthetic checks, and another contributor reviews exact stopped-journal launch
+approval. The original source, plan, claim and journal remain frozen; no additional
+assessment or native-call allowance is granted.
+
+
+The [reviewed recovery](../artifacts/l0-ui-development-recovery-t035.json) resumed
+T035 with the original six-call/seven-assessment/one-fault bounds and no new
+allowance. Thirty focused synthetic checks passed independently; the application
+and stop-guard body remained identical. Native version/binary and saved first-party
+login were checked again. A separate native Chrome window loaded the production
+page and submitted the exact fictional idea through its real form.
+
+The [live result](../artifacts/2026-11-05-ui-development-t035.json) preserves
+seventeen journal events, both raw native outputs and full interface observations.
+Call one delivered a provisional result and asked whether photos identify members
+and whether they agreed to sharing, before any planned correction. The actual
+unknown button submitted “I don't know.” Call two completed natively but failed
+continuity adoption: `open_questions/0.reason` gained one explanatory sentence
+while `assessment_changes` was empty. Separate native-output review found the
+other seventeen old tracked items exact and two new additions; no material loss
+was found on inspection. The unchanged guard correctly refused the missing record.
+This shows one successful contextual question, not general hidden-need coverage.
+
+The failed canonical state retains the unknown marker and exact owner quote,
+with the earlier assessment stale and no current assessment. The real browser
+shows “Outdated · awaiting a new result,” the failure message, the correction form,
+and a disabled Download brief button. Opening Developer View shows its explicit
+outdated/export-disabled warning. Top/bottom screenshots were inspected in CUA;
+only task-page accessibility transcriptions are archived, without unrelated tabs
+or screenshots as image files. Ten offline evidence checks pass; all twenty-two
+anchor advice fragments match the observed transcription. The first provisional
+API export succeeded automatically; this was not an actual browser download.
+
+The run stopped after the real failure: two native calls, two assessments, no
+retry/fallback and no injected timeout. The planned correction, third-attempt
+software timeout, its retry, fresh final brief and actual download remain
+unchecked. Four unspent native calls cannot transfer to a replacement attempt.
+The original blocked archive and three-line stopped-journal prefix are unchanged.
+
+Three new AI readers in isolated contexts received the full observed page,
+including static notices, disposition, correction route and expanded Developer
+warning. First answers were preserved without coaching or rerun. Separate review
+coded fifteen teach-back topics and nine navigation answers as supported by the
+shown text. This is generated-text fidelity, not human comprehension, source
+quality or task completion. Reader intentions were not executed. Their suggestions
+to use the visible Retry button are normal UI advice, not operator deviations.
+Review also retained source-quality questions about account-availability wording,
+detailed service recovery and jargon in the failure message. Temporal/isolation
+provenance is parent-reported; hashes alone do not reconstruct orchestration.
+
+After the failed run was archived, Codex added the focused D021 prompt example
+for bare unknown replies. Core/schema/guard behavior did not change. The existing
+52 assessment-change tests pass, including reason-rewrite refusal and valid
+accounting; one existing Starlette/httpx warning remains. The new prompt has not
+been sent to a model. Separate contributor review approved the example: its
+`reworded` mapping is schema-valid, preserves the unknown and leaves the guard
+unchanged. Current prompt SHA-256 is
+`f340c8c4f72a33d5bc5f4d1d8d1337b89bd3beedd87fd8e1f004f893ae514ab6`.
+Next action: prepare a new bounded development check with an explicit allowance
+and fresh fictional flow. Preserve this closed failure and the frozen v7 comparison. Successful
+correction/recovery/download verification remains incomplete, so T035 is blocked
+on that remaining technical outcome; T011 and T032 remain incomplete.
+
+
+Final continuation checks: all 23 embedded live-result entries and the original
+stopped-journal prefix validate. Four Markdown documents pass 131 relative
+link/anchor checks, heading and fence checks; `git diff --check` passes. The prompt
+example validates against `AssessmentChange`; no schema/core change followed the
+committed baseline. The human-session template remains unfilled and unchanged.
+Commit `9041d9a` precedes this continuation; the new evidence, prompt example and
+status updates are uncommitted. No push or public deployment occurred.
+
+
+T035 next check: the owner's “Continue to the next step” authorizes a new exposed
+fictional development flow for the reviewed prompt example, with at most four
+native calls, five assessments and one declared software timeout. This is a new
+bounded allowance through the existing saved first-party Claude login; no new
+purchase or fallback. The earlier real failure and its unused calls stay closed.
+Codex owns browser operation, result evidence and docs; the operator owns the
+private helper/plan/checks, with a separate contributor's exact preflight before
+launch. The adult choir-sharing case exercises unknown replies, a public/private
+correction, a declared timeout, its explicit retry and an actual download if all
+real responses validate. No initial question means unknown handling is unchecked;
+no question is manufactured. Stop on a real native/state failure without retry.
+
+
+The [next plan](../artifacts/l0-ui-development-plan-t035-next.json) and
+[exact preflight](../artifacts/l0-ui-development-preflight-t035-next.json) passed
+27 independent synthetic checks. Native Claude Code updated to 2.1.318 before
+launch; its binary/version are pinned, all seven required CLI flags are present,
+and no routing/config/auth override environment names were present. Outcomes
+cannot isolate the prompt change from this CLI update.
+
+The new browser run has one valid provisional native result and an unresolved
+access/membership question. The actual task tab and first response remain open;
+no unknown click, correction, timeout or download has executed. A floating Google
+Meet window repeatedly becomes the native control target. The owner was asked
+to minimize it and reply “Ready”; this is an interaction-availability blocker,
+not a model/state failure. No further native request is running. The server is
+idle on port 8026 with its existing claim and counters; do not restart/reset it.
+The [partial snapshot](../artifacts/2026-11-05-ui-development-t035-next-partial.json)
+preserves first output, exact journal prefix, source/plan/approval and the
+session deadline. Resume only the same in-memory task while that session remains
+valid. Do not extend its clock or replace the first attempt if it expires.
+T035 is temporarily blocked on browser availability; the two earlier closed
+failures remain unchanged. No source changes, commit or push occurred in this
+next-check turn.
+
+Independent partial-record review passes: all twelve embedded file hashes/bytes,
+exact eight-event live journal prefix, plan/approval/manifest bindings and remaining
+limits agree. This confirms record integrity only, without source-quality or
+completed-flow claims. `git diff --check` and board relative-target checks pass.
+
+
+The owner replied “Continue” while the original session was still valid. Codex
+selected the preserved task tab without reload/reset and clicked the actual
+unknown button. Native call two is processing; old advice is labelled outdated
+and download is disabled. The existing claim, source/native pins and four-call
+limit remain in force.
+
+The next check completed within its caps: four native calls (all valid), five
+assessments and the one declared fault. The unknown reply was accepted and
+retained. The correction triggered the labelled timeout once, before any native
+process; the correction and unknown survived, the prior result was marked outdated
+and no export ran until the retried result. Retry did not reinject the fault and
+produced revision 5. The bounded provisional handoff (call four) returned an
+identical assessment, so the brief stayed at revision 5. The actual browser download
+is byte- and JSON-identical to that production export (7,923 bytes, SHA-256
+`06cc5d33892e9395a488f88a952a1ac0f0a5d6810e39f154f560189b70481947`). Chrome saved
+it to the home directory rather than Downloads, which is why the first comparison
+attempt found no file. No real native/state error occurred, so the stop-on-failure
+path was not exercised.
+
+The Codex operator turn then stopped on a usage limit at 14:18:59Z. The server
+command it had launched was reported finished at 14:24:00Z (failed, exit -1)
+without its shutdown handler, so the journal has no `run_stopped` event. Its last
+write was at about 14:15Z and nothing was appended. All four calls had finished. Claude Code
+resumed the session, verified the download and archived the
+[completed run](../artifacts/2026-11-05-ui-development-t035-next.json). The archive
+embeds the journal (which keeps the partial snapshot's prefix), download proof,
+execution summary and verbatim final-stage accessibility captures copied from the
+operator log. The port 8026 server and in-memory session no longer exist. This
+completes the remaining browser outcome, so the earlier notes that T035 is blocked
+on browser availability or on correction/recovery/download verification, that call
+two is processing, and that only the same in-memory task may resume are superseded.
+
+Findings remain open. First, after the correction the facts confirm that the
+public sees only dates and that recordings and notes are member-only, yet the
+`access.members_only` fact stays unknown (“The owner does not know yet”), its
+carried-over question still asks whether anyone outside the choir should ever
+have access, and the risk and limitation lines still describe access as
+undecided. How members join and leave is still legitimately open. This is a
+continuity gap inside a valid result, not a guard failure. Smaller wording issues:
+the responsible-admin reason says “Not yet asked” although that question was
+asked; “members can play recordings on their own devices” is an unlabelled
+assumption; and “not uploaded until permission is recorded” is stronger than the
+owner's “check permission before sharing”. Second, the footer
+shows “agent request 5/7”, which counts session assessment requests against
+the hard-coded product limit and includes the synthetic attempt, beside “At most
+4 agent invocations per server run”. The two counters are not labelled as distinct.
+Third, plan step 8 is incomplete: the final full-page capture is archived, but no
+separate-context AI reading of this successful flow was run.
+
+The unknown reply succeeded this time, but this one exposed flow cannot credit the
+prompt example alone: Claude Code changed to 2.1.318 and provider revision may
+differ. No held-out acceptance, reliability rate, human comprehension, N06
+adjudication or owner sign-off follows.
+
+A separate read-only evidence review passed archive integrity (18 embedded files),
+every journal count above, the download comparison, the verbatim captures and both
+main findings; its precision corrections are reflected here and in the regenerated
+archive. Next action: owner decision on the stale-question gap, counter labels and
+whether to run the step 8 AI reading. T011 and T032 remain incomplete.

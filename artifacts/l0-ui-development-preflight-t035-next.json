@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "kind": "independent-live-ui-development-preflight",
+  "task": "T035 next development check",
+  "reviewer": "v7_adjudication; separate from operator/helper author",
+  "reviewed_at_utc": "2026-11-05T13:48:33.387974+00:00",
+  "verdict": "pass",
+  "plan_sha256": "eba50e47952941b3073fbb2ae5a4c0f42278c6a8d3bb820e9148381e6f718fcf",
+  "harness_sha256": "aec12564a6c4d6b10d24890c5adac871e5911719bd732e922120c91b3e1cadc8",
+  "journal_sha256": null,
+  "source_hashes": {
+    "src/meta_vibe_coding/__init__.py": "bc2c616949b2df2c04ef3a5fc83d33f7b68a6ef35c88d1328cf9c3814c67df04",
+    "src/meta_vibe_coding/agents.py": "9c74c1f3abea9fec7b18b9d2df429b45041a93a25dd60e7812927b24992e94a2",
+    "src/meta_vibe_coding/app.py": "d37174b62c8ba7d9e5dfa912a31de6587dbe6ca1cca0a42411e799b8aa047a92",
+    "src/meta_vibe_coding/contracts.py": "1244e372fb741e748736f661ab50ab3e72df459d765a33fbba03a2aa6951ff44",
+    "src/meta_vibe_coding/core.py": "32a3f9da70483a66ccdb6793f88455806e2f385f6232f12c4eb1c68d46f84132",
+    "src/meta_vibe_coding/evaluation.py": "aa90739444bcbf3ca937c0b6f24d97deebb0633bdf7838414acd6b2339714865",
+    "src/meta_vibe_coding/models.py": "6e293b185e8cd6a574c5556f0a97a875787d71456acf4a5b8829f36725f98c28",
+    "src/meta_vibe_coding/pilot.py": "1e269fefcc6e5ebc901ae6e255791f9663c3f2076175bb61699b5d8ec11b3f9e",
+    "src/meta_vibe_coding/process.py": "0ba3f358e9f1214317dc0d425be713e7f0539e42a2245028b7ac1ff5c1a8e774",
+    "src/meta_vibe_coding/prompt.txt": "f340c8c4f72a33d5bc5f4d1d8d1337b89bd3beedd87fd8e1f004f893ae514ab6",
+    "src/meta_vibe_coding/settings.py": "d26fe2174304f6fbde81d37a1ab053516690ac06ceb086803098b087220e81b8",
+    "src/meta_vibe_coding/static/app.js": "64cfa09d5fd990a226ab7361a43fc02c8dbf876262c414a13c8e6afe7d744950",
+    "src/meta_vibe_coding/static/index.html": "40f36fa620710086aa83362e7ba4fb0bb1592f05a1fd39b64a69e9ee5a8359ca",
+    "src/meta_vibe_coding/static/style.css": "270941e8cf325ad90b3af79312dbdb11aa557b4c99abf29d4e15914ee9b4ea78"
+  },
+  "requirements_lock_sha256": "b5c7b96c65c961f6f4c7f60e677003193ab952e4812649a0ac54e30fc71a3360",
+  "plan_path": "artifacts/l0-ui-development-plan-t035-next.json",
+  "harness_path": "/tmp/mvc-t035-next-2026-11-05/ui_server.py",
+  "execution_directory": "/tmp/mvc-t035-next-ui-2026-11-05",
+  "limits": {
+    "assessment_attempts": 5,
+    "native_calls": 4,
+    "synthetic_faults": 1,
+    "clarification_questions": 5,
+    "request_seconds": 300,
+    "session_seconds": 1800
+  },
+  "blocking_findings": [],
+  "checks": {
+    "source_prompt_schema_lock_exact": true,
+    "import_origins_match_checkout": true,
+    "native318_binary_exact": true,
+    "new_execution_directory_absent": true,
+    "exclusive_new_claim_manifest_journal": true,
+    "first_raw_cli_and_http_outputs_preserved": true,
+    "request_scoped_real_error_stopguard_unchanged": true,
+    "exact_correction_fault_once_with_no_native_start": true,
+    "retained_correction_retry_not_reinjected": true,
+    "optional_unknown_branch_no_placeholder_or_extra_budget": true,
+    "real_state_native_error_stops_no_retry_or_fallback": true
+  },
+  "synthetic_review": {
+    "independent_rerun_checks_passed": 27,
+    "actual_native_calls": 0,
+    "actual_browser_tasks": 0,
+    "script_path": "/tmp/mvc-t035-next-2026-11-05/rehearse_ui_server.py",
+    "script_sha256": "67838278fec6d3d0349514290e7282644bf13da0e7a02525a5165c85ea09be04",
+    "independent_method": "Ran unchanged script with final exclusive report write redirected to reviewer temporary file; original report preserved. Rerun occurred before the pin-only update; helper/check script unchanged. Updated author report binds native318 plan and same27checks.",
+    "updated_report_path": "/tmp/mvc-t035-next-2026-11-05/ui-harness-rehearsal-native318.json",
+    "updated_report_sha256": "7dea1f961ad969ce04163bef030fa021721620a91a3d9746ed7270bca7f14390",
+    "prior_draft_path": "/tmp/mvc-t035-next-2026-11-05/plan-before-native318.json",
+    "prior_draft_sha256": "5edf5b88fd49197aeedb49cda15efff2db3196f891c6c249a19d3e368aa72b4a"
+  },
+  "branch_bounds": {
+    "with_first_question": "initial native +unknown native +correction synthetic fault +explicit retry native +optional provisional native = at most5assessments/4native/1fault.",
+    "without_first_question": "initial native +correction synthetic fault +explicit retry native +optional provisional native = at most4assessments/3native/1fault. No blank regeneration or placeholder question.",
+    "operator": "Only initial visible unknown action and exact correction provide owner input; no rescue/fallback replies. Do not regenerate completed results. All real native/state failures stop.",
+    "allowance": "This is a newly authorized exposed development attempt,not a retry/replacement of the closed prior failed run. No unused prior allowance is transferred."
+  },
+  "native_configuration": {
+    "agent": {
+      "name": "claude",
+      "model": "claude-sonnet-5-5",
+      "version": "2.1.318 (Claude Code)",
+      "binary_sha256": "677a2ea7bf576cedd20e191d973914ed8a41796f53a63b1923381ddc4d5b5e7d"
+    },
+    "route": "saved first-party native claude.ai login; API key/auth token excluded and no extra forwarded environment. Launcher must recheck auth/version/binary; pre-native binary drift blocks.",
+    "reported_root_checks": "Current318help exposes required boundary/schema flags; no routing-override environment names present, presence-only check without secret values.",
+    "attribution_limit": "Claude Code changed from2.1.317 to2.1.318 alongside the current prompt. No result difference can be attributed solely to prompt changes; exact provider model revision/internal attempts remain unknown."
+  },
+  "evidence_and_claim_limits": [
+    "Approval permits bounded fictional development execution only; it does not establish actual native/browser success.",
+    "Actual current views,stale/failure handling,semantic correction and browser-downloaded bytes still require execution and separate review. API-only export is not actual download evidence.",
+    "Synthetic process checks and later AI reading do not establish adult comprehension,consent,human sign-off,reliability,comparative superiority or Level0acceptance.",
+    "Old failure and original draft/report stay preserved. No native inference,browser interaction,product source edit or harness edit occurred during this review."
+  ]
+}

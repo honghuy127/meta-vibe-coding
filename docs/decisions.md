@@ -429,8 +429,12 @@ no model-quality result or actual live UI flow.
 ## D021: Tolerate unambiguous continuity references and surface sharing authority
 
 - Date: 2026-11-04; status: implemented and separately reviewed under T035;
-  366 Python tests and 14 UI checks pass. Live verification remains blocked by
-  browser access; these checks do not establish semantic improvement.
+  366 Python tests and 14 UI checks pass. The 2026-11-05 browser check asked a
+  sharing-permission question, then stopped on an unaccounted reason rewrite.
+  A later prompt example has 52 focused checks. One fresh exposed browser run
+  then accepted an unknown reply and completed correction, recovery and download,
+  with one stale access question; it cannot isolate the example's effect. No
+  general semantic improvement or reliable completion is established.
 - Context: four v7 wrapper attempts stopped on accounting although trigger items
   largely preserved meaning. Two used `owner_responsibilities/0` instead of the
   full recommendation field. One included a redundant unchanged-item record;
@@ -457,6 +461,13 @@ no model-quality result or actual live UI flow.
   adoption. Prompt guidance needs live verification; software tests cannot prove
   hidden-need discovery. Preserve all frozen v7 outputs and finish its unstarted
   jobs before changing runtime source.
+- Follow-up on 2026-11-05: after preserving the closed two-call browser failure,
+  add a context-neutral unknown-reply example. Copy the still-relevant prior
+  open-question object exactly, put independent status advice in a new limitation,
+  or account explicitly for a rewritten reason with `reworded` and no evidence.
+  A bare unknown is not substantive owner evidence or resolution. The accounting
+  guard is unchanged. This is a prompt hypothesis requiring a new bounded check;
+  the failed attempt is not retried or reclassified.
 
 ## Open choices
 

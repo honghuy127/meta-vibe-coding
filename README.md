@@ -305,9 +305,21 @@ accepted; [T035](docs/work-board.md#t035-frozen-comparison-repair-and-browser-ve
 records the later D021 repair and remaining verification.
 
 D021 passed separate code review, 366 Python tests and 14 UI checks. Its bounded
-[browser development run](artifacts/2026-11-05-ui-development-t035-blocked.json)
-stopped before any assessment because browser control was unavailable. No live
-effect, actual download or full-interface AI walkthrough is established.
+[browser development run](artifacts/2026-11-05-ui-development-t035.json) resumed
+after the [initial access block](artifacts/2026-11-05-ui-development-t035-blocked.json).
+The first response asked about identifiable people and permission to share photos.
+The second response rewrote an open-question reason without a change record and
+was refused. The actual browser displayed outdated advice and disabled export;
+correction, scripted-timeout recovery and actual download were not reached.
+Three AI readers received the full observed failure-state interface; separate
+review found their generated summaries/navigation answers faithful to that text.
+This establishes no human comprehension or source-quality pass. A later prompt
+example clarifies accounting after unknown replies. A
+[fresh bounded browser run](artifacts/2026-11-05-ui-development-t035-next.json)
+then completed an unknown reply, a correction, declared-timeout recovery and an
+actual download matching the export. One carried-over access question stayed
+stale after the correction. This single exposed flow, run after a Claude Code
+update, does not credit the prompt example alone or establish acceptance.
 
 
 A [three-reader AI rehearsal](artifacts/2026-11-04-ai-owner-rehearsal.json) uses

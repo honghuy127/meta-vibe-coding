@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "kind": "independent-ui-recovery-approval",
+  "task": "T035",
+  "verdict": "pass",
+  "reviewer": "v7_adjudication; separate from helper author/operator",
+  "reviewed_at_utc": "2026-11-05T13:16:35.702801+00:00",
+  "plan_sha256": "a1cd3f03af4884082c38d20546a9a431f3d320653850bd1c4a0dfe8d0ed62df0",
+  "harness_sha256": "e0c6bf470c1556ff8419a138eff8091382d828e0d7973c165a05894dbdbab928",
+  "recovery_helper_sha256": "61810257750836b3e1de5c4786513ea088480e72fcd011a73e6e29010fb3c73a",
+  "journal_sha256": "96bb49446446ef9028ed339f543e0260e722dbabc2abf47b3d22c2b28eaa862c",
+  "claim_sha256": "443f004fbf3f0a7a911fc4fabea9d20e5cb87073e60a10e39eeb248a4004a40c",
+  "manifest_sha256": "488216555fb59dc6971a2a85cb1ba44ac43d2374615405bb0c74539f384b5ead",
+  "requirements_lock_sha256": "b5c7b96c65c961f6f4c7f60e677003193ab952e4812649a0ac54e30fc71a3360",
+  "source_hashes": {
+    "src/meta_vibe_coding/__init__.py": "bc2c616949b2df2c04ef3a5fc83d33f7b68a6ef35c88d1328cf9c3814c67df04",
+    "src/meta_vibe_coding/agents.py": "9c74c1f3abea9fec7b18b9d2df429b45041a93a25dd60e7812927b24992e94a2",
+    "src/meta_vibe_coding/app.py": "d37174b62c8ba7d9e5dfa912a31de6587dbe6ca1cca0a42411e799b8aa047a92",
+    "src/meta_vibe_coding/contracts.py": "1244e372fb741e748736f661ab50ab3e72df459d765a33fbba03a2aa6951ff44",
+    "src/meta_vibe_coding/core.py": "32a3f9da70483a66ccdb6793f88455806e2f385f6232f12c4eb1c68d46f84132",
+    "src/meta_vibe_coding/evaluation.py": "aa90739444bcbf3ca937c0b6f24d97deebb0633bdf7838414acd6b2339714865",
+    "src/meta_vibe_coding/models.py": "6e293b185e8cd6a574c5556f0a97a875787d71456acf4a5b8829f36725f98c28",
+    "src/meta_vibe_coding/pilot.py": "1e269fefcc6e5ebc901ae6e255791f9663c3f2076175bb61699b5d8ec11b3f9e",
+    "src/meta_vibe_coding/process.py": "0ba3f358e9f1214317dc0d425be713e7f0539e42a2245028b7ac1ff5c1a8e774",
+    "src/meta_vibe_coding/prompt.txt": "75b58879760fbee8c1ffe863e4a1facdfc1b53ef66610441d7261056c85b28cb",
+    "src/meta_vibe_coding/settings.py": "d26fe2174304f6fbde81d37a1ab053516690ac06ceb086803098b087220e81b8",
+    "src/meta_vibe_coding/static/app.js": "64cfa09d5fd990a226ab7361a43fc02c8dbf876262c414a13c8e6afe7d744950",
+    "src/meta_vibe_coding/static/index.html": "40f36fa620710086aa83362e7ba4fb0bb1592f05a1fd39b64a69e9ee5a8359ca",
+    "src/meta_vibe_coding/static/style.css": "270941e8cf325ad90b3af79312dbdb11aa557b4c99abf29d4e15914ee9b4ea78"
+  },
+  "native_configuration": {
+    "agent": {
+      "name": "claude",
+      "model": "claude-sonnet-5-5",
+      "version": "2.1.317 (Claude Code)",
+      "binary_sha256": "09f153b46b5df9e8b3454716d682a91901de020cbca630f61dec1a015b32b5e9"
+    },
+    "authentication": "saved first-party native claude.ai login",
+    "excluded_environment": [
+      "ANTHROPIC_API_KEY",
+      "ANTHROPIC_AUTH_TOKEN",
+      "MVC_BACKEND"
+    ],
+    "forbidden_native_overrides": [
+      "ANTHROPIC_BASE_URL",
+      "ANTHROPIC_MODEL",
+      "CLAUDE_CONFIG_DIR",
+      "CLAUDE_CODE_OAUTH_TOKEN"
+    ],
+    "extra_forwarded_environment": [],
+    "native_policy": "Unchanged original ui_server.py invocation builder and native defaults; no fallback.",
+    "historical_environment_snapshot": "Not recorded by original helper; no complete historical environment equality claim."
+  },
+  "limits": {
+    "assessment_attempts": 7,
+    "native_calls": 6,
+    "synthetic_faults": 1,
+    "clarification_questions": 5,
+    "request_seconds": 300,
+    "session_seconds": 1800
+  },
+  "new_allowance": 0,
+  "blocking_findings": [],
+  "prior_work": {
+    "journal_events": [
+      "run_started",
+      "http GET /api/config200",
+      "run_stopped"
+    ],
+    "assessment_attempts": 0,
+    "native_starts": 0,
+    "synthetic_faults_used": 0,
+    "real_failure_observed": false,
+    "reason": "Original browser interruption occurred before any idea/start/assessment. Zero-work recovery preserves the existing run and full original caps; no failed native attempt is retried."
+  },
+  "focused_review": {
+    "append_only": "Existing exact journal opened O_APPEND/O_NOFOLLOW with exclusive nonblocking flock retained throughout recovery; exact original claim/manifest and stopped-zero-work sequence required. Original bytes remain; exclusive recovery.claim/recovery-manifest are added and run_recovered is appended.",
+    "bindings": "Exact plan,original helper,recovery helper,journal,claim,manifest,source,lock,native configuration and unchanged limits verified. New allowance0. Existing recovery claims and drift refuse recovery.",
+    "application": "Original recording,adapter,declared third-attempt software fault and corrected request-scoped stop guard remain byte-identical. Real native/state errors stop; only the declared timeout permits explicit retry.",
+    "native": "Current binary bytes match the frozen plan through helper validation. First-party native saved-login status and version must be rechecked by launcher before claims. Native route overrides are forbidden; historical full environment was not recorded, so equality is not invented."
+  },
+  "independent_checks": {
+    "synthetic_check_path": "/tmp/mvc-t035-2026-11-04/rehearse_recover_ui_server.py",
+    "synthetic_check_sha256": "f3b4e5479f28d34ac7adcc2cc53dac74d88c5a21c880f46f493c8d5815c11f3b",
+    "author_report_path": "/tmp/mvc-t035-2026-11-04/ui-recovery-rehearsal.json",
+    "author_report_sha256": "bd5200f7ca83ee0c47ba2481c514fc3a6d2c1e011b849be9387b928e66bc5aef",
+    "independent_rerun_checks_passed": 30,
+    "actual_native_calls": 0,
+    "actual_browser_tasks": 0,
+    "method": "Ran unchanged recovery rehearsal with final exclusive report path redirected to reviewer temporary file; original report and real stopped run unchanged. Also validated this approval through open_checked_recovery against the real exact journal under lock, without claims/probes/journal writes."
+  },
+  "authority": "User Proceed these3, resume and latest commit+proceed authorize this bounded fictional development recovery; no new spending,purchase,fallback or extra allowance.",
+  "limits_of_verdict": [
+    "Approval covers only one recovery of the exact zero-work stopped development run.",
+    "Synthetic checks do not establish native/UI success,semantic quality,reliability,Level0acceptance or human comprehension.",
+    "Actual browser views,download,model outputs and any failures need separate evidence review. Exact provider model revision and complete historical native environment remain unknown."
+  ]
+}

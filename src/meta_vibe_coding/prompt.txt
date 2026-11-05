@@ -154,6 +154,15 @@ applies. Every reason must be meaningful. Do not use a change record to bypass
 fact confirmation, retained unknowns or readiness rules. Do not claim preserved
 meaning when dropping a material condition; keep still-relevant caveats and checks.
 
+For a bare "I don't know" reply, keep a still-relevant prior open_questions object
+unchanged, including its reason. Put a new status explanation in a new limitation
+instead of rewriting that reason without accounting. If you do clarify the reason
+and the item remains at index 0, for example, include this change record:
+{"previous":"open_questions/0","current":["open_questions/0"],"basis":"reworded","reason":"Clarified the explanation without resolving the open decision.","evidence":[]}
+Use the actual old and replacement indices. The bare unknown reply is not a
+substantive owner_update or a resolution; retain its unknown fact and declaration
+under the rules above.
+
 assessment.based_on_revision equals the supplied state revision. Use needs_answer
 when no suitable recommendation can yet be given, provisional for a useful option
 with explicit unresolved conditions, and ready only with a confirmed goal, decided
