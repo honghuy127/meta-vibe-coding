@@ -30,7 +30,7 @@ means the acceptance evidence and required review are recorded.
 | T008 | Define code, writing, filename, and directory conventions | review | Codex, requested by repository owner | `CONTRIBUTING.md`, `docs/writing-guide.md`, `AGENTS.md`, `README.md`, this board | Existing guides updated; no new files. Checks passed across 11 Markdown files: relative links/anchors, headings, fences, and whitespace. Self-reviewed; repository owner to review conventions. |
 | T009 | Improve the solution proposal and delivery plan using research skills | review | Codex, requested by repository owner | Proposal, Level 0 plan, work board, decision log, README | D003 applied; proposal condensed, sources checked, and acceptance tasks linked. Strict Markdown checks and local render review completed; owner review pending. |
 | T010 | Define product acceptance cases and the simplest-solution comparison | review | Codex, requested by repository owner | `docs/level-0.md`, proposal, README, D004 | Seven general cases and four variations defined, with acceptable alternatives, blocking failures, comparison limits, and teach-back checks. Strict Markdown checks pass for all 11 documents; whitespace and acceptance-table checks pass. Self-reviewed, owner review pending. No complete product case evaluation; T005 records the local timeout smoke attempts. |
-| T011 | Check whether adult owners understand and can use the L0 handoff | blocked | Facilitator pending; Codex prepares materials | Private anonymous session observations; reviewed summary here | Owner chose AI rehearsal on 2026-11-04; T034 records synthetic observations. The actual-adult gate remains deferred and incomplete; no participant consent or responses have been collected. Existing [human-session template](../artifacts/l0-adult-session-template.json) remains unfilled. |
+| T011 | Check whether adult owners understand and can use the L0 handoff | blocked | Claude Code facilitates on the repository owner's behalf; requested by repository owner | Private anonymous session observations outside Git; reviewed summary here | Owner chose AI rehearsal on 2026-11-04; T034 records synthetic observations. On 2026-11-05 Claude Code facilitated one actual session (S01) with the owner as participant: three of five tasks completed, the correction never produced a result, and all five teach-back topics were understood with the page open. The participant is the product designer, not independent; this gate needs further independent adult sessions. See [S01 notes](#t011-actual-adult-session-s01). |
 | T012 | Replace direct inference with coding-agent wrappers | done | Codex with separate wrapper reviewer, requested by repository owner | `src/`, `tests/`, artifacts organization, README, proposal, Level 0 scope, decisions, agent guidance | OpenCode, Claude Code, and Codex CLI wrappers implemented; direct clients/runner removed. Native help/version and mocked contracts checked. See note for review and remaining live verification. |
 | T013 | Self-audit the pending implementation before commit | done | Codex, requested by repository owner | Source, tests, package/lock files, docs, artifact provenance | Audited all 33 tracked/untracked candidate files against D008; fixed owner-confirmation, stale-question/ID, readiness, and instruction-boundary issues. Independent fix review passed; see note. No commit or live inference. |
 | T014 | Make the fictional pilot repeatable after the cooldown | done | Codex with separate reviewer, requested by repository owner | `src/meta_vibe_coding/pilot.py`, `tests/test_pilot.py`, `.gitignore`, README, this board | Opt-in runner prepared and independently reviewed. Default check sends no inference; serving requires cooldown expiry and a current pricing check. Exclusive claims prevent allowance resets. 101 pytest and ten UI checks pass; T006 acceptance remains incomplete. |
@@ -911,8 +911,8 @@ T032's current readiness review remains blocked:
 | T030 provenance failure | Retained failure and generic prompt fix remain development evidence; check meaning in fresh outputs. |
 | T031 comparison | Frozen plan discloses both wrapper-only gates and 32,000/64,000-byte budgets. Ten jobs reviewed/adjudicated; four unstarted at quota stop. See result and recovery below. |
 | N06 human ruling | Repository owner confirmed the blocking omission on 2026-11-04; D019 and the packet retain the decision and its limits. |
-| Actual live views/download and failure handling | Browser flow/download incomplete. Both frozen [failure-double paths](../artifacts/l0-failure-double-v7.json) pass through production HTTP with local process doubles and zero model calls; software recovery evidence only. |
-| T011 adult understanding | Owner selected AI rehearsal now (T034/D020). Actual adult observations and individual consent remain absent; the human-evidence criterion is still incomplete. |
+| Actual live views/download and failure handling | One fresh bounded browser run completed correction, declared-timeout recovery and an actual download (T035), with a stale access question remaining. Both frozen [failure-double paths](../artifacts/l0-failure-double-v7.json) pass through production HTTP with local process doubles and zero model calls; software recovery evidence only. |
+| T011 adult understanding | Owner selected AI rehearsal first (T034/D020). One actual session (S01, 2026-11-05) followed, with the non-independent owner as participant; see [T011 session notes](#t011-actual-adult-session-s01). The human-evidence criterion is still incomplete. |
 | Native permissions, destination/retention and usage | Recheck selected native settings before execution or participant-facing use; unknowns stay explicit. |
 | Owner decision | Codex recommends against sign-off on current evidence. Actual owner decision remains pending; unmet gates are explicit. |
 
@@ -1422,3 +1422,41 @@ every journal count above, the download comparison, the verbatim captures and bo
 main findings; its precision corrections are reflected here and in the regenerated
 archive. Next action: owner decision on the stale-question gap, counter labels and
 whether to run the step 8 AI reading. T011 and T032 remain incomplete.
+
+### T011: Actual adult session S01
+
+This summary was reviewed and approved by the participant on 2026-11-05. One
+actual adult session took place; the participant was the product designer, so
+they were neither independent nor randomly selected. Claude Code facilitated on
+the owner's behalf. It gave the consent and retention notice, then observed
+through the participant's reports, page prints and saved brief, not their screen.
+The build was `e28e72e`, using Claude Code with `claude-sonnet-5-5` and a 4-call
+cap. The fictional idea was a shared family finance web app.
+
+Tasks: describing the idea and saving the brief were completed. Answering the
+consequential question was completed after one Retry, because the continuity
+check refused the first response. The correction was attempted but never produced
+a result: after it failed, two retries ended on the session limit. The updated
+Owner View was therefore never seen. The facilitator gave help twice, each time
+after the participant asked whether the agent was still running.
+
+Teach-back used the pre-correction brief. All five topics were rated understood,
+with no help after the first answers and no confident misunderstanding. The
+participant had the page open while answering, so this shows that the page can be
+read accurately, not that the content was remembered.
+
+Usability findings:
+
+- Twice, a failed step was read as the agent still running. The failure status
+  line did not make clear what had happened or what to do next.
+- While export was disabled, the participant printed the page to PDF instead.
+- The submitted correction text is not shown anywhere after a failure, although
+  the status says answers are retained.
+- “Start a new idea to continue” would discard the session, and it may not work
+  once the server's call cap is used up.
+- Continuity refusals blocked two of the five tasks.
+
+Limits: this was one non-independent participant in a formative check. It does
+not complete T011's evidence or establish usability for other owners. Raw notes
+were kept outside Git and deleted after this summary was approved. The app kept
+no journal, so the call count before each failure is inferred, not logged.
