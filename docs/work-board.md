@@ -30,7 +30,7 @@ means the acceptance evidence and required review are recorded.
 | T008 | Define code, writing, filename, and directory conventions | review | Codex, requested by repository owner | `CONTRIBUTING.md`, `docs/writing-guide.md`, `AGENTS.md`, `README.md`, this board | Existing guides updated; no new files. Checks passed across 11 Markdown files: relative links/anchors, headings, fences, and whitespace. Self-reviewed; repository owner to review conventions. |
 | T009 | Improve the solution proposal and delivery plan using research skills | review | Codex, requested by repository owner | Proposal, Level 0 plan, work board, decision log, README | D003 applied; proposal condensed, sources checked, and acceptance tasks linked. Strict Markdown checks and local render review completed; owner review pending. |
 | T010 | Define product acceptance cases and the simplest-solution comparison | review | Codex, requested by repository owner | `docs/level-0.md`, proposal, README, D004 | Seven general cases and four variations defined, with acceptable alternatives, blocking failures, comparison limits, and teach-back checks. Strict Markdown checks pass for all 11 documents; whitespace and acceptance-table checks pass. Self-reviewed, owner review pending. No complete product case evaluation; T005 records the local timeout smoke attempts. |
-| T011 | Check whether adult owners understand and can use the L0 handoff | blocked | Unassigned | Authorized session artifacts; short result in this board | Depends on T006, named facilitator, consent/data-handling decisions, and owner authorization. Record comprehension, task completion, burden, and changes needed before L1. |
+| T011 | Check whether adult owners understand and can use the L0 handoff | blocked | Facilitator pending; Codex prepares materials | Private anonymous session observations; reviewed summary here | Owner chose AI rehearsal on 2026-11-04; T034 records synthetic observations. The actual-adult gate remains deferred and incomplete; no participant consent or responses have been collected. Existing [human-session template](../artifacts/l0-adult-session-template.json) remains unfilled. |
 | T012 | Replace direct inference with coding-agent wrappers | done | Codex with separate wrapper reviewer, requested by repository owner | `src/`, `tests/`, artifacts organization, README, proposal, Level 0 scope, decisions, agent guidance | OpenCode, Claude Code, and Codex CLI wrappers implemented; direct clients/runner removed. Native help/version and mocked contracts checked. See note for review and remaining live verification. |
 | T013 | Self-audit the pending implementation before commit | done | Codex, requested by repository owner | Source, tests, package/lock files, docs, artifact provenance | Audited all 33 tracked/untracked candidate files against D008; fixed owner-confirmation, stale-question/ID, readiness, and instruction-boundary issues. Independent fix review passed; see note. No commit or live inference. |
 | T014 | Make the fictional pilot repeatable after the cooldown | done | Codex with separate reviewer, requested by repository owner | `src/meta_vibe_coding/pilot.py`, `tests/test_pilot.py`, `.gitignore`, README, this board | Opt-in runner prepared and independently reviewed. Default check sends no inference; serving requires cooldown expiry and a current pricing check. Exclusive claims prevent allowance resets. 101 pytest and ten UI checks pass; T006 acceptance remains incomplete. |
@@ -49,7 +49,15 @@ means the acceptance evidence and required review are recorded.
 | T027 | Verify revised assessment continuity on a fresh development flow | blocked | Codex with separate reviewer, requested by repository owner | Fresh live development evidence, README/scope/board | T026 committed as deb5997. Three actual UI calls completed before browser failure. Independent review passed 35 evidence and 17 archive checks, retaining stale access facts and missing new requirements as failures. Attempt closed; unused two calls cannot be reused. Remaining live stages/download need working browser access and a new reviewed plan/allowance. |
 | T028 | Investigate stale corrections and omitted fact updates | done | Codex with separate reviewer, requested by repository owner | Core question/unknown guards, prompt, browser controller, targeted regressions, relevant docs | T027 committed as e364da7. D013 implements unresolved question targets, protected settled unknown actions and correction/extraction guidance. Independent design/code/docs review passed; 236 Python and 14 UI tests plus dependency/docs checks pass. Native 2/brief 1 and all 20 historical artifacts preserved; no live calls or demonstrated extraction improvement. |
 | T029 | Prepare fresh correction verification | done | Codex with separate reviewer, requested by repository owner | Frozen development plan/harness artifact, README/scope/decisions/board | T028 committed as 37c25a0. Frozen craft-club plan and HTTP/read-only replay harness prepared; 56 offline, 19 independent and 14 final reconciliation checks pass. Zero native calls; proposed cap five requires later execution instruction/settings review. T027 stays partial and closed. |
-| T030 | Execute the fresh correction check and review recorded views | ready | Unassigned | Bounded result evidence, recorded-view checks, relevant docs | Use T029's exact reviewed plan after a later execution instruction and native settings/cap review. Propose at most five fresh Codex/Luna calls through saved ChatGPT login; preserve every failure and separate semantic, HTTP and replay findings. No new purchase, fallback, retry or reuse of T027's allowance. |
+| T030 | Execute the fresh correction check and review recorded views | done | Codex with separate reviewer, requested by repository owner | Bounded result evidence, recorded-view checks, relevant docs | Owner authorized all four Level 0 completion gates on 2026-11-02, including T029's reviewed maximum five-call check. Use exact plan/source and saved ChatGPT login; no API key, new purchase, fallback, retry or reused allowance. Five HTTP calls and replay views/download retained in the [result](../artifacts/2026-11-02-codex-luna-correction-verification.json); 67 independent mechanical checks pass. Blocking mixed owner/agent confirmed fact remains a failure. Generic prompt revision reviewed; 236 Python and 14 UI checks pass. Source frozen for T031; no semantic improvement or acceptance claimed. |
+| T031 | Complete current-version Level 0 acceptance and comparison | blocked | Codex with separate case author, operator and reviewer; requested by repository owner | `scripts/`, tests, native Claude schema delivery, D015 and D016 fixes, plans 4 to 6, results, relevant docs | [Plan 7](../artifacts/l0-comparison-plan-v7.json) now has all fourteen first attempts closed using 39 calls after reviewed recovery. Original [28-call partial evidence](../artifacts/2026-11-03-claude-sonnet-acceptance-v7.json) is unchanged. Six wrapper continuity stops and one baseline quota stop remain failures; separate semantic review and scoped adjudication are complete. The [complete archive](../artifacts/2026-11-05-claude-sonnet-acceptance-v7-complete.json) binds the final journal. D021 follows this frozen run; Level 0 remains unaccepted. |
+| T032 | Review Level 0 readiness and obtain owner sign-off | blocked | Codex prepares review; repository owner decides | Existing scope, proposal, work board, setup/data/usage evidence | Owner requested the final gate; prepare concrete review evidence after T030/T031 and T011. Actual owner approval, participant consent and unresolved operating choices cannot be supplied by an agent. No public deployment or release authorized. |
+
+| T033 | Execute the plan for remaining Level 0 gaps | blocked | Codex with separate author/operator/reviewer; repository owner handles human gates | Core/models/contracts/prompt, evaluation, targeted tests, new v7 and human-review artifacts, README/scope/decisions/board | Continuity guard implemented/reviewed; partial v7 comparison, adjudication, recovery checks, N06 packet and consent materials retained. N06 blocking omission confirmed by the repository owner on 2026-11-04. Quota/recovery, native bookkeeping reliability, actual UI/download and T011/T032 gates remain unresolved. No sign-off. |
+
+| T034 | Rehearse owner sessions with AI readers | done | Codex coordinates three separate AI reader contexts and an evidence reviewer; requested by repository owner | Synthetic rehearsal artifact, README, Level 0 scope, decisions and this board | Three separate-context AI readers completed the [synthetic rehearsal](../artifacts/2026-11-04-ai-owner-rehearsal.json); first answers and separate evidence review retained. Source/view/hash checks pass. No actual participants, product calls, browser tasks or downloads; T011/T032 remain incomplete. |
+
+| T035 | Finish frozen attempts, repair continuity and sharing checks, verify browser flow and full-interface AI walkthrough | blocked | Codex with separate recovery/operator/code/evidence reviewers; requested by repository owner | Recovery/result artifacts first; then core/prompt/tests, browser evidence and existing docs | Owner authorized all three next steps on 2026-11-04. Frozen v7 execution/review complete; D021 implemented and separately reviewed, 366 Python and 14 UI tests pass. Browser development stopped at zero assessments because browser control is unavailable; full-interface AI walkthrough awaits it. See [current evidence](#t035-frozen-comparison-repair-and-browser-verification). No human acceptance inferred. |
 
 Proposed paths are locations for future work, not existing artifacts. Split tasks
 when contributors need independent ownership; do not reserve the whole repository
@@ -536,6 +544,501 @@ byte-identical to HEAD. No production code changed, so software suites were not
 rerun. T030 owns later authorized execution and recorded
 view checks; this preparation establishes no active allowance.
 
+### T030–T032: Complete the four Level 0 gates
+
+The owner requested all four completion gates on 2026-11-02: targeted correction
+verification and fixes, complete acceptance/comparison, adult owner understanding
+(T011), and final review/sign-off. Apply the supplied research skill's evaluation
+guidance in agent-led mode within this scope; the proposal, Level 0 contract,
+work board and versioned artifacts remain authoritative without duplicate dossiers.
+Native runs remain bounded and independently reviewed. Participant/facilitator
+availability has been requested; no actual session or human approval is invented.
+
+T031 stopped on 2026-11-02 at 15 of 98 native calls. The Codex usage limit reached
+the coordinator, reviewer, operator and native calls together, because all four
+share one Plus allowance with no credits. Rate-limit logs show the 5-hour window
+resetting at 14:17:38 JST with 78% of the weekly window used. The harness process
+then exited with status 137, losing in-memory state; its journal survives.
+
+N01-wrapper failed after one call (`invalid_output`): a question referenced a fact
+it did not create. N01-baseline and N02-baseline delivered provisional results and
+their variations in five calls each. N02-wrapper reached its variation; call 15
+returned the usage-limit error, so NV03 is not checked and the job is a technical
+stop rather than a retry candidate. N03 to N07 are unstarted. No semantic, view or
+comparison judgment exists for any job. From N02-baseline onward the harness could
+not combine known passages with the unlisted-fact reply, so the known part was
+supplied and the rest left unanswered on both approaches; affected rows are
+protocol deviations, not equal received information.
+
+The [interrupted record](../artifacts/2026-11-02-codex-luna-acceptance-v3-interrupted.json)
+holds the journal, claims, reviews, operator selections and frozen harness, because
+those existed only under `/tmp`. Its 51 files reconcile byte-for-byte; the local
+operator token is excluded and a credential-pattern scan found nothing. This is
+not an exhaustive secret scan. Plan, cases, source, lock, harness and Codex binary
+hashes all still match the freeze.
+
+The owner then replaced Codex with Claude Code and Haiku 4.5 for this test and
+agreed the harness should not depend on one agent, so plan 3 closed without resuming.
+A journal-based resume launcher had passed review by then but never ran; it is kept
+in the closed record and its logic moved into the new harness.
+[D015](decisions.md#d015-name-the-agent-in-the-plan-and-run-acceptance-through-one-harness)
+records the choice. All fourteen jobs run again under plan 4 with the same cases,
+because mixing agents would not be a matched comparison.
+
+The Claude wrapper had never made a live call. One development call showed Haiku
+wrapping JSON in a Markdown fence, which the strict parser rejects, so every wrapper
+job would have failed for a reason unrelated to stewardship. The wrapper now uses
+native `--json-schema`, like Codex's `--output-schema`, without relaxing validation.
+Stewardship and baseline prompts and both schemas are byte-identical to plan 3. A
+live rehearsal on a synthetic case used three Haiku calls, two wrapper and one
+baseline: all completed with Haiku reported as served, no workspace files and a
+real export. Wrapper calls took about 75 seconds and 8,600 output tokens, baseline
+about 22 seconds. The Claude CLI reported about $0.15 across those calls; on a
+subscription that is a notional figure, not a charge.
+
+The operator and runner share files in the run directory because the Claude sandbox
+denies localhost, which removed the port and control token. A separate reviewer,
+blind to cases, failed the launcher twice and the new harness three times before
+passing `d659d14c5972`. Fixes included a run directory that could have granted a
+fresh allowance, a malformed request that stranded the run, wrapper and baseline text
+being escaped differently, and a usage-limit shape that could pass unnoticed.
+
+The [plan 4 run](../artifacts/2026-11-02-claude-haiku-acceptance-v4.json) closed all
+fourteen jobs in 54 of 98 calls, about 28 minutes of native time. Claude Code reported
+Haiku 4.5 as served on every call, with no native stops, tool denials or workspace
+files. It reported 181,000 output tokens and a notional $1.36, which is not a charge
+on the subscription. A separate agent reviewed each job and variation against the
+frozen rubric, and another adjudicated its findings against the raw evidence,
+reproducing all 17 wrapper calls.
+
+No phase passes on either approach. Of 18 blocking findings, 16 stood and 2 were
+overturned, and adjudication added 3, leaving 19: 7 on the wrapper and 12 on the
+baseline. Only N04 and N07 baselines have no blocking failure, and neither passes
+every dimension. These counts do not show which approach is better, because the
+wrapper produced fewer results to fault.
+
+The wrapper's main problem is reaching a result. N03, N04, N06 and N07 stopped with
+`invalid_output`, so four of seven jobs have no current result. N03, N06 and N07 were
+model output defects stopped by guards working as designed, though N06's guard is
+heavy. N04 is a product and harness defect: byte-exact quote matching fails when the
+model flattens a line break, and the harness's passage joining supplied the line
+break. A real multi-line owner reply can fail the same way. Normalize whitespace on
+both sides of both containment checks. Without it, N04 would have reached a result
+but was unlikely to pass. Wrapper results that did finish keep unknowns visible, yet
+under-clarify and leave cost and upkeep out of the Owner View. N05 asked nothing.
+Every baseline finished, but baselines repeated questions after unknowns and made
+unsupported price or safety claims. T030's mixed owner and agent fact did not recur
+in adopted values, on thin coverage.
+
+Recorded deviations invalidate no row: provisional was set on all six variation
+calls rather than only final ones, which affected N01 unequally; seven answers were
+fragments rather than clauses; one matched question received unequal clauses.
+Baseline pages omit pending questions, so those were judged from the journal.
+Wrapper view dimensions come from recorded replay, so no wrapper row can pass on
+them. Live UI, actual downloads, owner comprehension and vendor claims are unchecked.
+Agent review is not human review; human review is advised on one disputed block and
+on N04 baseline, where one dimension alone prevents a pass. Coordinators stayed blind
+to N03 to N07 text throughout, but those cases are now exposed and are regression
+evidence only.
+
+The owner then asked to rerun the test with Sonnet. [Plan 5](../artifacts/l0-comparison-plan-v5.json)
+changes only the requested model, `claude-sonnet-5-5`, plus its run directory, owner
+instruction, version and description. Plan 4 regenerates byte-identically, so
+source, harness, cases and protocol match. A separate agent checked the bindings, and
+a two-call rehearsal on a synthetic case confirmed the model ID. The known quote
+whitespace defect was deliberately left in place so that the model is the only
+variable.
+
+The [plan 5 run](../artifacts/2026-11-02-claude-sonnet-acceptance-v5.json) closed all
+fourteen jobs in 46 of 98 calls, with Sonnet reported as served on every call. It
+stopped twice because Claude Code exhausted its structured-output retries on
+N02-wrapper and N05-wrapper. A separate agent reviewed each stop from provider fields
+as a model output failure, not a limit, and the run resumed against an approval of
+the exact journal. Each failed job keeps its failure, no allowance was added, and no
+further job was lost. Wrapper calls averaged about 36 seconds and baseline calls
+about 23; the CLI reported a notional $2.94.
+
+After separate review and adjudication, six jobs pass every phase: N01, N03, N04 and
+N06 wrappers, and N02 and N04 baselines. N07-wrapper has one blocking failure, hidden
+material uncertainty: it gave a ready result without settling a decision-critical
+scope. N05 fails a non-blocking dimension on both approaches, and N02 and N05
+wrappers stopped technically. Calibration paired jobs across both runs and found
+plan 5's review consistent with plan 4's on price, safety, recovery and hidden
+uncertainty. Sonnet's outputs hedge where Haiku's asserted. The quote whitespace
+defect did not recur.
+
+The comparison exposed a test defect. The mixed-answer line chosen for plan 4, "For
+anything else you asked: I do not know.", is tied to no question. Baselines read it
+as closing their own listed open questions, recorded unasked items as owner unknowns
+and stopped asking. That overturned five disputed baseline blocks, but N01, N03, N06
+and N07 baseline clarification cannot be scored and is left open. It also appears,
+more weakly, in two plan 4 rows that its reviews missed, with no verdict change. The
+wrapper was unaffected because the product ties each reply to one question. Next
+time, name the uncovered part of the question, send a plain "I do not know" when
+nothing is covered, and check each owner unknown against the questions actually asked.
+
+Reaching a result is now Sonnet's main wrapper cost. Sixteen of 24 wrapper calls
+needed more than one structured-output attempt and five hit Claude Code's limit of
+five; two of the four fully passing wrappers relied on a last attempt. Baseline calls
+never needed more than two. Haiku needed at most two attempts on every call, but
+produced weaker content that failed the product's guards.
+
+Open: the five artefact rows need a corrected rerun, which would be regression
+evidence only, since these cases are now exposed. Whether replay pages count as a
+rendered check is disputed. Plan 4's adjudicator ruled them ineligible for wrapper
+view dimensions, and under that reading only the two baseline jobs pass. The N05
+wrapper risk call, live UI, actual downloads and owner comprehension are unchecked,
+and agent review is not human review. Level 0 acceptance is therefore not met.
+
+Before the final run, three fixes were made and reviewed separately with no blocker:
+word-based quote matching, ten Claude structured-output attempts (D016, the owner's
+choice), and a mixed-answer reply tied to the current question. A live probe
+confirmed safe-mode Claude Code honours the attempt setting; Sonnet's measured pace
+keeps ten attempts inside the unchanged 300-second limit. A separate agent wrote
+seven new cases that the coordinator never saw. A rehearsal hit the owner's Claude
+5-hour limit, was rerun after the reset, and plan 6 passed a separate binding check.
+
+The [plan 6 run](../artifacts/2026-11-02-claude-sonnet-acceptance-v6.json) closed all
+fourteen jobs in 57 calls with no native stop. Eight wrapper calls needed more than
+the old five attempts and all completed, so the retry change worked. A separate agent
+reviewed the run and another adjudicated it against raw evidence.
+
+Adjudication confirmed a product defect. On N05-wrapper, a provisional result with
+one-line text and no acceptance criteria, open decisions or limitations was adopted
+over a fuller earlier result and exported with HTTP 200. Level 0 requires a
+provisional export to carry its unresolved questions. Content rules apply only to
+ready results (`models.py:150-166`); text and lists may be minimal (`models.py:83-103`);
+adoption has no continuity check (`core.py:118-119`); and export blocks only a missing
+or `needs_answer` result (`core.py:148-150`). It occurred once in 30 adopted wrapper
+results, and the unknown facts stayed visible.
+
+Eight jobs or phases pass: N02 baseline and wrapper bases, N03 and N04 baselines,
+N04 wrapper, N05 baseline with its unknown variation, and N07 wrapper and baseline.
+Only N05 baseline and both N07 jobs pass with no deviation that could have changed
+them. N06-wrapper has a new blocking finding, a hidden need the baseline raised and
+the wrapper never did, which awaits human confirmation. N03-wrapper and N06-baseline
+over-asked. N01-baseline wrongly attributed an unknown to the owner, which is not
+blocking.
+
+The operator was required to close provisionally at the five-question limit eight
+times and did so once. Three misses, on N01, N02 and N05 wrappers, changed outcomes
+to question-limit failures; N01-wrapper also had a miscounted step. Only the wrapper
+was hurt, because the baseline is told how many questions remain. N01 and N02
+baselines stopped on the shared 32,000-byte input limit at their variation calls,
+with inputs of 33,667 and 33,837 bytes: the transcript baseline resends every earlier
+reply, while the wrapper peaked at 24,239 bytes. So the two approaches are not
+equally exposed to that limit. NV01, N02-baseline NV03 and N05-wrapper NV02 are not
+checked.
+
+Level 0 acceptance is not met. Live UI, downloads, owner comprehension and the
+separate failure double are unchecked, and agent review is not human review. The
+plan 6 cases are now exposed.
+
+Follow-up on 2026-11-03,
+[D017](decisions.md#d017-require-provisional-results-to-carry-what-they-leave-open-and-size-the-baseline-separately):
+a provisional result must now list open questions and limitations and keep each
+owner unknown open by fact key, matching case-insensitively; the prompt says so.
+This rule rejects none of 62 earlier sound provisional results and both empty ones.
+A refusal keeps the owner's answers and leaves the earlier result outdated and
+unexportable. The harness now forces the provisional close from the question limit
+onward on both approaches and records that it did. At the owner's choice, a plan can
+give the transcript baseline its own input limit, 64,000 bytes, while the wrapper
+keeps the product's 32,000. A separate review passed harness `a51847a47f73` and the
+product change with no blocker. The case-insensitive topic match came after that
+review and is self-reviewed. All 313 Python and 14 UI tests pass. No live call or
+acceptance run used these changes.
+
+The remaining gaps and their closure order are tracked in [T033](#t033-plan-to-close-the-remaining-level-0-gaps).
+T011, T031 and T032 stay blocked; no sign-off is implied.
+
+### T033: Plan to close the remaining Level 0 gaps
+
+Prepared on 2026-11-03. This is proposed follow-up work, not an implemented
+continuity safeguard, a new run authorization or an acceptance decision. Codex
+owns technical preparation; the repository owner assigns the human reviewer and
+facilitator. No dates depend on assumed participant or reviewer availability.
+
+1. **Define and check assessment continuity.** Codex prepares a small design and
+   regression fixtures for `core.py`, `models.py`, `contracts.py`, `prompt.txt` and
+   the relevant flow/contract/UI tests. Compare a replacement with the retained
+   previous assessment and current owner evidence. Cover lost material open
+   decisions, limitations, acceptance criteria and owner responsibilities, even
+   when every required list remains nonempty. Start with decisions tied to stable
+   fact keys; assess whether other material items need explicit carry-forward or
+   removal reasons. Any contract change needs separate design review and a
+   decision-log entry before implementation. String length, list counts and exact
+   prose matching cannot decide whether a result is substantively weaker.
+
+   The design must allow resolved questions, superseded advice and concise
+   rewrites, giving later owner corrections priority over stale advice. It must
+   also handle the first assessment, no-change replies and repeated failed
+   requests. On refusal, retain the owner's answers and leave the earlier result
+   outdated and unexportable; do not silently merge stale text or retry. Exit when
+   meaningful regressions cover both lost-content refusal and valid revision,
+   both views and export agree, and another contributor has reviewed the change.
+   Record any semantic losses the selected design still cannot detect. Offline
+   checks alone will not establish live improvement.
+
+2. **Prepare an explicit comparison of the different contracts.** After technical
+   changes are reviewed, Codex prepares a new versioned T031 plan, updates its
+   review/report instructions and obtains independent preflight review. Keep
+   D017's rule: provisional wrapper results must retain each declared unknown as
+   an open question under its fact key, ignoring case and outer spaces. The plain
+   chat baseline has no equivalent key validator or adoption gate. Disclose that
+   difference before running and next to the results, including any new
+   continuity gate. Assess preservation of uncertainty by meaning in both
+   approaches; report wrapper validation stops separately from omissions in
+   delivered outputs. A baseline-only retrospective audit may inform review but
+   must not feed state or validator feedback into its transcript.
+
+   Set `baseline_input_bytes` explicitly to the owner's selected 64,000 bytes;
+   retain the wrapper's 32,000. Record the different input/schema contracts,
+   shared question/call/time limits, native hidden attempts, and enforced
+   provisional close. Verify the topic guard's later case-normalization change
+   separately; its existing review is self-review only. Have another contributor
+   freeze seven genuinely new cases after source freeze; exposed cases remain
+   regression evidence. Bind plan, source, harness and journal hashes, confirm the
+   selected native settings and invocation allowance under D015, and preserve
+   every first attempt without retries or fallback. Do not assume unused old
+   allowance is reusable. Close out the still-unchecked live UI, actual download
+   and failure-double evidence explicitly, labeling replay separately. Exit when
+   all required phases and review dimensions have evidence or remain openly
+   blocked; only complete reviewed evidence can support acceptance.
+
+3. **Obtain human adjudication of N06-wrapper.** In parallel with technical
+   preparation, Codex prepares a compact review packet from the unchanged
+   [plan 6 result](../artifacts/2026-11-02-claude-sonnet-acceptance-v6.json): embedded
+   `review-v6.json` at `rows[17]`, `review-v6-adjudication.json` at
+   `blocking_rulings[7]` (both zero-based), the
+   frozen case/applicability rule, initial request, disclosed answers and all four
+   wrapper outputs. The dispute is whether failing to ask or flag that other
+   families' children might appear in dance-show videos is a blocking hidden-need
+   omission. The first reviewer treated undisclosed facts as inapplicable; the
+   adjudicator treated this need as inferable from the initial request. Include
+   the baseline's relevant question as context, not proof of a wrapper failure.
+
+   The repository owner or a named human reviewer decides whether the frozen rule
+   supports the finding and records confirmed, overturned or unresolved, with
+   passages, rationale and affected review dimensions. Append that ruling without
+   rewriting the original reviews or rerunning the case to decide its old verdict.
+   An unresolved dispute leaves the case open; overturning this finding alone
+   does not establish Level 0 acceptance. Any fix informed by N06 is development
+   work and must precede the next source/case freeze.
+
+4. **Unblock T011's adult sessions.** Materials can be prepared alongside steps
+   1–3. The repository owner names a facilitator and confirms adult availability,
+   intended participant count/selection, private storage and a deletion rule.
+   The facilitator confirms voluntary consent and the destination/retention notice
+   before collecting responses; existing gate authorization is not participant
+   consent. Use the existing [procedure](level-0.md#check-owner-understanding) and
+   [empty template](../artifacts/l0-adult-session-template.json), a technically
+   reviewed build and fictional tasks. Discuss remaining material risks before
+   sessions; do not use participants as substitutes for technical review.
+
+   Check idea entry, a consequential answer, a correction, the updated Owner View
+   and brief download. Record the first uncoached teach-back on recommendation,
+   access, cost unknowns, maintenance/recovery and next action, followed by any
+   help and confident misunderstandings. Keep raw observations outside Git.
+   Exit when actual sessions and separate review exist, important
+   misunderstandings are resolved and a non-identifying summary records build,
+   participant count, incomplete tasks and limits. If those conditions fail,
+   revise and recheck the affected flow; keep T011 blocked rather than inferring
+   comprehension from software or agent checks.
+
+5. **Prepare T032 and request the owner's decision last.** Codex assembles the
+   concrete readiness review in the existing board and scope documents after
+   T031's technical/semantic review and T011's evidence are complete. Include
+   T030's retained mixed-provenance failure and the evidence for any later fix,
+   continuity limits, the human N06 ruling, comparison asymmetries, live view and
+   download checks, failure recovery, comprehension results, and remaining native
+   permissions, data/retention and usage choices. Keep a missing item visible and
+   distinguish an accepted residual limitation from an unmet acceptance criterion.
+
+   Codex can recommend readiness with stated limits; the repository owner gives
+   the actual sign-off. Record the decision, reviewed build and evidence, scope
+   and conditions. T032 remains blocked while required evidence or a human
+   decision is missing. Sign-off does not itself authorize public deployment,
+   spending or a release.
+
+Next action: start step 1's design review and prepare step 3's human review packet;
+steps 2 and 4 can be prepared while those reviews are pending. Implementation and
+execution evidence belong in the affected task notes, not in new routine logs.
+Planning checks: all 43 relative links/anchors, 28 headings, code fences and
+whitespace in this board pass; `git diff --check` passes. Self-reviewed against
+current scope, D015–D017 and the retained plan 6 reviews; separate review remains
+pending. Runtime tests were not run for this documentation-only change. No code,
+historical result, live call, participant record, commit or push changed in this task.
+
+
+Execution update, 2026-11-03: the owner instructed Codex to proceed with this plan.
+[D018](decisions.md#d018-account-explicitly-for-changed-assessment-items) was reviewed
+by a separate Codex contributor before implementation. Native contract 3 now
+accounts explicitly for changes to tracked prior assessment lists in adoption;
+state/export schema 1 remains. The same reviewer found no implementation blocker
+and ran 170 targeted checks. This guards against unaccounted loss, not weaker
+meaning hidden in a claimed rewrite or unjustified withdrawal. Scalar summaries,
+recommendation kind and risk level remain outside the guard. The topic
+normalization mismatch between provisional validation and question suppression is
+fixed and separately reviewed. A later boundary regression also checks that an
+already-assessed owner turn cannot justify a new removal.
+
+The [N06 human review packet](../artifacts/l0-n06-human-review.json) contains all
+four original wrapper exchanges, the frozen applicability rule and both agent
+positions. Its embedded-source hashes were verified. On 2026-11-04 the repository
+owner answered “Confirm” to the evidence-backed recommendation and confirmed the
+blocking omission. The accepted rationale is failure to ask about or leave open
+other people appearing and permission to share, under the frozen hidden-need rule.
+This confirms the risk/unknown-handling failure; it does not rule the invite-only
+recommendation itself unsafe. [D019](decisions.md#d019-confirm-the-n06-hidden-need-omission)
+records the human decision. Original reviews and run outputs remain unchanged. The existing
+[adult-session template](../artifacts/l0-adult-session-template.json) now includes
+a consent script and unfilled logistics fields. Facilitator role, adult count and
+availability, private storage and deletion arrangements were requested; no consent
+or participant response has been collected.
+
+Fresh-case preparation preserves an unsuccessful author assignment: the first
+independent author opened a source-freeze file that included runtime source and
+prompt text. No cases were authored and that assignment was disqualified. A new
+blind author receives hash-only metadata. Historical attempts remain unchanged.
+The browser access host reports unavailable; native Chrome access took unusually
+long. No completed live UI flow or actual download is claimed from that attempt.
+
+T032's current readiness review remains blocked:
+
+| Required evidence | Current state / next action |
+| --- | --- |
+| Current build and continuity guard | D018 reviewed; four of five attempted wrappers stopped on accounting despite largely preserved trigger meaning. Reliability/semantic improvement is unestablished. |
+| T030 provenance failure | Retained failure and generic prompt fix remain development evidence; check meaning in fresh outputs. |
+| T031 comparison | Frozen plan discloses both wrapper-only gates and 32,000/64,000-byte budgets. Ten jobs reviewed/adjudicated; four unstarted at quota stop. See result and recovery below. |
+| N06 human ruling | Repository owner confirmed the blocking omission on 2026-11-04; D019 and the packet retain the decision and its limits. |
+| Actual live views/download and failure handling | Browser flow/download incomplete. Both frozen [failure-double paths](../artifacts/l0-failure-double-v7.json) pass through production HTTP with local process doubles and zero model calls; software recovery evidence only. |
+| T011 adult understanding | Owner selected AI rehearsal now (T034/D020). Actual adult observations and individual consent remain absent; the human-evidence criterion is still incomplete. |
+| Native permissions, destination/retention and usage | Recheck selected native settings before execution or participant-facing use; unknowns stay explicit. |
+| Owner decision | Codex recommends against sign-off on current evidence. Actual owner decision remains pending; unmet gates are explicit. |
+
+The replacement blind author froze seven new categories and three owner variations
+in [cases 7](../artifacts/l0-acceptance-cases-v7.json), with an
+[authorship manifest](../artifacts/l0-case-freeze-v7.json); no native calls were made.
+The coordinator has inspected only IDs and structural metadata. The new
+[plan 7](../artifacts/l0-comparison-plan-v7.json) binds the reviewed runtime, source
+snapshot, current schemas, case bytes and harness. It states both wrapper-only
+gates and the 32,000/64,000-byte input budgets before execution. Independent
+[preflight](../artifacts/l0-comparison-preflight-v7.json) passed after resolving
+three draft instruction/rubric conflicts; all exact hashes match. The first
+sandbox launch stopped at native authentication before a claim, journal or
+inference. The same approved launch succeeded outside the sandbox with platform
+approval and no added allowance. Claude Code 2.1.317 and its binary hash are in the
+run manifest; inference-free help confirms the required native flags. First
+attempts were executed through the separate operator; the partial run is closed
+for now at the native quota stop described below.
+
+Execution checks: `.venv/bin/python -m pytest -q` passes all 344 checks;
+`node --test tests/test_ui.cjs` passes all 14; `.venv/bin/python -m pip check`
+finds no broken requirements. The existing Starlette/httpx deprecation warning
+remains. The no-inference evaluation rehearsal passes all eight transition checks;
+four changed Markdown documents pass relative links/anchors, headings, fences
+and whitespace checks, and `git diff --check` passes. These are software and
+preparation checks, not Level 0 acceptance, comprehension or live improvement.
+The [partial result](../artifacts/2026-11-03-claude-sonnet-acceptance-v7.json)
+retains all 28 native starts and ten closed jobs, with four jobs unstarted. Five
+jobs delivered final outputs: four baselines and one wrapper. Four wrappers stopped
+on D018 accounting; one baseline stopped on the provider's HTTP 429 usage limit.
+The fifth wrapper delivered its base and unknown variation. Across all jobs,
+three variations were delivered; unreached phases stay unchecked. Native retries
+or fallback did not replace any first attempt. The server was stopped after all
+attempted jobs closed and its inbox was empty; the journal hash is unchanged.
+
+The [separate review](../artifacts/l0-comparison-review-v7.json) and
+[adjudication](../artifacts/l0-comparison-adjudication-v7.json) cover 20 phase rows,
+including the four unstarted jobs. Four baseline phase rows pass all dimensions;
+two C02 baseline rows fail risk/unknown handling for omitted read/output-error and
+incomplete-catalog handling. No semantic blocking finding was confirmed within
+this limited review. C05 wrapper base and unknown variation pass semantic dimensions,
+but wrapper rendering and actual download remain unchecked. The four refused
+wrapper candidates largely preserved meaning in their trigger items; wrong
+responsibility reference prefixes, an unaccounted reason rewrite, and missing or
+redundant records stopped them. This is a substantial accounting burden; the
+software guard cannot be treated as demonstrated semantic improvement. No source
+relaxation or output repair changed the frozen run.
+
+The operator's C04 routing ambiguity remains in the original review. Independent
+adjudication found no confirmed deviation: a prior one-off capability did not
+establish recurring monthly counts after the changed workflow. The affected
+clarification dimension passes on recorded evidence; counterfactual outcome impact
+remains unestablished. The exact pre-adjudication review snapshot is retained in
+the result archive, so both positions and their hashes remain recoverable.
+
+The [recovery review](../artifacts/l0-comparison-recovery-v7.json) passes technical
+checks but is `not_ready` for launch before the reported next reset at
+2026-11-04 02:00 JST. The date is inferred from the native message and its timestamp;
+quota restoration is unverified. Only C06 baseline/wrapper and C07 wrapper/baseline
+may resume, with at most 28 additional calls across those four original first
+attempts. Closed jobs cannot be reopened and their unused calls cannot transfer.
+Recheck exact journal/source/plan/harness and native login/version/binary, and obtain
+fresh exact-journal launch approval after the time condition. No new allowance,
+retry, fallback or source change is authorized by that recovery preparation.
+
+Next action: use T034’s synthetic observations to improve the next walkthrough; review the
+native accounting burden before readiness claims, and complete the four unstarted
+jobs only under the recorded recovery conditions. T031, T011, T032 and this task
+remain blocked. Codex recommends against Level 0 sign-off on this evidence.
+Final reconciliation on 2026-11-04 JST verifies all 129 embedded archive files and
+the unchanged journal, runtime and pre-/post-adjudication hash chain. The four
+changed Markdown documents pass 110 relative links/anchors, heading, fence and
+whitespace checks; `git diff --check` passes. No commit, push, global agent-setting
+change or public deployment has occurred.
+
+
+### T034: AI owner-session rehearsal
+
+The owner selected AI agents to mimic human owners on 2026-11-04; see
+[D020](decisions.md#d020-rehearse-owner-sessions-with-ai-readers). Three readers in
+separate contexts received two recorded Owner View states each and the same five
+teach-back prompts. Their packs excluded the code, case answer bank, expected
+answers and earlier reviewer judgments. Personas are fictional prompts, not a
+model of the adult population. First responses were retained without coaching or
+rerun in one [rehearsal artifact](../artifacts/2026-11-04-ai-owner-rehearsal.json).
+
+The inputs cover a completed planning handoff with unknown photo metadata,
+family-video sharing, and a refused revision whose earlier recommendation is
+outdated. The current production controller generated text in a DOM/HTTP double;
+five exports match original recorded HTTP responses and one failed state remains
+unexportable. The source snapshots span historical model/runtime versions. This
+replay does not rerun reasoning or establish current model quality. Nine proposed
+reader actions were not executed; no actual browser task or download occurred.
+
+A separate evidence reviewer coded the 15 generated first-topic answers: 14 were
+supported by shown text and one partly supported answer explicitly added its own
+stop/seek-help precaution. These counts describe AI text, not a human comprehension
+rate. The family-sharing reader faithfully summarized a source that still omits
+the D019 sharing-permission question. Repetition of visible advice does not make
+that source complete.
+
+Two additional complaints about a missing provisional label were unsupported:
+the readers confused the hidden request-provisional action with the supplied
+provisional disposition. The packs also omitted static correction-form labels
+and the no-software-built notice. A navigation question based on those excerpts
+cannot establish that the real UI lacks a correction route. No new UI defect was
+confirmed. Questions about provider access, metadata handling, backup scope,
+account recovery and technical maintenance are prompts for a later walkthrough,
+not independently verified defects or proposed policy adopted by the owner.
+
+Checks: all 11 embedded input/first-response/review files are hash-bound; the
+original response hashes, historical source archives, controller and frozen plan 7
+runtime are unchanged. Five successful exports and the failed state agree with
+their sources. The human-session template remains unfilled and unchanged. JSON,
+Markdown relative links/anchors, headings, fences and whitespace are checked for
+the changed artifacts/documents. No production source changed, so runtime suites
+were not rerun. No product-agent CLI invocation, model acceptance retry, participant
+consent, commit or push occurred. The three AI reader sessions and AI evidence
+review are model-generated simulation.
+
+T034 is complete as a synthetic rehearsal. T011's actual-adult evidence and T032
+sign-off remain incomplete under the current scope; no waiver is inferred. The
+next rehearsal should include all visible page context and label controls by their
+visible action names before drawing UI conclusions. Technical reliability and
+browser verification remain the next product checks.
+
 ### T014: Repeatable fictional pilot
 
 Added the [pilot runner](../src/meta_vibe_coding/pilot.py) and usage in README.
@@ -670,3 +1173,72 @@ inspected; the hosted GitHub render is unverified.
 For later handoffs, record only what helps the next contributor: result and paths,
 checks and their limits, unresolved issue, and next action. Link a pull request or
 commit when one exists. Avoid transcripts and routine activity diaries.
+
+
+### T035: Frozen comparison, repair and browser verification
+
+The four untouched v7 jobs closed before any runtime repair. The
+[complete archive](../artifacts/2026-11-05-claude-sonnet-acceptance-v7-complete.json)
+contains 177 hash-bound files and links the unchanged original partial archive.
+Independent reconciliation verifies the original 180-line journal prefix and the
+final 250-line journal: 39 native starts/finishes, fourteen distinct closed jobs
+and 34 questions. Continuation used eleven calls and nine questions. Six wrapper
+continuity stops and the original baseline quota failure remain closed failures;
+seven jobs delivered final results. Four older support files remain in the linked
+partial archive. No retry, fallback or replacement of failed evidence occurred.
+
+Separate [complete review](../artifacts/l0-comparison-review-v7-complete.json) and
+[scoped adjudication](../artifacts/l0-comparison-adjudication-v7-complete.json) are
+finished. C06 baseline falsely attributed an unresolved answer to the owner; its
+uncertainties were still visible, so this is a confirmed nonblocking dimension
+failure. No new blocking finding or operator deviation was established. Wrapper
+fact-key, open-question readiness and continuity rules remain stricter than the
+transcript baseline, alongside the 32,000/64,000-byte input budgets. This frozen
+run does not test the later D021 implementation or establish comparative advantage.
+
+[D021](decisions.md#d021-tolerate-unambiguous-continuity-references-and-surface-sharing-authority)
+now normalizes only the exact recommendation-list shorthands and outer spaces,
+checks duplicates after normalization, and permits valid optional records for
+unchanged items. All changed tracked items still require accounting. Prompt
+wording favors retained relevant text and asks about represented people/sharing
+authority where consequential, without inventing owner facts. Native contract 3
+and canonical state/brief 1 are unchanged. Separate design/code review approved
+the change; 52 focused tests include archived-response diagnostics. Those offline
+diagnostics do not reclassify original v7 attempts.
+
+Implementation checks completed before browser launch: `.venv/bin/python -m
+pytest -q` passed 366 tests; `node --test tests/test_ui.cjs` passed fourteen;
+`.venv/bin/python -m pip check` found no broken requirements. One existing
+Starlette/httpx deprecation warning remains. Source hashes are recorded in the
+[development evidence](../artifacts/2026-11-05-ui-development-t035-blocked.json).
+No further runtime edit followed those checks.
+
+The browser plan is a separate exposed fictional development check with at most
+six native calls, seven assessments and one declared third-assessment timeout.
+The first harness preflight failed because a later invalid request could bypass
+its stop rule after that timeout. Failed bytes are preserved. The repaired
+request-specific rule passed twenty synthetic checks across three fixtures and
+separate repeated review. These fixtures made no native calls or browser tasks.
+
+Actual launch verified the existing native first-party login, CLI version/binary,
+source, plan and approval. Browser access reported an unavailable host; repeated
+native Chrome fallback calls timed out. The server was stopped in order with
+zero assessments, zero native calls and no injected fault. Its journal contains
+only startup, configuration access and stop. No idea/advance, actual download or
+reliable rendered-view check occurred. The full-interface AI walkthrough was not
+substituted with another stripped replay. This is an automation-access blocker,
+not a native-model or quota failure.
+
+Next action: restore reliable browser access, then obtain separate contributor
+review bound to the stopped journal and unchanged source/plan/harness/native
+configuration for append-only continuation. Preserve the exclusive claim and
+original journal; no reset, replacement or extra allowance is authorized. Finish
+the browser flow and actual download before the full-interface AI reader task.
+T035 remains blocked on that access. T011 actual adult sessions and T032 owner
+sign-off remain incomplete; D019's human-confirmed N06 finding remains recorded.
+Separate evidence review passed the final status text and all fifteen embedded
+development files, including the exact stopped journal and unchanged runtime.
+Four changed Markdown documents pass 128 relative link/anchor checks, heading
+and fence checks; both new archives pass embedded byte/hash checks, and
+`git diff --check` passes. The human-session template remains unchanged/unfilled.
+No commit, push, deployment or global agent-setting change occurred.

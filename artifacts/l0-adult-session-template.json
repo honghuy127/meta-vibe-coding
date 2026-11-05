@@ -1,0 +1,111 @@
+{
+  "kind": "private-adult-session-template",
+  "status": "unstarted; no participants or responses recorded",
+  "session_id": null,
+  "preconditions": {
+    "facilitator_confirmed": null,
+    "adult_participation_confirmed": null,
+    "voluntary_consent_confirmed": null,
+    "prototype_fallibility_explained": null,
+    "applicable_organization_approval_checked": null,
+    "reviewed_build_reference": null,
+    "private_storage_location": null,
+    "deletion_date_or_rule": null,
+    "agent_destination_and_retention_notice_seen": null
+  },
+  "instructions": [
+    "Use fictional information only. Do not request names, contacts, credentials or personal documents.",
+    "Before consent, explain the selected coding agent/provider destination, native configuration and retention limits, including what remains unknown. Fictional input still leaves the app through that route.",
+    "No audio/video recordings. Participant may stop or skip any question.",
+    "Record the first teach-back before helping. Keep raw observations private and outside Git.",
+    "Begin only after technical review and unresolved material risks are discussed."
+  ],
+  "tasks": [
+    {
+      "task": "Describe a fictional software idea.",
+      "completed": null,
+      "help_given": null,
+      "observation": null
+    },
+    {
+      "task": "Answer a consequential question.",
+      "completed": null,
+      "help_given": null,
+      "observation": null
+    },
+    {
+      "task": "Correct a requirement.",
+      "completed": null,
+      "help_given": null,
+      "observation": null
+    },
+    {
+      "task": "Inspect the changed Owner View.",
+      "completed": null,
+      "help_given": null,
+      "observation": null
+    },
+    {
+      "task": "Save the engineering brief.",
+      "completed": null,
+      "help_given": null,
+      "observation": null
+    }
+  ],
+  "teach_back": [
+    {
+      "prompt": "What is recommended, and why?",
+      "first_answer": null,
+      "rating": null,
+      "help_after_first_answer": null,
+      "confident_misunderstanding": null
+    },
+    {
+      "prompt": "Who can access which information?",
+      "first_answer": null,
+      "rating": null,
+      "help_after_first_answer": null,
+      "confident_misunderstanding": null
+    },
+    {
+      "prompt": "What costs are still unknown?",
+      "first_answer": null,
+      "rating": null,
+      "help_after_first_answer": null,
+      "confident_misunderstanding": null
+    },
+    {
+      "prompt": "What must you maintain or recover?",
+      "first_answer": null,
+      "rating": null,
+      "help_after_first_answer": null,
+      "confident_misunderstanding": null
+    },
+    {
+      "prompt": "What is your next action or unresolved decision?",
+      "first_answer": null,
+      "rating": null,
+      "help_after_first_answer": null,
+      "confident_misunderstanding": null
+    }
+  ],
+  "rating_values": [
+    "understood",
+    "needs help",
+    "misunderstood"
+  ],
+  "review": {
+    "reviewer": null,
+    "important_misunderstandings_resolved": null,
+    "nonidentifying_summary_approved": null
+  },
+  "limits": "Unfilled template is preparation, not participation, consent, usability evidence or owner sign-off.",
+  "session_plan": {
+    "facilitator_role": null,
+    "planned_participant_count": null,
+    "selection_and_availability": null,
+    "build_reference": null,
+    "material_risks_discussed": null
+  },
+  "consent_script": "This prototype can be wrong. Please use a fictional task without names, private documents or secrets. Your fictional input will be sent through the selected coding agent and its provider. The facilitator will explain the destination and known or unknown retention limits before you decide. Participation is voluntary; you may stop or skip any question. We do not record audio/video or collect names/contact details in the evidence. The facilitator will explain where anonymous observations are kept and when they will be deleted. We will ask you to explain the result in your own words before offering help. Do you agree to take part?"
+}

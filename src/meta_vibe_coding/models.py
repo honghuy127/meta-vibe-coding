@@ -9,7 +9,17 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 Text = Annotated[str, Field(min_length=1, max_length=8000)]
 Scalar = str | bool | int | float
 FACT_KEY_PATTERN = r"^[a-z][a-z0-9_]*(\.[a-z][a-z0-9_]*)*$"
+
+
+def quoted_in(quote: str, source: str) -> bool:
+    """True when the owner wrote these words in this order; line breaks and spacing may differ."""
+    words = " ".join(quote.split())
+    return bool(words) and words in " ".join(source.split())
 FactKey = Annotated[str, Field(pattern=FACT_KEY_PATTERN)]
+
+
+def normalized_topic(topic: str) -> str:
+    return topic.strip().lower()
 
 
 class Model(BaseModel):
@@ -97,6 +107,14 @@ class Assessment(Model):
     limitations: list[Text]
 
 
+class AssessmentChange(Model):
+    previous: Text
+    current: list[Text] = Field(max_length=100)
+    basis: Literal["reworded", "owner_update", "advice_withdrawn"]
+    reason: Text
+    evidence: list[UnknownEvidence] = Field(max_length=30)
+
+
 class State(Model):
     schema_version: Literal[1] = 1
     revision: int = Field(default=1, ge=1)
@@ -134,8 +152,8 @@ class State(Model):
             if not fact or fact.status != "unknown" or evidence.source_turn_id not in fact.source_turn_ids:
                 raise ValueError("An owner unknown must reference its current unknown fact")
             source = sources.get(evidence.source_turn_id)
-            if source is None or not evidence.quote.strip() or evidence.quote not in source:
-                raise ValueError("An owner unknown needs an exact nonempty source quote")
+            if source is None or not quoted_in(evidence.quote, source):
+                raise ValueError("An owner unknown must quote the owner's own words")
         for question in self.questions:
             if question.answer_turn_id is not None and question.answer_turn_id not in turn_ids:
                 raise ValueError("Question answer refers to an unknown owner source")
@@ -158,6 +176,13 @@ class State(Model):
                     raise ValueError("Ready results require acceptance criteria")
                 if any(q.blocks_recommendation for q in self.assessment.open_questions):
                     raise ValueError("Blocking questions prevent a ready result")
+            if self.assessment.disposition == "provisional":
+                # A provisional export must carry what it leaves unresolved (Level 0, step 5).
+                if not self.assessment.open_questions or not self.assessment.limitations:
+                    raise ValueError("Provisional results require open questions and limitations")
+                # Topics are free text; fact keys are lower-case, so ignore case and outer spaces.
+                if set(self.owner_unknowns) - {normalized_topic(q.topic) for q in self.assessment.open_questions}:
+                    raise ValueError("Provisional results must keep each detail the owner does not know open")
         return self
 
 
@@ -167,6 +192,7 @@ class Candidate(Model):
     assessment: Assessment
     question: ProposedQuestion | None
     owner_unknowns: dict[FactKey, UnknownEvidence] = Field(default_factory=dict, max_length=100)
+    assessment_changes: list[AssessmentChange] = Field(default_factory=list, max_length=500)
 
 
 class AdvanceRequest(Model):

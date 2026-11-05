@@ -47,13 +47,35 @@ logical contract, implemented by strict Pydantic models and application validato
 [D008](decisions.md#d008-wrap-coding-agents-only) defines the agent boundary. State
 is scoped to one idea. Persistence and import are not implied by export support.
 
-Native contract 2 is separate from this canonical state. It returns only fact
+Native contract 3 is separate from this canonical state. It returns only fact
 updates and explicit removals, with evidence attached to each update and questions
 referencing resulting fact keys. Untouched facts carry forward locally. Evidence
 supplies source citations and explicit-unknown markers together; confirmed updates
 need exact owner quotes. Adoption still validates against the original state.
-These checks do not establish semantic support, complete extraction, correct
-corrections or alias detection; see [D011](decisions.md#d011-return-fact-changes-with-attached-evidence).
+Native contract 3 also returns `assessment_changes`. Adoption requires explicit
+accounting for changed prior assessment list items under
+[D018](decisions.md#d018-account-explicitly-for-changed-assessment-items): risk reasons,
+hidden requirements, recommendation rationale/alternatives/owner responsibilities,
+acceptance criteria, open questions and limitations. References use `field/index`
+with zero-based indices. Exact unchanged items can move within their list without
+a record. Other prior items each need one record with `previous`, `current`,
+`basis`, `reason` and `evidence`; replacements must exist in the same list.
+`reworded` needs replacements; `owner_update` quotes substantive owner turns after
+`assessed_turn_count`; `advice_withdrawn` explains correction of prior agent advice.
+Only owner updates carry evidence. No prior assessment permits only an empty
+change list. Failed requests retain the same anchor and evidence boundary.
+[D021](decisions.md#d021-tolerate-unambiguous-continuity-references-and-surface-sharing-authority)
+allows the exact shorthand fields `rationale`, `alternatives` and
+`owner_responsibilities` for their `recommendation.` paths, plus outer spaces.
+Normalization precedes duplicate checks. Valid optional records for unchanged
+items still obey every reference/reason/evidence rule; every changed item still
+needs accounting. The sharing prompt also calls for contextual clarification of
+represented people and authority to share, without inventing owner facts.
+These checks establish accounting, not semantic equivalence, justified withdrawal,
+complete extraction, correct corrections or alias detection. Scalar summary,
+recommendation kind and risk level remain outside this list guard. Existing fact,
+unknown and readiness guards still apply. Earlier native responses are rejected;
+canonical state and exported briefs remain schema 1.
 
 | State field | Type and meaning |
 | --- | --- |
@@ -295,6 +317,15 @@ work. Apply D008's agent-aware limits; spending stays unauthorized until
 an account and spending cap are authorized. Do not grant extra retries to one
 approach; retain technical failures and identify any diagnostic rerun separately.
 
+Before the next run, freeze and disclose the different contracts. Only the wrapper
+requires a declared unknown's fact key in provisional open questions and explicit
+accounting for changed assessment list items; the transcript baseline receives no
+canonical state or validator feedback. Apply the same semantic review of retained
+uncertainty and requirements to both, and report wrapper validation stops separately
+from omissions in delivered results. Set `baseline_input_bytes` to 64,000 explicitly;
+the wrapper retains 32,000 bytes. Report both limits and any exhaustion separately.
+These are deliberately different workflows, not equal contracts.
+
 Compare blocking failures first, then decision fit, question burden, correction
 effort, latency, and cost. Prefer the simpler workflow when it meets the same needs;
 record the concrete benefit that justifies added state or UI. Development
@@ -329,6 +360,31 @@ Score each as understood, needs help, or misunderstood, against the actual case
 facts. Record facilitator help and any confident misunderstanding. Do not score
 satisfaction as comprehension or coach an answer into a pass. Resolve important
 misunderstandings before claiming the handoff supports informed ownership.
+
+Before a session, the facilitator confirms adult participation, explains that the
+prototype may be wrong, explains the selected agent/provider destination and any
+unknown retention limits, obtains voluntary consent and checks any applicable
+organizational approval. Use fictional tasks and no personal documents or secrets.
+Participants may stop or decline any question. Do not record audio/video or collect
+names/contact details in session evidence. Confirm the facilitator, participant
+availability and private storage/deletion arrangement before collecting responses.
+
+Use the current technically reviewed build. Ask each participant to describe an
+idea, respond to one consequential question, correct a requirement, inspect the
+updated Owner View and save the brief. Then use the five teach-back topics above,
+without coaching an initial answer. Record task completion, assistance and observed
+misunderstandings under an anonymous session ID; raw observations remain private
+and outside Git. Report only reviewed non-identifying summaries. Participant count,
+selection and incomplete tasks must remain explicit; a small formative check does
+not establish population-level usability. Until actual sessions and their review
+exist, T011 remains incomplete.
+
+AI reader walkthroughs may rehearse these materials using fictional recorded
+handoffs. Keep generated personas, first teach-back answers and proposed actions
+labelled as simulation. Review support in the displayed text separately from
+completeness against case facts, and preserve failures or missing replay context.
+These walkthroughs do not supply adult participation, consent, actual browser
+use/download or measured human understanding; see [D020](decisions.md#d020-rehearse-owner-sessions-with-ai-readers).
 
 ## Boundaries
 
@@ -385,8 +441,19 @@ Obsolete access facts and omitted new download/revocation facts remain substanti
 failures despite successful protocol/state/export checks. Browser automation failed
 before the remaining correction, closeout and actual final download. This run does
 not establish complete semantic correction or acceptance.
-T029's [fresh correction plan](../artifacts/2026-11-01-codex-luna-correction-plan.json)
-prepares separate native HTTP and recorded-view checks without new model results.
+T030's [correction result](../artifacts/2026-11-02-codex-luna-correction-verification.json)
+retains five completed HTTP stages and matching recorded views/download. Review
+found a blocking owner-confirmed fact containing an agent-derived consequence.
+The generic prompt revision separates those claims; its live effectiveness is
+unverified. T031's [plan 4 result](../artifacts/2026-11-02-claude-haiku-acceptance-v4.json)
+ran new independent cases and a matched baseline on Haiku 4.5. No phase passes, four
+of seven wrapper jobs produced no result and 19 blocking findings stand. The
+identical [plan 5 rerun on Sonnet 5.5](../artifacts/2026-11-02-claude-sonnet-acceptance-v5.json)
+passes six of fourteen jobs on recorded replay, with one blocking failure, two
+wrapper stops and five rows left open by a test wording defect. The
+[final plan 6 run](../artifacts/2026-11-02-claude-sonnet-acceptance-v6.json) on new
+cases confirmed that a provisional result missing its open decisions and limitations
+can be exported, contrary to this scope. This milestone's acceptance is not met. Targeted transitions and replay do not establish it.
 Adult comprehension sessions have not run. Before a public demo,
 resolve provider data handling, deployment authority, and operating cost; readiness
 must be demonstrated in the intended environment.

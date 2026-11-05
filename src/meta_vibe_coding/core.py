@@ -3,7 +3,7 @@
 import json
 import time
 
-from .models import AdvanceRequest, Candidate, State, Turn
+from .models import AdvanceRequest, Assessment, Candidate, State, Turn, normalized_topic, quoted_in
 from .settings import Limits, load_limits
 
 
@@ -16,6 +16,70 @@ class FlowError(Exception):
 def same_json(left, right) -> bool:
     # Python equality merges booleans and numbers, including inside lists/maps.
     return json.dumps(left, sort_keys=True) == json.dumps(right, sort_keys=True)
+
+
+ASSESSMENT_LISTS = (
+    "risk.reasons", "hidden_requirements", "recommendation.rationale",
+    "recommendation.alternatives", "recommendation.owner_responsibilities",
+    "acceptance_criteria", "open_questions", "limitations",
+)
+
+
+def assessment_reference(path: str) -> str:
+    """Accept only unambiguous shorthand for recommendation list fields."""
+    path = path.strip()
+    field, separator, index = path.rpartition("/")
+    aliases = {"rationale", "alternatives", "owner_responsibilities"}
+    if separator and field in aliases:
+        return f"recommendation.{field}/{index}"
+    return path
+
+
+def assessment_items(assessment: Assessment | None) -> dict:
+    """Address prior advice for explicit accounting, without judging its meaning."""
+    items = {}
+    if assessment is not None:
+        data = assessment.model_dump()
+        for field in ASSESSMENT_LISTS:
+            rows = data
+            for part in field.split("."):
+                rows = rows[part]
+            items.update({f"{field}/{index}": value for index, value in enumerate(rows)})
+    return items
+
+
+def substantive(text: str) -> bool:
+    return text.strip().lower().rstrip(".! ") not in {
+        "continue", "go on", "proceed", "next", "i don't know", "i don’t know", "i do not know"}
+
+
+def check_assessment_changes(state: State, candidate: Candidate) -> None:
+    previous = assessment_items(state.previous_assessment or state.assessment)
+    current = assessment_items(candidate.assessment)
+    changed = {path for path, value in previous.items()
+               if not any(path.rsplit("/", 1)[0] == new.rsplit("/", 1)[0]
+                          and same_json(value, replacement) for new, replacement in current.items())}
+    records = candidate.assessment_changes
+    paths = [assessment_reference(record.previous) for record in records]
+    if (len(paths) != len(set(paths)) or not changed.issubset(paths)
+            or not set(paths).issubset(previous)):
+        raise FlowError("invalid_output", "The agent did not account for changes to its earlier assessment. Your answers are retained.")
+    fresh_sources = {turn.id: turn.text for turn in state.turns[state.assessed_turn_count:]
+                     if substantive(turn.text)}
+    for record, previous_path in zip(records, paths):
+        field = previous_path.rsplit("/", 1)[0]
+        replacements = [assessment_reference(path) for path in record.current]
+        if (not record.reason.strip() or len(replacements) != len(set(replacements))
+                or any(path not in current or path.rsplit("/", 1)[0] != field for path in replacements)):
+            raise FlowError("invalid_output", "The agent did not explain a valid replacement for its earlier advice. Your answers are retained.")
+        if record.basis == "reworded" and not record.current:
+            raise FlowError("invalid_output", "Reworded advice needs a replacement. Your answers are retained.")
+        if record.basis == "owner_update":
+            if not record.evidence or any(e.source_turn_id not in fresh_sources
+                    or not quoted_in(e.quote, fresh_sources[e.source_turn_id]) for e in record.evidence):
+                raise FlowError("invalid_output", "A claimed owner change needs new quoted owner input. Your answers are retained.")
+        elif record.evidence:
+            raise FlowError("invalid_output", "Agent advice cannot be presented as an owner change. Your answers are retained.")
 
 
 def allocate_id(prefix: str, existing: list[str]) -> str:
@@ -82,9 +146,7 @@ def adopt(state: State, candidate: Candidate, *, allow_question: bool = True) ->
         raise FlowError("invalid_output", "The agent lost a detail you said was unknown. Your answers are retained.")
     latest_turn = state.turns[-1].id if state.turns else "t0"
     fresh_reply = len(state.turns) > state.assessed_turn_count
-    latest_text = state.turns[-1].text.strip().lower().rstrip(".! ") if state.turns else ""
-    substantive_reply = fresh_reply and latest_text not in {
-        "continue", "go on", "proceed", "next", "i don't know", "i do not know"}
+    substantive_reply = fresh_reply and substantive(state.turns[-1].text)
     turn_ids = ["t0"] + [turn.id for turn in state.turns]
     unknowns = state.owner_unknowns.copy()
     for key, fact in candidate.facts.items():
@@ -109,6 +171,7 @@ def adopt(state: State, candidate: Candidate, *, allow_question: bool = True) ->
             if evidence.source_turn_id not in turn_ids or turn_ids.index(evidence.source_turn_id) <= turn_ids.index(previous.source_turn_id):
                 raise FlowError("invalid_output", "The agent changed the source of an unanswered detail. Your answers are retained.")
         unknowns[key] = evidence
+    check_assessment_changes(state, candidate)
     data = state.model_dump()
     facts = {key: fact.model_dump() for key, fact in candidate.facts.items()}
     if not same_json(facts, data["facts"]):
@@ -128,7 +191,8 @@ def adopt(state: State, candidate: Candidate, *, allow_question: bool = True) ->
     # in the assessment without creating another question for the owner.
     ask_question = allow_question and (candidate.question is None or candidate.question.topic not in unknowns)
     if candidate.question and not ask_question:
-        if not any(q.topic == candidate.question.topic for q in candidate.assessment.open_questions):
+        if not any(normalized_topic(q.topic) == normalized_topic(candidate.question.topic)
+                   for q in candidate.assessment.open_questions):
             raise FlowError("invalid_output", "The agent omitted an unresolved decision from its result. Your answers are retained.")
     if candidate.question and ask_question:
         if len(data["questions"]) >= 5:

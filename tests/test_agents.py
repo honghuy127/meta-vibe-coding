@@ -45,7 +45,7 @@ def configured(monkeypatch):
 
 
 def help_text():
-    return b"--standalone --format --agent --safe-mode --restricted --tools --strict-mcp-config --no-session-persistence --append-system-prompt --json --ephemeral --ignore-user-config --ignore-rules --sandbox --disable --output-schema"
+    return b"--standalone --format --agent --safe-mode --restricted --tools --strict-mcp-config --no-session-persistence --append-system-prompt --json-schema --json --ephemeral --ignore-user-config --ignore-rules --sandbox --disable --output-schema"
 
 
 @pytest.mark.parametrize("agent", ["opencode", "claude", "codex"])
@@ -74,6 +74,7 @@ def test_three_wrappers_share_state_and_delegate_models(configured, monkeypatch,
             assert "--safe-mode" in args and "--bare" not in args
             assert args[args.index("--mcp-config") + 1] == '{"mcpServers":{}}'
             assert args[args.index("--append-system-prompt") + 1] == module.PROMPT
+            assert args[args.index("--json-schema") + 1] == module.SCHEMA
         else:
             assert args[args.index("--sandbox") + 1] == "read-only"
             assert "shell_tool" in args and "code_mode_host" in args
@@ -362,3 +363,31 @@ def test_nonzero_process_preserves_bounded_stdout_for_error_classification(tmp_p
         asyncio.run(process.run_cli([sys.executable, "-c", "import sys; print('fictional'); sys.exit(1)"],
             content="", cwd=str(tmp_path), env={"PATH": os.defpath}, timeout=5))
     assert error.value.stdout == b"fictional\n" and "fictional" not in str(error.value)
+
+
+def test_claude_structured_output_is_used_and_fenced_text_stays_rejected():
+    state = State(raw_intent="Fictional idea")
+    data = json.loads(output("claude", state))
+    data["structured_output"] = json.loads(data["result"])
+    data["result"] = "Summary text outside the contract."
+    text, metadata = module.parse_completion("claude", json.dumps(data).encode())
+    assert json.loads(text) == data["structured_output"] and metadata["model"] == "reported-model"
+    data["structured_output"] = {"note": "caf\u00e9 \u2014 corner"}
+    assert "caf\u00e9 \u2014 corner" in module.parse_completion("claude", json.dumps(data).encode())[0]
+    fenced = json.loads(output("claude", state))
+    fenced["result"] = "```json\n" + fenced["result"] + "\n```"
+    with pytest.raises(ValueError):
+        module.parse_result("claude", json.dumps(fenced).encode(), state)
+
+
+def test_native_schema_is_refused_for_opencode_only():
+    assert "--json-schema" in module.invocation("claude", "claude", None, {}, output_schema="{}")
+    with pytest.raises(ValueError):
+        module.invocation("opencode", "opencode", None, {}, output_schema="{}")
+
+
+def test_claude_gets_more_structured_output_attempts_and_others_do_not(monkeypatch):
+    monkeypatch.setenv("MAX_STRUCTURED_OUTPUT_RETRIES", "1")
+    assert module.agent_environment("claude")["MAX_STRUCTURED_OUTPUT_RETRIES"] == "10"
+    assert "MAX_STRUCTURED_OUTPUT_RETRIES" not in module.agent_environment("codex")
+    assert "MAX_STRUCTURED_OUTPUT_RETRIES" not in module.agent_environment("opencode")

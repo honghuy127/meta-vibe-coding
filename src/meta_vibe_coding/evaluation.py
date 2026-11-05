@@ -148,8 +148,9 @@ def initial_packet(plan: dict, initial_request: str, approach: str) -> dict:
     else:
         raise ValueError('Unknown approach; no fallback is selected.')
     # This constructs argv only. No native binary, config or credentials are opened.
-    args = invocation('codex', 'codex', plan['agent']['requested_model'], {}, prompt=prompt,
-        output_schema='response-schema.json')
+    agent = plan['agent']['name']
+    args = invocation(agent, agent, plan['agent']['requested_model'], {}, prompt=prompt,
+        output_schema='response-schema.json' if agent == 'codex' else json.dumps(schema, separators=(',', ':')))
     return {'approach': approach, 'native_argv': args, 'trusted_prompt': prompt, 'stdin': content,
         'response_schema': schema,
         'scope': 'Current schema preview only; freeze a new matched plan before live execution. Historical first attempts stay closed.'}
@@ -224,8 +225,16 @@ def rehearse() -> dict:
                     'summary': 'Fictional fixture response, not a product recommendation.',
                     'rationale': ['Exercise the HTTP state transitions only.'], 'alternatives': [],
                     'owner_responsibilities': []}, 'acceptance_criteria': ['Review the intended device.'],
-                'open_questions': [], 'limitations': ['No model inference or semantic assessment.']}
-            return Candidate.model_validate({'facts': facts, 'assessment': assessment, 'question': question}), Usage(
+                'open_questions': [{'topic': 'usage.environment', 'text': 'Where the timer is used is still open.',
+                    'blocks_recommendation': False, 'reason': 'It changes which devices need to run it.'}] if question else [],
+                'limitations': ['No model inference or semantic assessment.']}
+            changes = []
+            if state.previous_assessment and state.previous_assessment.open_questions and state.turns:
+                changes = [{'previous': 'open_questions/0', 'current': [], 'basis': 'owner_update',
+                    'reason': 'The supplied fixture owner answered the environment question.',
+                    'evidence': [{'source_turn_id': state.turns[-1].id, 'quote': state.turns[-1].text}]}]
+            return Candidate.model_validate({'facts': facts, 'assessment': assessment, 'question': question,
+                'assessment_changes': changes}), Usage(
                 agent='test-double', elapsed_seconds=0.0)
 
     exchanges = []

@@ -10,7 +10,7 @@ from pydantic import ValidationError
 
 from meta_vibe_coding.app import create_app
 from meta_vibe_coding.core import FlowError, adopt, export_brief, model_input, prepare, reserve_call
-from meta_vibe_coding.models import AdvanceRequest, Candidate, Fact, Question, State, Turn, Usage
+from meta_vibe_coding.models import AdvanceRequest, AssessmentChange, Candidate, Fact, Question, State, Turn, Usage
 
 
 def result(state, *, question=None, facts=None, disposition="ready"):
@@ -20,7 +20,15 @@ def result(state, *, question=None, facts=None, disposition="ready"):
     if question:
         facts = {**facts}
         facts.setdefault(question["topic"], {"value": None, "status": "unknown", "source_turn_ids": []})
-    return Candidate.model_validate({
+    open_questions = []
+    if disposition != "ready":
+        # A provisional result carries what it leaves unresolved, including owner unknowns.
+        keys = [k for k, f in facts.items() if (f.status if hasattr(f, "status") else f["status"]) == "unknown"]
+        keys += [k for k in state.owner_unknowns if k not in keys]
+        open_questions = [{"topic": key, "text": "Still unresolved.", "blocks_recommendation": False,
+            "reason": "Fictional open decision."} for key in keys] or [
+            {"topic": "scope", "text": "Scope is still open.", "blocks_recommendation": False, "reason": "Fictional open decision."}]
+    candidate = Candidate.model_validate({
         "facts": facts,
         "assessment": {"based_on_revision": state.revision, "disposition": disposition,
             "risk": {"level": "unknown", "reasons": ["A fictional test result, not a risk review."]},
@@ -28,8 +36,20 @@ def result(state, *, question=None, facts=None, disposition="ready"):
             "recommendation": {"kind": "local_utility", "summary": "Consider a local utility.",
                 "rationale": ["Files stay on the laptop."], "alternatives": ["Existing utility"],
                 "owner_responsibilities": ["Preview changes and retain originals."]},
-            "acceptance_criteria": ["A dry run shows proposed names."], "open_questions": [],
+            "acceptance_criteria": ["A dry run shows proposed names."], "open_questions": open_questions,
             "limitations": ["Test-double output."]}, "question": question})
+    # This double carries old advice by default. Tests changing it must account
+    # for that change explicitly, as a real native contract 3 response must.
+    previous = state.previous_assessment or state.assessment
+    if previous:
+        new_questions = candidate.assessment.open_questions
+        candidate.assessment = previous.model_copy(deep=True)
+        candidate.assessment.based_on_revision = state.revision
+        candidate.assessment.disposition = disposition
+        topics = {q.topic for q in candidate.assessment.open_questions}
+        candidate.assessment.open_questions.extend(
+            q for q in new_questions if q.topic not in topics)
+    return candidate
 
 
 
@@ -49,9 +69,10 @@ def native_result(state, candidate=None):
             [{"source_turn_id": source, "quote": sources[source][:500]} for source in fact.source_turn_ids])
         records.append({"key": key, "value": fact.value, "status": fact.status, "reason": fact.reason,
             "evidence": evidence, "owner_unknown": declaration is not None})
-    return json.dumps({"contract_version": 2, "fact_updates": records,
+    return json.dumps({"contract_version": 3, "fact_updates": records,
         "remove_fact_keys": sorted(state.facts.keys() - candidate.facts.keys()),
-        "assessment": body["assessment"], "question": body["question"]})
+        "assessment": body["assessment"], "question": body["question"],
+        "assessment_changes": body["assessment_changes"]})
 
 
 def test_false_unknown_empty_and_strict_types():
@@ -116,6 +137,8 @@ def test_previous_assessment_is_stale_context_until_successful_adoption(answer):
     # A supplied replacement may revise old advice; the wrapper does not merge it.
     candidate = result(pending, facts=pending.facts, disposition="provisional")
     candidate.assessment.limitations = ["Fresh scripted limitation."]
+    candidate.assessment_changes = [AssessmentChange(previous="limitations/0", current=["limitations/0"],
+        basis="advice_withdrawn", reason="Scripted withdrawal of earlier advice; semantic justification is not validated.", evidence=[])]
     updated = adopt(pending, candidate)
     exported = export_brief(updated)
     assert updated.previous_assessment is None
@@ -425,3 +448,49 @@ def test_assessed_reply_count_cannot_claim_future_or_unreviewed_input():
     payload = state.model_dump()
     payload["turns"] = [{"id": "t1", "text": "New reply without reassessment"}]
     with pytest.raises(ValidationError): State.model_validate(payload)
+
+
+def test_an_empty_provisional_result_is_refused_and_the_fuller_one_stays_outdated():
+    from meta_vibe_coding.core import export_brief, prepare
+    from meta_vibe_coding.models import AdvanceRequest
+    state = State(raw_intent="Fictional idea")
+    fuller = adopt(state, result(state, disposition="provisional"))
+    assert export_brief(fuller)["open_questions"]
+    pending = prepare(AdvanceRequest(state=fuller, request_id="r1", answer="More detail."))
+    empty = result(pending, disposition="provisional").model_dump()
+    empty["assessment"].update(acceptance_criteria=[], open_questions=[], limitations=[])
+    with pytest.raises(FlowError, match="earlier assessment"):
+        adopt(pending, Candidate.model_validate(empty))
+    assert pending.assessment is None and pending.previous_assessment == fuller.assessment
+    with pytest.raises(FlowError):
+        export_brief(pending)
+
+
+def test_a_provisional_result_must_keep_each_owner_unknown_open():
+    state = State(raw_intent="A tool. I don't know the budget.", facts={
+        "goal": {"value": "A tool.", "status": "confirmed", "source_turn_ids": ["t0"]},
+        "operations.budget": {"value": None, "status": "unknown", "source_turn_ids": ["t0"]}},
+        owner_unknowns={"operations.budget": {"source_turn_id": "t0", "quote": "I don't know the budget."}})
+    body = result(state, facts=state.facts, disposition="provisional").model_dump()
+    assert {q["topic"] for q in body["assessment"]["open_questions"]} == {"operations.budget"}
+    adopt(state, Candidate.model_validate(body))
+    body["assessment"]["open_questions"] = [{"topic": "scope", "text": "Scope is open.", "blocks_recommendation": False, "reason": "Fictional."}]
+    with pytest.raises(ValueError, match="owner does not know"):
+        adopt(state, Candidate.model_validate(body))
+
+
+def test_ready_results_are_not_held_to_the_provisional_rule():
+    state = State(raw_intent="Fictional idea")
+    body = result(state, disposition="ready").model_dump()
+    body["assessment"].update(open_questions=[], limitations=[])
+    assert adopt(state, Candidate.model_validate(body)).assessment.disposition == "ready"
+
+
+def test_an_owner_unknown_topic_matches_whatever_its_case_or_spacing():
+    state = State(raw_intent="A tool. I don't know the budget.", facts={
+        "goal": {"value": "A tool.", "status": "confirmed", "source_turn_ids": ["t0"]},
+        "operations.budget": {"value": None, "status": "unknown", "source_turn_ids": ["t0"]}},
+        owner_unknowns={"operations.budget": {"source_turn_id": "t0", "quote": "I don't know the budget."}})
+    body = result(state, facts=state.facts, disposition="provisional").model_dump()
+    body["assessment"]["open_questions"][0]["topic"] = "  Operations.Budget "
+    adopt(state, Candidate.model_validate(body))

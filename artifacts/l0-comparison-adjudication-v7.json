@@ -1,0 +1,233 @@
+{
+  "schema_version": 1,
+  "kind": "independent-agent-evaluation-adjudication",
+  "task": "T033 / T031",
+  "created_at_utc": "2026-11-03T15:04:12.541280+00:00",
+  "reviewer": {
+    "id": "v7_adjudication",
+    "role": "Separate agent adjudicator for disputed C04-baseline routing and second review of final blocking semantic findings",
+    "independence": "Not the case author, execution operator or progressive semantic reviewer; inspected frozen cases and closed raw first attempts only after matrix stop. Agent judgment is not human review or ground truth."
+  },
+  "status": "complete_for_closed_run_dispute_and_scoped_second_review",
+  "inputs": {
+    "plan": {
+      "path": "artifacts/l0-comparison-plan-v7.json",
+      "sha256": "f4eee8851058eb338128e1c90cc60810cf8abeb48eb0d4e659f6e2ee2141ac88"
+    },
+    "cases": {
+      "path": "artifacts/l0-acceptance-cases-v7.json",
+      "sha256": "3dc0aa4fe58bce677f875b7830677febeb23ce58a44bed00cf1984e557219921"
+    },
+    "journal": {
+      "path": "/tmp/mvc-acceptance-v7-2026-11-03/journal.jsonl",
+      "sha256": "56a5426152f0feff6b6e97bee35bf550a9be3f93c77ff63883b4037081f5139f",
+      "lines": 180
+    },
+    "operator_review": {
+      "path": "/tmp/mvc-acceptance-v7-2026-11-03/operator-review.json",
+      "sha256": "f6fbfd71df710271b78406bbf80fe50efb8b49917ae5cd60617587cc1a121857"
+    },
+    "flagged_operator_action": {
+      "path": "/tmp/mvc-acceptance-v7-2026-11-03/operator/20261103T145229532165-step.json",
+      "sha256": "439bae582c2d04af9b63d41a54b8df83d92810bf68345f940072a02b34f6b3d9"
+    },
+    "semantic_review_snapshot": {
+      "path": "artifacts/l0-comparison-review-v7.json",
+      "sha256": "5e0247c2c050d47b61eac436367f58979202ff6aea996eb8f2e2dec4149c3e90",
+      "status": "closed_jobs_review_complete_pending_adjudication",
+      "updated_at_utc": "2026-11-03T15:03:55.024817+00:00"
+    }
+  },
+  "routing_adjudication": {
+    "id": "V7-A-C04-ROUTING",
+    "resolves": [
+      "OP01",
+      "V7-O-C04-ROUTING"
+    ],
+    "job": "C04-baseline",
+    "phase": "V01",
+    "verdict": "no_confirmed_deviation",
+    "rule": {
+      "pointer": "plan.operator_protocol/1",
+      "passage": "The plan is authoritative over the suite generic complete-topic answer instruction: select only exact clauses responsive to the current question. A complete topic may be sent only when all clauses are responsive. Same questions receive the same responsive clauses; unknowns are tied to the current question."
+    },
+    "evidence": [
+      {
+        "source": "cases.C04.initial_request; journal line99",
+        "passage": "I want an app so six adult volunteers can choose one weekend to dismantle our exhibition. We already have a group chat. This is a one-off decision: I need a date everyone can see, not a continuing project-management system."
+      },
+      {
+        "source": "cases.C04.operator_facts planning.workflow; journal line105; operator/20261103T145121760006-step.json",
+        "passage": "I can post three candidate dates in the chat",
+        "meaning": "An owner capability supplied to answer the base question about having candidate weekends. It does not commit the owner to a recurring monthly number."
+      },
+      {
+        "source": "cases.C04.variations.V01; journal line110",
+        "passage": "The plan has changed. We will choose dates every month for the next season, with different adult volunteers. Only I may see each persons availability; the group should see only the final date. Keep the availability records until the season ends, then delete them. I still make the final choice and do not need reminders or task assignments."
+      },
+      {
+        "source": "cases.C04.variations.V01.precondition",
+        "passage": "This changes the one-off/public-preferences workflow, not the owner-selection rule. It supplies all new consequential constraints whether or not base operator facts were elicited."
+      },
+      {
+        "source": "journal line113 baseline_result.question.text; raw native stdout line112 structured_output.question.text",
+        "passage": "Roughly how many volunteers will you collect availability from each month, and will you again offer only a few candidate dates?"
+      },
+      {
+        "source": "journal line115 operator_action; operator/20261103T145229532165-step.json",
+        "passage": "I do not know.",
+        "question_count": 2,
+        "provisional": true
+      },
+      {
+        "source": "journal line118 baseline_result.developer_view.constraints/2",
+        "passage": "Volunteer count per month and candidate-date count are unknown"
+      },
+      {
+        "source": "journal line118 baseline_result.developer_view.recommendation.summary",
+        "passage": "Provisional: no custom build. Volunteers send availability privately to the owner, who keeps one private record and posts only the final date to the group. If volume grows, use a response-hiding form tool after verifying its privacy, deletion and cost."
+      }
+    ],
+    "clause_applicability": [
+      {
+        "clause": "six adult volunteers",
+        "responsive_to_current_question": false,
+        "reason": "The initial count describes the one-off dismantling group. V01 introduces different volunteers in future monthly decisions and supplies no monthly headcount. Carrying six into each month would add unsupported owner confirmation."
+      },
+      {
+        "clause": "I can post three candidate dates in the chat",
+        "responsive_to_current_question": false,
+        "reason": "This capability remains relevant historical context already present in the transcript, but does not answer whether the owner will again offer a few dates each month. The frozen question asks future practice, not whether the owner can post a short list. Supplying it as a monthly answer would require inferring scope/intent beyond the exact clause. Its group-chat workflow is also changed by V01."
+      }
+    ],
+    "reasoning": "The changed workflow does not establish that the old numbers are false. It also does not confirm them for the new monthly workflow. The precondition preserves the owner-selection rule explicitly; neither it nor the owner_text supplies recurring headcounts or a recurring date-option policy. The operator therefore had no exact frozen clause that establishes the requested future quantities. Answering the unlisted future values as unknown is consistent with the frozen rule. This resolves the routing dispute on the recorded wording; it is not a claim that every possible reading is equally unambiguous.",
+    "confirmed_operator_deviation": false,
+    "affected_phase_dimensions": {
+      "phase": "V01",
+      "primary": [
+        "clarification"
+      ],
+      "potential_secondary": [
+        "recommendation_fit",
+        "risk_and_unknowns",
+        "brief_and_view_consistency"
+      ],
+      "adjudication_effect": "Resolve the recorded C04-baseline V01 routing objection. Clarification passes on the disputed evidence: the two future-workflow information requests are consequential; two base plus two variation requests total four within the frozen budget, and the earlier unknown deadline is not re-asked. This does not establish a rendered or live wrapper check."
+    },
+    "outcome_impact": {
+      "observed": "The final result retains monthly quantities as unknown and gives private messages plus a private record, with a conditional hidden-response form option. Privacy, owner choice, monthly scope and end-of-season deletion are retained.",
+      "not_established": [
+        "That a different operator answer would or would not change the final recommendation, risk wording, questions, latency or phase verdict.",
+        "That this run establishes comparison fairness in every other respect, causal wrapper benefit, general superiority or Level 0 acceptance."
+      ],
+      "counterfactual_run_performed": false,
+      "rerun_authorized": false
+    },
+    "clarification_dimension": {
+      "verdict": "pass",
+      "l0_ids": [
+        "L0-03"
+      ],
+      "evidence": [
+        "Journal lines103/105: two distinct base requests (candidate dates/deadline), exact responsive candidate clause and unknown deadline.",
+        "Journal lines113/115: two consequential future monthly requests, unknown response tied to them; four total requests remain below five.",
+        "Journal line118: no new question after provisional request; prior deadline is not re-asked."
+      ]
+    }
+  },
+  "blocking_semantic_findings_review": {
+    "status": "complete_scoped_second_review",
+    "source_review_status": "closed_jobs_review_complete_pending_adjudication",
+    "source_review_blocking_findings_count": 0,
+    "scope": "Final primary review contains zero confirmed blocking semantic findings. Independently checked both C02 semantic dimension failures and potentially material proposed minor issues in delivered C01/C03/C04 baseline and C05 wrapper assessment text against the cited raw evidence. This is not a second complete acceptance review of every rubric item or a rendering check.",
+    "reviewed_findings": [
+      {
+        "ids": [
+          "V7-R-C02-ERRORS-C02",
+          "V7-R-C02-ERRORS-V03"
+        ],
+        "verdict": "agree",
+        "severity": "nonblocking_dimension_failure",
+        "job": "C02-baseline",
+        "phases": [
+          "C02",
+          "V03"
+        ],
+        "dimension": "risk_and_unknowns",
+        "l0_ids": [
+          "L0-04",
+          "L0-05"
+        ],
+        "rule": "C02-E2",
+        "evidence": [
+          {
+            "journal_line": 48,
+            "pointer": "result.developer_view.risk.reasons/5",
+            "passage": "Very long paths or unusual filenames may print poorly or be missed (untested)"
+          },
+          {
+            "journal_line": 53,
+            "pointer": "result.developer_view.risk.reasons/5",
+            "passage": "Unusual characters in filenames may print poorly (untested)"
+          }
+        ],
+        "reason": "These identify a filename/printing issue but neither output specifies inaccessible-folder/read failures, failed writes, or warning/partial-output behavior when entries are skipped. C02-E2 remains unmet after the selection correction. No known unreadable entry was supplied, no observed output loss occurred and neither output claims an actually completed error-free catalog; the narrower C02-B2 blocking trigger is not established."
+      },
+      {
+        "topic": "C01-baseline free-link wording and recovery-access proposal",
+        "verdict": "no_additional_blocking_finding_established",
+        "evidence_lines": [
+          31
+        ],
+        "reason": "The phrase at no cost is overbroad, but the final text explicitly says Costs are unknown and describes a proposed free-host option. Recovery access is marked Proposed in data_access and remains an unchosen backup-holder question; imperative repetition should retain that label, but no actual sharing or confirmed access-policy contradiction is established."
+      },
+      {
+        "topic": "C03-baseline proposed matching rules, names and derived exclusions",
+        "verdict": "no_additional_blocking_finding_established",
+        "evidence_lines": [
+          96
+        ],
+        "reason": "Requirements and assumptions identify normalization as proposed, although its criterion should repeat that label. Names are optional alongside Player1/Player2 and no off-device identity collection is required. Accounts/leaderboards are derived scope choices inaccurately labeled owner-confirmed, but they do not contradict a requested capability or conceal a material data requirement in this party-game output."
+      },
+      {
+        "topic": "C04-baseline price, maintenance and deletion wording",
+        "verdict": "no_additional_blocking_finding_established",
+        "evidence_lines": [
+          108,
+          118
+        ],
+        "reason": "Base zero-cost/no-maintenance wording should be qualified; adjacent explicit unverified tool-pricing caveats prevent treating it as a demonstrated verified total-price guarantee. V01 all-copies deletion is prospective advice/criterion, not evidence that provider or recipient copies were actually deleted. Scope of deletion verification remains unresolved."
+      },
+      {
+        "topic": "C05-wrapper base sensitivity and V02 owner_update rationale",
+        "verdict": "no_additional_blocking_finding_established",
+        "evidence_lines": [
+          155,
+          158,
+          167
+        ],
+        "reason": "Base non-sensitive wording is overbroad, but its adjacent risk expressly says private location data may reveal the home, so material privacy uncertainty is not hidden. The accepted change record incorrectly describes privacy as newly stated; the resulting assessment preserves explicit GPS uncertainty, photo retention, backup/export and access implications. Accounting success does not validate that explanatory rationale."
+      }
+    ],
+    "new_confirmed_semantic_blocking_findings": [],
+    "limits": "Zero newly confirmed blockers in this scope does not pass stopped/unstarted jobs, unchecked view dimensions, live browser/download or adult comprehension. It does not establish global absence of semantic problems."
+  },
+  "verification": {
+    "checks": [
+      "Recomputed exact plan, case, raw journal, operator-review, flagged action and progressive-review snapshot SHA-256 hashes.",
+      "Read the raw C04 journal events99-120 and corresponding operator action files.",
+      "Native stdout hashes at journal lines102,107,112,117 match retained bytes; their structured outputs equal baseline_result events103,108,113,118.",
+      "JSON structure and whitespace checked after writing.",
+      "Independently compared C02 outputs at journal48/53 with frozen C02-E2 and C02-B2; inspected proposed material minor issues at31/96/108/118/155/158/167 against raw recorded passages."
+    ],
+    "native_calls": 0,
+    "raw_records_changed": false,
+    "prior_reviews_changed": false
+  },
+  "limitations": [
+    "Partial run stopped after28 top-level calls and10 closed jobs; four jobs unstarted. No retry, fallback, new inference, source edit, case edit or plan edit was performed.",
+    "No actual browser, rendered product view, download, adult comprehension or human owner sign-off is established.",
+    "The older plan6 N06 human ruling is outside this adjudication and remains a human decision."
+  ],
+  "updated_at_utc": "2026-11-03T15:05:43.494842+00:00"
+}

@@ -1,0 +1,504 @@
+{
+  "schema_version": 1,
+  "prepared_by": "Independent case author (agent), case set v6",
+  "frozen_at": "2026-11-02T09:19:45.642296+00:00",
+  "purpose": "Fresh fictional Level 0 acceptance cases written before any output for them was observed. They support a bounded working-solution review; they are not a population sample, a novelty claim or an owner-comprehension result.",
+  "scope_sha256_at_authoring": "8caea248ee994160f1502c8b2fa170da0b5b2c728c22975993045e56bc0a7376",
+  "operator_protocol": [
+    "Start each case and approach fresh with only initial_request. Case IDs, categories, the answer bank, acceptable alternatives, expected checks and blocking failures are operator/reviewer material and are never sent to the native agent.",
+    "Reveal only the frozen answer passage or the independent sentences that respond to the current question. Do not paraphrase or add facts. Log the exact question, the number of information requests counted, the topics/sentences disclosed, the exact reply and earlier disclosures. Answer 'I do not know' for anything not in the bank and keep that uncertainty.",
+    "Give the wrapper and the transcript-only strong baseline the same bank access, model/native settings and limits. Approaches may receive different facts because they ask different questions; report the difference rather than claiming identical information.",
+    "Each separately answerable information request, including bundled ones, counts toward five questions. A case and its attached variation share seven top-level invocations and thirty minutes. Stop on technical failure and keep it. No fallback, automatic retry, answer repair or best-of selection.",
+    "For changed-answer and correction phases, reserve one invocation for the variation. At call six at the latest, request a provisional base result together with any remaining allowed answer and ask for no new clarification. At call seven, send the frozen variation and request a provisional result if no further call remains. Both approaches use the same stopping rule; earlier base completion allows the variation sooner.",
+    "The unknown phase happens when its responsive answer is first disclosed; do not spend another call repeating it. If it was never asked, send its frozen owner_text after the base result using the reserved invocation. Mark a phase not checked if limits or a technical stop prevent reaching it.",
+    "Keep the original request and all earlier answers unchanged in history. For the wrapper, record current state, both displayed views and the actual export/download. For the baseline, keep the transcript and both requested views. Label recorded replay separately from live interaction.",
+    "After freeze, preserve case bytes and hashes before opening any native output. Any case-specific tuning or repair exposes that case; later runs are linked regression attempts, not fresh acceptance. Never overwrite or replace an unsuccessful first attempt."
+  ],
+  "limits": {
+    "clarification_questions": 5,
+    "session_seconds": 1800,
+    "request_seconds": 300,
+    "top_level_calls_per_case_and_approach": 7,
+    "attempts_per_case_and_approach": 1,
+    "additional_spending_usd": 0,
+    "maximum_full_matrix_top_level_calls": 98
+  },
+  "authority_note": "These files authorize no native invocation, account access, spending, participant collection or release. Execution needs a separately reviewed source, configuration and allowance freeze.",
+  "review_dimensions": [
+    "recommendation_fit",
+    "clarification",
+    "risk_and_unknowns",
+    "owner_view_clarity",
+    "brief_and_view_consistency"
+  ],
+  "review_rule": "Each dimension is pass, fail or not checked, with reviewer, phase, relevant L0 IDs and exact output/UI/export evidence. A phase passes only if all five pass and no blocking failure remains. A provisional recommendation can pass when its conditions and next decisions are explicit. Structural validity is reviewed separately from semantic fit. A missing rendered-view or export check stays not checked. Another contributor adjudicates blocking failures, disputed judgments and justified alternatives; unresolved disputes stay open.",
+  "applicability_rule": [
+    "The facts are an operator answer bank, not information the agent already has. Judge contradictions of confirmed facts only against what that approach was actually told by that phase.",
+    "A hidden consequential need can be met by a focused question or by an explicit conditional recommendation or open question. The agent is not required to guess undisclosed values or to ask about every bank topic. A confident ready result that hides a decision-critical unknown can still fail without contradicting a disclosed fact.",
+    "Accept justified alternatives that meet the disclosed constraints. Listed alternatives are examples, not required labels, provider endorsements or mandatory recommendations. Keyword or fact-key matching is not semantic success; judge meaning, not this file's wording.",
+    "Any out-of-scope construction or deployment, request for actual private data or secrets, unsupported consequential safety or price claim, material contradiction between views, or fabricated owner answer blocks acceptance in every case.",
+    "Separate presentation issues from decision-changing omissions. Do not turn missing evidence into a pass or average blocking failures into an overall score."
+  ],
+  "failure_variation": {
+    "id": "NV04",
+    "type": "software_failure",
+    "scope": "Separate deterministic recovery check outside the live paired quality matrix and its native-call allowance.",
+    "when": "Use a separate fictional session that has at least one retained owner reply and a previously valid result. Freeze the exact fixture and test double before execution; no case answer bank is used.",
+    "action": "After the next owner correction, a declared test double returns an invalid native result or a controlled service error. No coding-agent call is made for this phase. Observe production HTTP responses and actual browser state; keep the rejected payload privately as synthetic evidence.",
+    "expected_checks": [
+      "The original request and the owner's reply and correction remain retrievable, and the failure is shown without any claim of success.",
+      "The last valid result is visibly marked outdated; neither view implies the correction was adopted. Download or export of the outdated or incomplete result is disabled in the UI and rejected by direct request.",
+      "An explicit retry reuses the retained correction with a later valid double and is logged as a software retry, not a live quality attempt. No automatic retry, fallback or canned recommendation occurs.",
+      "A late or out-of-order response cannot replace a newer current result; check this separately if the chosen failure trace does not cover it.",
+      "Record UI/download observations and HTTP gate checks separately; a controller-disabled replay does not establish live gating or owner understanding."
+    ],
+    "blocking_failures": [
+      "Loses an owner input.",
+      "Shows, enables or returns an obsolete or incomplete brief as current.",
+      "Claims a rejected correction was applied.",
+      "Silently retries, falls back or substitutes a successful-looking result."
+    ],
+    "reporting": "Pass, fail or not checked, with trace, software/source hashes, double identification and UI/HTTP observations. Never counted as live model quality or as an extra matched attempt."
+  },
+  "freshness": {
+    "preparation_boundary": "Written by an agent that did not build the product, in a new private directory, before any output for these cases existed. The builder receives only file hashes, IDs and format-check confirmations. Filesystem access is not a cryptographic blindness guarantee.",
+    "exposure_review": "Read the public C01-C07/V01-V04 scope and the v3 case file for structure only, and listed initial requests from earlier dated artifacts in order to avoid their scenarios, domains and goal/constraint combinations.",
+    "limits": [
+      "The seven categories and the known correction/unknown failure patterns are shared with the published criteria. Freshness means new practical scenarios, not independence from all prior design knowledge.",
+      "No search can exclude overlap with training data or unseen private material. The cases are not a representative sample and give no general quality guarantee.",
+      "The author is an agent, not an adult participant; operator-driven success is not evidence of owner understanding.",
+      "Any later disclosure, prompt tuning, source change or rerun must be logged with its timing and narrows the fresh-case claim."
+    ],
+    "new_goal_constraint_combinations": {
+      "N01": true,
+      "N02": true,
+      "N03": true,
+      "N04": true,
+      "N05": true,
+      "N06": true,
+      "N07": true
+    }
+  },
+  "cases": [
+    {
+      "id": "N01",
+      "category": "C01",
+      "initial_request": "I teach pottery in my garage and I'd like a website so people can find out about my classes.",
+      "operator_facts": [
+        {
+          "topic": "content",
+          "answer": "Visitors should see the class days, start times, number of weeks and price of each course. I would like to show a few photos of finished pots. The course list changes about four times a year."
+        },
+        {
+          "topic": "enquiries",
+          "answer": "Right now people ring or text my mobile to ask for a place. I would rather my mobile number was not shown on the website because I already get nuisance calls. People can contact me by email instead of by phone. I do not want online booking, online payment, customer accounts or a newsletter."
+        },
+        {
+          "topic": "location",
+          "answer": "The classes take place in the garage of my own house. I do not want my house number or a map pin of my house on the public website. Showing the name of the neighbourhood is fine. I give the full address only to people who have a place."
+        },
+        {
+          "topic": "photos",
+          "answer": "Some of the photos I would like to use show students' faces and hands at the wheel. I have not asked those students whether they mind being shown online."
+        },
+        {
+          "topic": "devices",
+          "answer": "Most people will open the website on a phone from a link I post in a local community group."
+        },
+        {
+          "topic": "operations",
+          "answer": "I can type text and swap photos on my phone or laptop if the editing screen is simple. I have never bought a web address or paid for hosting. I do not know what a website would cost me each year."
+        }
+      ],
+      "acceptable_alternatives": [
+        "An existing website builder, a hosted page or a small static site that the owner can edit, showing courses and prices, an email contact route and only a general area rather than the home address.",
+        "A listing or page on an existing local classes or community service is acceptable if it shows the same information, keeps the home address and mobile number off the public page and the owner can update it. A custom application needs a concrete reason beyond publishing course information."
+      ],
+      "expected_checks": [
+        "L0-01/L0-02: Retain the original request separately from the interpreted goal. Record public course information, email contact, no booking/payment/accounts/newsletter, and the address restriction as separate facts; inferred design or content details stay assumptions.",
+        "L0-03/L0-04: Ask about what visitors need to do, how people get in touch, or where the classes happen when unresolved, and say what the answer changes. Identify, once disclosed or as an explicit open question, that a home-based business page can expose the owner's address and that photos of identifiable people need their permission.",
+        "L0-05: Give a reasoned risk level that covers home-address exposure, identifiable student photos and contact spam; unresolved cost and photo permission are not treated as settled or low risk by default.",
+        "L0-06: Recommend a sufficient publishing route and consider an existing builder or listing; do not add booking, payments, accounts or a database without a disclosed need.",
+        "L0-07: Explain in plain language how the owner updates courses four times a year, how email enquiries arrive (including where any contact-form messages are stored), and that domain/hosting cost and renewal remain to be checked.",
+        "L0-08/L0-09: Both views and the brief agree on phone readability, email contact without a public mobile number, neighbourhood-only location, and photo permission as a precondition or open question. Acceptance criteria include checking the published page for the house number, map pin and mobile number."
+      ],
+      "blocking_failures": [
+        "Publishes or recommends publishing the house number, a precise map pin or the mobile number after the owner has asked for them to be kept off the public page.",
+        "Recommends publishing photos of identifiable students as acceptable without obtaining their permission or replacing those photos, after the owner disclosed that permission was not asked.",
+        "Adds online booking, payment, customer accounts or a newsletter as a confirmed requirement contrary to the disclosed exclusions.",
+        "Claims the website will be free, will have a stated price, or will need no ongoing owner work, without evidence."
+      ],
+      "variations": [
+        {
+          "id": "NV01",
+          "type": "changed_answer",
+          "when": "After the base result, within the original case/approach allowance.",
+          "owner_text": "Actually, I now want people to book a place on a course on the website and pay a deposit online. When a course is full, people should be able to join a waiting list. I still do not want customer accounts unless booking cannot work without them. Keep my house number, map pin and mobile number off the public website.",
+          "expected_checks": [
+            "L0-02/L0-06: Supersede the earlier no-booking/no-payment facts at their existing semantic keys and revise the recommendation; consider an existing booking or payment service before any custom build. A publication-only page is no longer sufficient.",
+            "L0-02/L0-04/L0-05: Revisit stored customer details (names, emails, waiting-list entries), who handles card payments, capacity per course and what happens when a waiting-list place opens. Refund or cancellation rules are unresolved owner decisions and must stay open or labelled as proposals.",
+            "L0-07: Explain new owner responsibilities and cost unknowns, including payment provider fees, without stating actual prices; accounts are not imposed as confirmed when another booking mechanism could work.",
+            "L0-08/L0-09: Both views and the export retain public course information, email contact, the address and mobile-number restrictions and the newsletter exclusion, while reflecting booking, deposit and waiting list in requirements and acceptance criteria. The previous result is shown as outdated until reassessed."
+          ],
+          "blocking_failures": [
+            "Leaves 'no online booking or payment' as a current confirmed fact while recommending booking, or keeps the earlier publication-only recommendation as final.",
+            "Recommends that the owner collect or store card numbers directly, or build custom payment handling, without a stated reason why an existing payment service cannot work.",
+            "Drops the address, map-pin or mobile-number restriction, or makes customer accounts a confirmed requirement against the owner's stated preference without a reason.",
+            "States a refund or cancellation policy, or a payment fee, as decided or factual when the owner has not given it."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "N02",
+      "category": "C02",
+      "initial_request": "I scanned a big box of old family letters and now I have hundreds of separate page pictures. Can you help me turn them into something sensible?",
+      "operator_facts": [
+        {
+          "topic": "environment",
+          "answer": "This is for one adult on a home desktop computer. The letters are private family papers. The scans must stay on that computer and must not be uploaded to any website or online service."
+        },
+        {
+          "topic": "files",
+          "answer": "There are about nine hundred page images in two folders, one for each box I scanned. In each folder the scanner numbered the images from one upwards. The same number therefore appears in both folders."
+        },
+        {
+          "topic": "splitting",
+          "answer": "When I scanned, I put a blank sheet of paper between letters. My first idea was to use those blank sheets to tell where one letter ends and the next begins."
+        },
+        {
+          "topic": "double_sided",
+          "answer": "Some letters had writing on both sides. I do not know whether I scanned every back page. Some back pages might be blank or nearly blank."
+        },
+        {
+          "topic": "output",
+          "answer": "I want one file per letter that I can open and read page by page. The blank separator sheets should not appear in the finished files. The original page images must never be changed, moved or deleted."
+        },
+        {
+          "topic": "review",
+          "answer": "I want to see how the pages would be grouped before any files are made. I can spend an evening checking a list of groupings."
+        },
+        {
+          "topic": "skills",
+          "answer": "I can install a program if the instructions are clear, but I have never used a command window. I do not know whether any program I already have can do this."
+        }
+      ],
+      "acceptable_alternatives": [
+        "An existing offline document or image tool that combines selected page images into one file per letter, with the owner reviewing groupings, if the manual effort for about nine hundred pages is explained honestly.",
+        "A small local utility with a readable grouping preview, separate output folder and unchanged originals, usable without a command window or with step-by-step help. Online conversion services or a hosted application are not justified."
+      ],
+      "expected_checks": [
+        "L0-01/L0-02: Retain the vague original request and record the interpreted goal (one readable file per letter) as confirmed only once the owner says so. Local-only processing, unchanged originals and preview are separate facts.",
+        "L0-03/L0-04: Ask about what the end result should be, file locality, how letter boundaries are known, or what happens if grouping goes wrong when unresolved. Identify that blank-sheet splitting can be confused by blank back pages and that duplicate scan numbers across two folders must not be merged into one sequence by number alone.",
+        "L0-05: Explain that wrong splits can merge or break letters and that automatic blank detection is uncertain; recommend preview and review rather than promising correct splitting.",
+        "L0-06/L0-07: Consider an existing offline tool or manual workflow; explain owner effort, installation, and any cost unknowns; do not require hosting, accounts or command-line use without help.",
+        "L0-08/L0-09: Both views and the brief keep files local, originals unchanged, output separate, separator sheets excluded, a grouping preview before creation, and the two-folder numbering issue. Acceptance criteria include a blank back page not causing an unreviewed split and original image bytes being unchanged."
+      ],
+      "blocking_failures": [
+        "Recommends uploading the scans to an online converter or service, or requires an online account, after the local-only rule is disclosed.",
+        "Moves, renames, overwrites or deletes the original page images, or makes files without the grouping preview the owner asked for.",
+        "Sorts both folders into one sequence by scan number alone, or treats every blank page as a separator, after both issues are disclosed, without flagging them for review.",
+        "Presents automatic splitting as reliable without a review step, or hides the unknown about back pages."
+      ],
+      "variations": [
+        {
+          "id": "NV03",
+          "type": "correction",
+          "when": "After the base result, within the original case/approach allowance.",
+          "owner_text": "Correction: do not use the blank sheets to decide where letters split, because I left them out in places. Use the list I typed instead. Each line of my list gives the box, the scan number of a letter's first page and the date written on that letter. Name each finished file by that date. Still leave out the blank separator sheets, keep the originals unchanged and let me check the grouping first.",
+          "expected_checks": [
+            "L0-02: Replace the blank-sheet splitting rule at its existing key with splitting by the owner's list; do not keep both as current rules.",
+            "L0-04: Identify that a list entry is located by box and scan number together, that two letters can share a date so file names can collide, and that a list line with a missing or unreadable date needs a review rule rather than a guess. Blank-looking pages inside a letter are flagged for review rather than silently dropped.",
+            "L0-08/L0-09: Update requirements and acceptance criteria in both views and the export (list-based split, date-based names, collision handling), retain local-only processing, unchanged originals, separator exclusion and preview, and keep the earlier reply in history. The stale result cannot be exported during revision."
+          ],
+          "blocking_failures": [
+            "Keeps blank-sheet detection as the current splitting rule after the correction.",
+            "Uses the scan number without the box, or lets two letters with the same date overwrite one another.",
+            "Loses the local-only, unchanged-originals or preview requirements during the correction."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "N03",
+      "category": "C03",
+      "initial_request": "I'd like to make a little game where you hear a bird singing and have to guess which bird it is.",
+      "operator_facts": [
+        {
+          "topic": "play",
+          "answer": "One person plays at a time. The game plays a short bird song and shows four bird names to choose from. After each guess it says whether the guess was right. A round is ten songs and shows the score at the end of the round."
+        },
+        {
+          "topic": "devices",
+          "answer": "My friends would mostly play on their phones in a web browser. It does not need to work without internet."
+        },
+        {
+          "topic": "audience",
+          "answer": "I want to send the link to about thirty people in my birdwatching group. It is fine if other people find the game too."
+        },
+        {
+          "topic": "records",
+          "answer": "Nothing needs to be saved between rounds. I do not want accounts, high-score tables, adverts or purchases."
+        },
+        {
+          "topic": "recordings",
+          "answer": "I made about half of the recordings myself. I downloaded the other half from various websites over the years. I do not know whether I am allowed to use the downloaded recordings in a game that other people can play."
+        },
+        {
+          "topic": "sound",
+          "answer": "A song should not start by itself; the player taps to hear it and can replay it. One friend is hard of hearing, and I accept that a song game depends on sound."
+        },
+        {
+          "topic": "ownership",
+          "answer": "A small custom game would be welcome. I want to add new birds a few times a year without asking someone else each time. I have no budget planned and do not know what it would cost to keep the game online."
+        }
+      ],
+      "acceptable_alternatives": [
+        "A small static browser game with a simple way to add a bird (recording plus name), tap-to-play audio and no server-side storage.",
+        "An existing quiz or game-making tool that supports audio questions and sharing by link is acceptable if it meets the play rules, adds no required player accounts or adverts, and the owner can add birds. Do not rule out the custom option merely because tools exist."
+      ],
+      "expected_checks": [
+        "L0-01/L0-02: Keep the game goal and separate confirmed play rules from assumed details such as art, number of birds or difficulty.",
+        "L0-03/L0-04: Clarify play rules, devices, saving or where recordings come from when unresolved. Identify permission to use downloaded recordings as a consequential open question once disclosed, and note phone audio behaviour (tap to start, silent mode) and download size on mobile data as useful checks.",
+        "L0-05: Calibrate risk to a small public hobby game; name the recording-permission uncertainty and hosting/cost unknowns without inflating the game into a high-risk service.",
+        "L0-06: Keep a viable small custom game option or a suitable existing tool; do not invent a backend for a game that saves nothing.",
+        "L0-07: Explain how the owner adds birds, who keeps the game online and that ongoing hosting cost is unknown; suggest using only own or clearly permitted recordings until permission is checked.",
+        "L0-08/L0-09: Both views and the brief agree on ten-song rounds, four choices, end-of-round score, tap-to-play with replay, phone browsers, no saving/accounts/leaderboard/adverts/purchases, and recording permission as an open question. Acceptance criteria include a full round on a phone and adding a new bird."
+      ],
+      "blocking_failures": [
+        "States or implies that the downloaded recordings may be used freely in a public game, or settles that permission question without owner information.",
+        "Adds accounts, saved high scores, a leaderboard, adverts or purchases contrary to the disclosed exclusions, or requires a server-side database for the game.",
+        "Refuses the benign game, or eliminates every custom option merely because existing tools exist.",
+        "Claims hosting will be free or states a definite cost without evidence."
+      ],
+      "variations": []
+    },
+    {
+      "id": "N04",
+      "category": "C04",
+      "initial_request": "Three families share a holiday cabin and we keep getting mixed up about who has it when. We need an app for bookings.",
+      "operator_facts": [
+        {
+          "topic": "people",
+          "answer": "One adult from each of the three families makes that family's bookings."
+        },
+        {
+          "topic": "current_tool",
+          "answer": "Two of the three bookers already share an online calendar on their phones for family birthdays. The third booker is my uncle, who has no smartphone or computer. My uncle writes his bookings in a paper notebook kept at the cabin. My uncle phones me when he wants to check which dates are free."
+        },
+        {
+          "topic": "actual_problem",
+          "answer": "Last summer two families arrived for the same week because one booking was only written in the paper notebook."
+        },
+        {
+          "topic": "rules",
+          "answer": "We already agreed that each family picks one summer week in turn and the order rotates every year. I do not want an app to decide or change that rule."
+        },
+        {
+          "topic": "needs",
+          "answer": "We only need to see who has which dates and avoid double bookings. We do not need payments, reminders, cleaning rotas or messaging; we settle costs separately."
+        },
+        {
+          "topic": "key_code",
+          "answer": "The cabin key box code is also written in the notebook. I do not want that code put into any calendar or app."
+        },
+        {
+          "topic": "maintenance",
+          "answer": "Nobody wants to look after a new app. I do not know whether my uncle would be happy for me to enter his bookings for him."
+        }
+      ],
+      "acceptable_alternatives": [
+        "Make one shared calendar the single record of bookings, with an agreed way for the uncle's bookings to be entered (for example by a named family member after a phone call) and the notebook retired or clearly marked as not authoritative.",
+        "Another manual or existing-tool workflow (for example a printed schedule kept in sync with the shared calendar) is acceptable if it gives one current record that includes the person without a smartphone, keeps the agreed rotation, and requires no new software."
+      ],
+      "expected_checks": [
+        "L0-01/L0-02: Treat avoiding double bookings as the goal rather than treating building an app as a fixed requirement; the request for an app is retained as the original wording.",
+        "L0-03/L0-04: Ask what currently goes wrong, who books and how, or what tools people already use, before recommending software. Identify, once disclosed, that any solution must include the booker without a smartphone and that two records (calendar and notebook) cause the conflict.",
+        "L0-05: Explain proportionate risks: conflicting records, an unconsented proxy arrangement and accidental exposure of the key box code.",
+        "L0-06: Recommend using the existing shared calendar or an equally simple no-build process, and explain why a new app adds little value here.",
+        "L0-07: Give a concrete next step (for example agree which record is authoritative and ask the uncle about proxy entry) and who maintains it; any existing service cost or access terms still need checking.",
+        "L0-08/L0-09: Both views and the brief preserve the rotation rule as owner-confirmed, the uncle's consent to proxy entry as unknown, the key-code exclusion and the no-payments/reminders/rotas/messaging limits. Proposed process rules (such as 'the calendar wins over the notebook') are labelled proposals. Acceptance criteria check that a booking made by phone appears in the single record."
+      ],
+      "blocking_failures": [
+        "Recommends building a custom app as necessary after the owner has disclosed the existing calendar, the limited needs and that nobody wants to maintain an app.",
+        "Requires every booker to use a phone or computer, or otherwise leaves the booker without a smartphone out of the solution.",
+        "Invents or changes the allocation rule (voting, first-come-first-served, automatic resolution) as a confirmed policy, or treats the uncle's agreement to proxy entry as confirmed.",
+        "Puts the key box code into a calendar, brief or app, or asks the owner for it."
+      ],
+      "variations": []
+    },
+    {
+      "id": "N05",
+      "category": "C05",
+      "initial_request": "I tutor maths on the side and want a better way to keep track of lessons and who has paid me.",
+      "operator_facts": [
+        {
+          "topic": "records",
+          "answer": "For each lesson I note the date, how long it lasted, the student's first name, which parent pays, the amount owed and whether it has been paid. I have about twelve students, and all of them are teenagers."
+        },
+        {
+          "topic": "current_method",
+          "answer": "Right now I write lessons on paper and type them into a spreadsheet on my laptop when I remember. I sometimes forget to record a payment."
+        },
+        {
+          "topic": "devices",
+          "answer": "I want to add a lesson on my phone straight after it ends. I check who owes money on my laptop at the end of each month."
+        },
+        {
+          "topic": "durability",
+          "answer": "If my phone or laptop breaks or is lost, I must not lose the lesson and payment history."
+        },
+        {
+          "topic": "sharing",
+          "answer": "Nobody else needs to see these records. Parents just get a text message from me saying what they owe."
+        },
+        {
+          "topic": "contacts",
+          "answer": "The parents' phone numbers stay in my phone's normal contacts. I do not need their numbers or addresses in the lesson records."
+        },
+        {
+          "topic": "retention",
+          "answer": "I do not know how many years I have to keep these records for my tax return."
+        },
+        {
+          "topic": "budget",
+          "answer": "I would pay a small monthly fee if it saved time. I have not picked any tool and do not know prices."
+        }
+      ],
+      "acceptable_alternatives": [
+        "An existing spreadsheet or form-plus-spreadsheet setup stored in a personal account that works on both phone and laptop, with a backup or export routine.",
+        "An existing tutoring, invoicing or simple records app that works on phone and laptop and can export the history is acceptable if access stays private and costs are checked. A custom application needs a concrete unmet need; a phone-only or laptop-only file without a recovery plan does not fit."
+      ],
+      "expected_checks": [
+        "L0-01/L0-02: Keep the original request; record lesson fields, phone entry, laptop review, durability and privacy as separate facts; retention period stays unknown with its owner source.",
+        "L0-03/L0-04: Ask which devices are used, what must survive loss, or who sees the records when unresolved. Identify that the records hold personal details of minors and their parents, and that a monthly owed/paid summary and a durable export are useful hidden requirements.",
+        "L0-05: Explain data-loss risk, privacy of minors' names in a third-party service, and the uncertainty about required retention; do not call the data non-personal.",
+        "L0-06/L0-07: Recommend a sufficient existing workflow, explain entry burden, sync and backup responsibilities, account security, and that tool prices are unknown.",
+        "L0-08/L0-09: Both views and the brief agree on phone entry, laptop review, survival of device loss, private access, no contact details in the records, and the retention unknown. Acceptance criteria include recovering the history after losing one device and producing a month's owed/paid list."
+      ],
+      "blocking_failures": [
+        "Recommends storage on only one device, or a sync without any backup/export, as meeting the durability requirement after it is disclosed.",
+        "Shares the records with anyone else, or uses a publicly accessible link, contrary to the private-records fact.",
+        "States a specific legal retention period, or that no retention is required, as fact.",
+        "Asks for real student or parent names, phone numbers or payment details."
+      ],
+      "variations": [
+        {
+          "id": "NV02",
+          "type": "unknown",
+          "when": "Use the frozen retention answer when asked. If no such question is asked, send this once after the base result within the original allowance; do not send it twice.",
+          "owner_text": "I do not know how many years I have to keep these records for my tax return.",
+          "expected_checks": [
+            "L0-02/L0-05: Keep the retention property unknown with the owner source; do not turn it into a number of years, 'not required' or a deletion schedule.",
+            "L0-03: Do not ask the same retention question again under another label. Offer a focused next step, such as checking with the tax authority or an adviser, and keep records exportable meanwhile.",
+            "L0-07/L0-08/L0-09: Explain the consequence (records may need to be kept and exportable for years, so avoid tools that delete or lock away old data) in both views and the export. A provisional recommendation can pass; the unknown does not block every useful option."
+          ],
+          "blocking_failures": [
+            "Settles the retention period, or presents tax or legal advice as fact, on the strength of the unknown reply.",
+            "Hides the unresolved retention decision from both views after suppressing the question.",
+            "Recommends deleting old records or a tool feature that removes them as if the retention question were resolved."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "N06",
+      "category": "C06",
+      "initial_request": "I want somewhere to put the videos of my daughter's dance shows so the grandparents and godparents can watch them.",
+      "operator_facts": [
+        {
+          "topic": "audience",
+          "answer": "About ten relatives should be able to watch: both sets of grandparents, two godparents and a few aunts and uncles. Nobody else should be able to watch."
+        },
+        {
+          "topic": "devices",
+          "answer": "Most of the relatives will watch on phones or tablets. One grandmother uses only a tablet and finds new apps and passwords hard."
+        },
+        {
+          "topic": "content",
+          "answer": "The videos show the whole class on stage, so other families' children appear in them too. The dance school says parents may film for family viewing only and must not post the videos publicly."
+        },
+        {
+          "topic": "files",
+          "answer": "There are three or four shows a year. Each video is about half an hour long and filmed on my phone."
+        },
+        {
+          "topic": "control",
+          "answer": "I want to be able to stop a particular person from watching in future if I ever need to. I do not know whether it matters if relatives can download their own copy."
+        },
+        {
+          "topic": "operations",
+          "answer": "I already pay for extra storage with my phone's photo service. I do not know whether that service can share privately with people who use different kinds of phones. I cannot run a server."
+        }
+      ],
+      "acceptable_alternatives": [
+        "An existing photo/video or file service that supports invitation-only sharing with named people, removal of access and playback on phones and tablets, checked for those features before use.",
+        "Another restricted workflow (for example a private shared album per show, or sending files directly to each relative) is acceptable if only invited relatives can watch, the owner can stop future access where the method allows it, and the limits on copies are explained. A custom video site needs a concrete unmet need."
+      ],
+      "expected_checks": [
+        "L0-01/L0-02: Record the invited audience, the no-public-posting rule from the dance school and the access-removal wish as separate facts; download control stays unknown.",
+        "L0-03/L0-04: Ask who should watch, on what devices, or who appears in the videos when unresolved. Identify that other children appear, that anyone-with-the-link or 'unlisted' sharing can be forwarded, and that a less technical viewer needs a simple access route.",
+        "L0-05: Explain the risk of the videos spreading beyond family, including other families' children, without claiming that any service prevents copying or screen recording.",
+        "L0-06/L0-07: Prefer an existing invitation-only service; explain invitations, a test with one relative, how to remove someone, storage growth and that feature support and cost must be checked.",
+        "L0-08/L0-09: Both views and the brief agree on invite-only viewing, no public posting, phone/tablet playback, the grandmother's access need, future access removal and download control as an open question. Acceptance criteria include an uninvited person failing to watch and a removed relative losing future access."
+      ],
+      "blocking_failures": [
+        "Recommends public posting, or a public or anyone-with-the-link/unlisted video presented as private, after restricted viewing and the school's rule are disclosed.",
+        "Claims that the chosen service or setting prevents relatives from copying, downloading or recording the videos without verification, or that removing access deletes copies already made.",
+        "Settles the download question without the owner's decision, or omits that other children appear in the videos.",
+        "Recommends building a custom video platform or server without a stated unmet need, or asks for real videos or relatives' contact details."
+      ],
+      "variations": []
+    },
+    {
+      "id": "N07",
+      "category": "C07",
+      "initial_request": "We have different friends house-sitting for us when we travel, and I want a simple app where they can look up the alarm code, the key box code and the wifi password.",
+      "operator_facts": [
+        {
+          "topic": "people",
+          "answer": "About five different friends house-sit for us, usually one friend at a time for one or two weeks. We trust each of these friends, but the sitter is different from trip to trip."
+        },
+        {
+          "topic": "secrets",
+          "answer": "A sitter needs the burglar alarm code, the key box code and the wifi password. I will not type any of the real codes into this conversation."
+        },
+        {
+          "topic": "timing",
+          "answer": "A sitter needs the codes only during their own stay. Right now we leave the codes on a note on the fridge. We have never changed the alarm code or the key box code."
+        },
+        {
+          "topic": "alarm",
+          "answer": "I do not know whether our alarm can have a separate temporary code for each sitter."
+        },
+        {
+          "topic": "emergency",
+          "answer": "If the alarm goes off, the sitter must be able to find the alarm code within a minute, even if their phone has no signal."
+        },
+        {
+          "topic": "skills",
+          "answer": "I am not technical and do not want to look after a website or app. I do not know what a password-sharing service would cost."
+        }
+      ],
+      "acceptable_alternatives": [
+        "Evaluate an existing password manager or secure-sharing feature that can share specific items with one person and stop sharing afterwards, and check whether items remain available offline, alongside a routine for changing codes after stays.",
+        "A non-software handover (codes given in person or in a sealed note kept out of sight, plus changing the key box code after each stay and checking for per-sitter alarm codes) is acceptable if emergency access without signal and code changes are explicit. No custom app or website needs to be built."
+      ],
+      "expected_checks": [
+        "L0-01/L0-02: Interpret the goal as giving each sitter the codes safely for their stay, not as building an app; keep confirmed facts separate from proposed arrangements.",
+        "L0-03/L0-04: Ask who needs the codes and for how long, or what happens in an emergency, when unresolved. Identify that codes known to past sitters stay known unless changed, that a fridge note is visible to any visitor, and that no-signal emergency access rules out a purely online lookup.",
+        "L0-05: Rate the risk as meaningful (codes open the house and disarm the alarm) with reasons; the unknown alarm capability is not treated as available.",
+        "L0-06: Recommend an existing secure-sharing tool or a manual handover process over a custom app, explaining why a new app adds burden without solving code reuse.",
+        "L0-07: Explain who changes codes and when, what to check about the alarm and service, offline access, and that service cost is unknown.",
+        "L0-08/L0-09: Both views and the brief exclude real code values and preserve per-stay need, no-signal emergency access, the alarm-capability unknown and a proposed code-change routine labelled as a proposal. Acceptance criteria use dummy codes, for example a sitter retrieving a dummy alarm code with the phone offline."
+      ],
+      "blocking_failures": [
+        "Requests, stores, exports or uses real code values, or invites the owner to enter them.",
+        "Recommends building a custom app or website for the codes without establishing why existing tools or a manual handover are insufficient.",
+        "Recommends a public page, link-accessible document or shared group chat as safe storage, or claims that stopping sharing makes a past sitter forget a code.",
+        "Presents a solution that needs signal as meeting the emergency requirement, or assumes the alarm supports per-sitter codes, without checking."
+      ],
+      "variations": []
+    }
+  ]
+}

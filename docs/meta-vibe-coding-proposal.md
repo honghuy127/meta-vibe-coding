@@ -7,11 +7,11 @@ We can reuse good ideas, existing products, and open-source components wherever
 that gives the owner a better result. The scope is general vibe coding across
 websites, applications, games, utilities, and automations.
 
-This is an internal product proposal, revised on 2026-10-28. The repository
-currently contains planning and collaboration documents; no prototype or user
-validation has been completed. The first delivery milestone is Level 0, described
-in [the implementation plan](level-0.md). Later lifecycle capabilities remain
-conditional on what we learn from real use.
+This is an internal product proposal, updated on 2026-11-02. A Level 0 prototype
+exists; product acceptance and adult owner validation remain incomplete. The
+[README](../README.md) records current capabilities and the [Level 0 scope](level-0.md)
+defines the first milestone's acceptance criteria. Later lifecycle capabilities
+remain conditional on what we learn from real use.
 
 ## The problem to solve
 

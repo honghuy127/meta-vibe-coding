@@ -1,0 +1,1939 @@
+{
+  "schema_version": 1,
+  "kind": "independent-progressive-agent-review",
+  "task": "T033 / T031",
+  "status": "closed_jobs_review_complete_with_scoped_adjudication",
+  "reviewer": "Separate Codex reviewer continuity_review; agent review, not human review or ground truth",
+  "plan_sha256": "f4eee8851058eb338128e1c90cc60810cf8abeb48eb0d4e659f6e2ee2141ac88",
+  "harness_sha256": "a51847a47f7361476e9f90ff00eb0d4b8ff060d61772652c7ee5b9497a3c1f99",
+  "case_sha256": "3dc0aa4fe58bce677f875b7830677febeb23ce58a44bed00cf1984e557219921",
+  "journal_path": "/tmp/mvc-acceptance-v7-2026-11-03/journal.jsonl",
+  "rows": [
+    {
+      "job": "C01-wrapper",
+      "case_id": "C01",
+      "phase": "C01",
+      "approach": "wrapper",
+      "outcome": "technical_stop",
+      "review_status": "reviewed",
+      "journal_finish_line": 16,
+      "calls": 2,
+      "questions": 2,
+      "failure_cause": {
+        "kind": "wrapper_only_continuity_gate",
+        "code": "invalid_output",
+        "evidence": "journal line16 retains no current assessment; line12 second native response omits required records for acceptance_criteria/0, recommendation.owner_responsibilities/2 and recommendation.rationale/1,/2, while adding an unnecessary record for unchanged recommendation.alternatives/2. This is an accounting failure, not proof that every affected statement lost meaning."
+      },
+      "dimensions": {
+        "recommendation_fit": {
+          "verdict": "not checked",
+          "evidence": [
+            "No delivered base result; the terminal state has assessment=null and export is closed."
+          ],
+          "l0_ids": [
+            "L0-06"
+          ]
+        },
+        "clarification": {
+          "verdict": "pass",
+          "evidence": [
+            "line6 asks editor identity and editing capability; line10 counts two information requests and discloses only responsive frozen clauses. No over-asking observed before stop."
+          ],
+          "l0_ids": [
+            "L0-03"
+          ]
+        },
+        "risk_and_unknowns": {
+          "verdict": "not checked",
+          "evidence": [
+            "No delivered final result; rejected output is not scored as an accepted handoff."
+          ],
+          "l0_ids": [
+            "L0-04",
+            "L0-05"
+          ]
+        },
+        "owner_view_clarity": {
+          "verdict": "not checked",
+          "evidence": [
+            "No actual rendered product view was checked."
+          ],
+          "l0_ids": [
+            "L0-07"
+          ]
+        },
+        "brief_and_view_consistency": {
+          "verdict": "not checked",
+          "evidence": [
+            "No current export at stop; no actual rendered view or download checked."
+          ],
+          "l0_ids": [
+            "L0-08",
+            "L0-09"
+          ]
+        }
+      },
+      "blocking_findings": [],
+      "operator_deviations": [],
+      "phases_not_checked": [],
+      "rejected_candidate_diagnostic": {
+        "classification": "unaccounted rewrites/consolidation plus a superfluous unchanged-item record",
+        "semantic_loss_in_guard_triggered_items": "Not established. On independent inspection, phone/stable-link criterion is extended to PDF, print-binder sync is folded into another responsibility, and both offline/no-machine-control rationale clauses remain in reworded text.",
+        "examples": [
+          {
+            "previous": "acceptance_criteria/0",
+            "old": "Each machine has one page that loads and reads well on a phone and has its own stable address.",
+            "new": "Each machine has one page or PDF that loads and reads well on a phone and has its own stable address."
+          },
+          {
+            "previous": "recommendation.owner_responsibilities/2",
+            "old": "Keep the printed binder in sync with the site.",
+            "new": "Export updated PDFs and republish them when equipment changes, and keep the printed binder in sync."
+          }
+        ],
+        "additional_limit": "Some declared alternative mappings are not semantically equivalent: a previous shared-document/PDF alternative is mapped to a hand-built-site alternative although the reason says it moved into the main recommendation. Bookkeeping reason/mapping quality still needs semantic review."
+      }
+    },
+    {
+      "job": "C01-baseline",
+      "case_id": "C01",
+      "phase": "C01",
+      "approach": "baseline",
+      "outcome": "delivered_provisional",
+      "review_status": "reviewed",
+      "journal_finish_line": 33,
+      "final_output_line": 31,
+      "calls": 3,
+      "questions": 4,
+      "dimensions": {
+        "recommendation_fit": {
+          "verdict": "pass",
+          "evidence": [
+            "Final requested text/JSON recommends 'Use existing no-code tools' and per-machine PDFs plus combined print PDF; owner said they can export PDFs and do not want to edit code (line23). Stable address choices remain conditional."
+          ],
+          "l0_ids": [
+            "L0-06"
+          ]
+        },
+        "clarification": {
+          "verdict": "pass",
+          "evidence": [
+            "line20 asks editor identity/skill; line25 asks existing web-address availability and willingness to pay. Counts 2+2; line28 unknown is attached to that question. Later output preserves that unknown without asking again."
+          ],
+          "l0_ids": [
+            "L0-03"
+          ]
+        },
+        "risk_and_unknowns": {
+          "verdict": "pass",
+          "evidence": [
+            "Final text: 'Costs are unknown'; 'The guide can’t guarantee safe machine use' (apostrophe styling normalized). Risk reasons include outdated diagrams, broken QR links, editor continuity and phone PDF readability. Proposed last-updated alignment addresses C01-E2. Hidden bank values were not treated as confirmed."
+          ],
+          "l0_ids": [
+            "L0-04",
+            "L0-05"
+          ]
+        },
+        "owner_view_clarity": {
+          "verdict": "pass",
+          "evidence": [
+            "Requested owner_view separates confirmed constraints, proposed plan, unknown costs, risks and next action. No live browser claim."
+          ],
+          "l0_ids": [
+            "L0-07"
+          ]
+        },
+        "brief_and_view_consistency": {
+          "verdict": "pass",
+          "evidence": [
+            "Requested developer_view and owner_view both retain public phone guide, machine-specific QR, standalone print fallback, no machine operation and sole no-code editor; provisional disposition and unknown hosting/address choice agree. This checks text/JSON only."
+          ],
+          "l0_ids": [
+            "L0-08",
+            "L0-09"
+          ]
+        }
+      },
+      "blocking_findings": [],
+      "operator_deviations": [],
+      "minor_issues": [
+        "Final owner_view says a free host link can be used 'at no cost', although no specific host/terms have been verified. Broader cost statement remains unknown; this is not treated as a demonstrated total-zero-cost promise.",
+        "A trusted second person's recovery access is labeled Proposed in data_access but repeated as an imperative in responsibilities. The unconfirmed proposal should stay labeled consistently; no access-policy contradiction to disclosed facts was observed."
+      ],
+      "phases_not_checked": []
+    },
+    {
+      "job": "C02-baseline",
+      "case_id": "C02",
+      "phase": "C02",
+      "approach": "baseline",
+      "outcome": "delivered_provisional",
+      "review_status": "reviewed",
+      "journal_finish_line": 55,
+      "final_output_line": 48,
+      "calls_total": 4,
+      "questions_total": 3,
+      "dimensions": {
+        "recommendation_fit": {
+          "verdict": "pass",
+          "evidence": [
+            "Local built-in Windows utility with read-only filename listing and a new printable catalog fits the disclosed scope; existing utility/manual alternatives retained. Variation changes recursive selection to top-level only."
+          ],
+          "l0_ids": [
+            "L0-06"
+          ]
+        },
+        "clarification": {
+          "verdict": "pass",
+          "evidence": [
+            "Two requests for OS/script comfort, then one scope request (lines40,45). Script comfort remains an explicit unknown; no repeat question. Provisional close at three base requests reserves variation budget under frozen suite protocol."
+          ],
+          "l0_ids": [
+            "L0-03"
+          ]
+        },
+        "risk_and_unknowns": {
+          "verdict": "fail",
+          "evidence": [
+            "C02-E2 requires identifying inaccessible folders/output errors and not presenting skipped entries as a complete catalog. Delivered outputs mention long paths/unusual filenames and possible missed entries but give no warning/error/partial-completeness handling. No supplied failed read or observed data loss occurred; this is a semantic omission rather than a technical stop."
+          ],
+          "l0_ids": [
+            "L0-04",
+            "L0-05"
+          ]
+        },
+        "owner_view_clarity": {
+          "verdict": "pass",
+          "evidence": [
+            "Plain language describes the button, local read-only access, suggested defaults, script setup uncertainty, responsibilities and next action."
+          ],
+          "l0_ids": [
+            "L0-07"
+          ]
+        },
+        "brief_and_view_consistency": {
+          "verdict": "pass",
+          "evidence": [
+            "Base owner/developer views both include disclosed recursive scope. V03 output explicitly excludes all subfolders and preserves filename titles, no pattern modification and never-overwrite. Unknown comfort and unverified software cost remain explicit."
+          ],
+          "l0_ids": [
+            "L0-08",
+            "L0-09"
+          ]
+        }
+      },
+      "blocking_findings": [],
+      "semantic_findings": [
+        {
+          "id": "V7-R-C02-ERRORS-C02",
+          "severity": "nonblocking_dimension_failure",
+          "rule": "C02-E2",
+          "evidence_line": 48,
+          "finding": "Missing explicit handling of inaccessible folders/output errors or incomplete catalog reporting."
+        }
+      ],
+      "operator_deviations": [],
+      "phases_not_checked": []
+    },
+    {
+      "job": "C02-baseline",
+      "case_id": "C02",
+      "phase": "V03",
+      "approach": "baseline",
+      "outcome": "delivered_ready",
+      "review_status": "reviewed",
+      "journal_finish_line": 55,
+      "final_output_line": 53,
+      "calls_total": 4,
+      "questions_total": 3,
+      "dimensions": {
+        "recommendation_fit": {
+          "verdict": "pass",
+          "evidence": [
+            "Local built-in Windows utility with read-only filename listing and a new printable catalog fits the disclosed scope; existing utility/manual alternatives retained. Variation changes recursive selection to top-level only."
+          ],
+          "l0_ids": [
+            "L0-06"
+          ]
+        },
+        "clarification": {
+          "verdict": "pass",
+          "evidence": [
+            "Two requests for OS/script comfort, then one scope request (lines40,45). Script comfort remains an explicit unknown; no repeat question. Provisional close at three base requests reserves variation budget under frozen suite protocol."
+          ],
+          "l0_ids": [
+            "L0-03"
+          ]
+        },
+        "risk_and_unknowns": {
+          "verdict": "fail",
+          "evidence": [
+            "C02-E2 requires identifying inaccessible folders/output errors and not presenting skipped entries as a complete catalog. Delivered outputs mention long paths/unusual filenames and possible missed entries but give no warning/error/partial-completeness handling. No supplied failed read or observed data loss occurred; this is a semantic omission rather than a technical stop."
+          ],
+          "l0_ids": [
+            "L0-04",
+            "L0-05"
+          ]
+        },
+        "owner_view_clarity": {
+          "verdict": "pass",
+          "evidence": [
+            "Plain language describes the button, local read-only access, suggested defaults, script setup uncertainty, responsibilities and next action."
+          ],
+          "l0_ids": [
+            "L0-07"
+          ]
+        },
+        "brief_and_view_consistency": {
+          "verdict": "pass",
+          "evidence": [
+            "Base owner/developer views both include disclosed recursive scope. V03 output explicitly excludes all subfolders and preserves filename titles, no pattern modification and never-overwrite. Unknown comfort and unverified software cost remain explicit."
+          ],
+          "l0_ids": [
+            "L0-08",
+            "L0-09"
+          ]
+        }
+      },
+      "blocking_findings": [],
+      "semantic_findings": [
+        {
+          "id": "V7-R-C02-ERRORS-V03",
+          "severity": "nonblocking_dimension_failure",
+          "rule": "C02-E2",
+          "evidence_line": 53,
+          "finding": "Missing explicit handling of inaccessible folders/output errors or incomplete catalog reporting."
+        }
+      ],
+      "operator_deviations": [],
+      "phases_not_checked": []
+    },
+    {
+      "job": "C02-wrapper",
+      "case_id": "C02",
+      "phase": "C02",
+      "approach": "wrapper",
+      "outcome": "technical_stop",
+      "review_status": "reviewed",
+      "journal_finish_line": 70,
+      "calls": 2,
+      "questions": 1,
+      "failure_cause": {
+        "kind": "wrapper_only_continuity_gate",
+        "code": "invalid_output",
+        "native_output_line": 66,
+        "missing_records": [
+          "recommendation.owner_responsibilities/0"
+        ],
+        "invalid_or_unneeded_records": [
+          "owner_responsibilities/0"
+        ],
+        "evidence": "The returned change record drops the recommendation. prefix from a prior owner-responsibility reference. Exact reference validation stops adoption; this is a protocol/addressing defect, not established semantic content loss."
+      },
+      "dimensions": {
+        "recommendation_fit": {
+          "verdict": "not checked",
+          "evidence": [
+            "No delivered current result at technical stop; actual rendered views/download were not checked."
+          ],
+          "l0_ids": [
+            "L0-06"
+          ]
+        },
+        "risk_and_unknowns": {
+          "verdict": "not checked",
+          "evidence": [
+            "No delivered current result at technical stop; actual rendered views/download were not checked."
+          ],
+          "l0_ids": [
+            "L0-04",
+            "L0-05"
+          ]
+        },
+        "owner_view_clarity": {
+          "verdict": "not checked",
+          "evidence": [
+            "No delivered current result at technical stop; actual rendered views/download were not checked."
+          ],
+          "l0_ids": [
+            "L0-07"
+          ]
+        },
+        "brief_and_view_consistency": {
+          "verdict": "not checked",
+          "evidence": [
+            "No delivered current result at technical stop; actual rendered views/download were not checked."
+          ],
+          "l0_ids": [
+            "L0-08",
+            "L0-09"
+          ]
+        },
+        "clarification": {
+          "verdict": "pass",
+          "evidence": [
+            "Observed questions were consequential, within the cap, and operator selections used responsive frozen clauses. This does not make the stopped phase pass."
+          ],
+          "l0_ids": [
+            "L0-03"
+          ]
+        }
+      },
+      "blocking_findings": [],
+      "operator_deviations": [],
+      "phases_not_checked": [
+        "V03"
+      ],
+      "rejected_candidate_diagnostic": {
+        "classification": "wrong field path prefix in otherwise plausible owner-resolved removal",
+        "semantic_loss_in_guard_triggered_items": "Not established. The prior request to tell the laptop type is obsolete after the owner supplies Windows; retained backup and OS-maintenance duties remain. The record says owner_responsibilities/0 rather than recommendation.owner_responsibilities/0.",
+        "examples": [
+          {
+            "previous": "recommendation.owner_responsibilities/0",
+            "old": "Tell us the laptop type so the right approach is chosen.",
+            "new": "Removed after Windows is supplied; explicit quoted owner_update reason exists under an invalid reference."
+          }
+        ]
+      }
+    },
+    {
+      "job": "C03-wrapper",
+      "case_id": "C03",
+      "phase": "C03",
+      "approach": "wrapper",
+      "outcome": "technical_stop",
+      "review_status": "reviewed",
+      "journal_finish_line": 91,
+      "calls": 3,
+      "questions": 3,
+      "failure_cause": {
+        "kind": "wrapper_only_continuity_gate",
+        "code": "invalid_output",
+        "native_output_line": 87,
+        "missing_records": [
+          "recommendation.owner_responsibilities/2"
+        ],
+        "invalid_or_unneeded_records": [
+          "owner_responsibilities/2"
+        ],
+        "evidence": "The returned change record drops the recommendation. prefix from a prior owner-responsibility reference. Exact reference validation stops adoption; this is a protocol/addressing defect, not established semantic content loss."
+      },
+      "dimensions": {
+        "recommendation_fit": {
+          "verdict": "not checked",
+          "evidence": [
+            "No delivered current result at technical stop; actual rendered views/download were not checked."
+          ],
+          "l0_ids": [
+            "L0-06"
+          ]
+        },
+        "risk_and_unknowns": {
+          "verdict": "not checked",
+          "evidence": [
+            "No delivered current result at technical stop; actual rendered views/download were not checked."
+          ],
+          "l0_ids": [
+            "L0-04",
+            "L0-05"
+          ]
+        },
+        "owner_view_clarity": {
+          "verdict": "not checked",
+          "evidence": [
+            "No delivered current result at technical stop; actual rendered views/download were not checked."
+          ],
+          "l0_ids": [
+            "L0-07"
+          ]
+        },
+        "brief_and_view_consistency": {
+          "verdict": "not checked",
+          "evidence": [
+            "No delivered current result at technical stop; actual rendered views/download were not checked."
+          ],
+          "l0_ids": [
+            "L0-08",
+            "L0-09"
+          ]
+        },
+        "clarification": {
+          "verdict": "pass",
+          "evidence": [
+            "Observed questions were consequential, within the cap, and operator selections used responsive frozen clauses. This does not make the stopped phase pass."
+          ],
+          "l0_ids": [
+            "L0-03"
+          ]
+        }
+      },
+      "blocking_findings": [],
+      "operator_deviations": [],
+      "phases_not_checked": [],
+      "rejected_candidate_diagnostic": {
+        "classification": "wrong field path prefix in otherwise plausible rewrite of unresolved rule advice",
+        "semantic_loss_in_guard_triggered_items": "Not established. Revised responsibility retains exact-repeat detection, leaves near-repeat rules undecided and labels case/space/plural defaults proposed. Its record lacks the recommendation. prefix.",
+        "examples": [
+          {
+            "previous": "recommendation.owner_responsibilities/2",
+            "old": "Decide how strict the repeat check should be (proposed: ignore capitalization and surrounding spaces).",
+            "new": "Exact repeats are flagged (your decision). Near-repeats are undecided; proposed default unless you decide otherwise: ignore capitalization and surrounding spaces, and treat plurals as different words."
+          }
+        ]
+      }
+    },
+    {
+      "job": "C02-wrapper",
+      "case_id": "C02",
+      "phase": "V03",
+      "approach": "wrapper",
+      "outcome": "unreached",
+      "review_status": "reviewed",
+      "journal_finish_line": 70,
+      "calls": 2,
+      "questions": 1,
+      "failure_cause": {
+        "kind": "wrapper_only_continuity_gate",
+        "code": "invalid_output",
+        "native_output_line": 66,
+        "missing_records": [
+          "recommendation.owner_responsibilities/0"
+        ],
+        "invalid_or_unneeded_records": [
+          "owner_responsibilities/0"
+        ],
+        "evidence": "The returned change record drops the recommendation. prefix from a prior owner-responsibility reference. Exact reference validation stops adoption; this is a protocol/addressing defect, not established semantic content loss."
+      },
+      "dimensions": {
+        "recommendation_fit": {
+          "verdict": "not checked",
+          "evidence": [
+            "The base stopped before the attached variation could be supplied; no variation outcome exists."
+          ],
+          "l0_ids": [
+            "L0-06"
+          ]
+        },
+        "risk_and_unknowns": {
+          "verdict": "not checked",
+          "evidence": [
+            "The base stopped before the attached variation could be supplied; no variation outcome exists."
+          ],
+          "l0_ids": [
+            "L0-04",
+            "L0-05"
+          ]
+        },
+        "owner_view_clarity": {
+          "verdict": "not checked",
+          "evidence": [
+            "The base stopped before the attached variation could be supplied; no variation outcome exists."
+          ],
+          "l0_ids": [
+            "L0-07"
+          ]
+        },
+        "brief_and_view_consistency": {
+          "verdict": "not checked",
+          "evidence": [
+            "The base stopped before the attached variation could be supplied; no variation outcome exists."
+          ],
+          "l0_ids": [
+            "L0-08",
+            "L0-09"
+          ]
+        },
+        "clarification": {
+          "verdict": "not checked",
+          "evidence": [
+            "The base stopped before the attached variation could be supplied; no variation outcome exists."
+          ],
+          "l0_ids": [
+            "L0-03"
+          ]
+        }
+      },
+      "blocking_findings": [],
+      "operator_deviations": [],
+      "phases_not_checked": [
+        "V03"
+      ]
+    },
+    {
+      "job": "C03-baseline",
+      "case_id": "C03",
+      "phase": "C03",
+      "approach": "baseline",
+      "outcome": "delivered_ready",
+      "review_status": "reviewed",
+      "journal_finish_line": 98,
+      "final_output_line": 96,
+      "calls": 1,
+      "questions": 0,
+      "dimensions": {
+        "recommendation_fit": {
+          "verdict": "pass",
+          "evidence": [
+            "Recommends a minimal static browser page for two adults on one tablet, considering paper/aloud/shared note/existing-game alternatives and avoiding a backend. Retains manual spelling disputes."
+          ],
+          "l0_ids": [
+            "L0-06"
+          ]
+        },
+        "clarification": {
+          "verdict": "pass",
+          "evidence": [
+            "No question was needed to deliver a conditional plan from the informative initial request. Repeat case/space and plural handling are labeled proposed assumptions, and delivery method stays open. Hidden operator values were not confirmed."
+          ],
+          "l0_ids": [
+            "L0-03"
+          ]
+        },
+        "risk_and_unknowns": {
+          "verdict": "pass",
+          "evidence": [
+            "C03-E2 is addressed through proposed matching rules and explicit touchscreen typo risk with optional undo/confirmation. Costs and hosting method remain uncertain and actual tablet testing is required."
+          ],
+          "l0_ids": [
+            "L0-04",
+            "L0-05"
+          ]
+        },
+        "owner_view_clarity": {
+          "verdict": "pass",
+          "evidence": [
+            "Requested owner text clearly separates stated need, proposed behavior, assumptions, cost/upkeep, risks and next action; no rendered browser claim."
+          ],
+          "l0_ids": [
+            "L0-07"
+          ]
+        },
+        "brief_and_view_consistency": {
+          "verdict": "pass",
+          "evidence": [
+            "Both requested views preserve two-player alternating word entry and repeat loss, a shared tablet and human spelling disputes. Proposals are identifiable from assumptions/requirements; no hidden connectivity/persistence/typing-correction bank value was treated as observed."
+          ],
+          "l0_ids": [
+            "L0-08",
+            "L0-09"
+          ]
+        }
+      },
+      "blocking_findings": [],
+      "operator_deviations": [],
+      "minor_issues": [
+        "Acceptance criteria repeat proposed case/space normalization without carrying its proposed label on that line; the assumptions and requirements do label it.",
+        "Optional player names in owner text sit awkwardly beside categorical no-personal-data language; no requirement to collect identities or send names off-device was made.",
+        "Developer constraints call derived exclusions of accounts/leaderboards owner-confirmed although the owner stated party use rather than those exact exclusions. They should stay proposed minimum-scope choices."
+      ],
+      "phases_not_checked": []
+    },
+    {
+      "job": "C04-baseline",
+      "case_id": "C04",
+      "phase": "C04",
+      "approach": "baseline",
+      "outcome": "delivered_provisional",
+      "review_status": "reviewed",
+      "journal_finish_line": 120,
+      "final_output_line": 108,
+      "calls_total": 4,
+      "questions_total": 4,
+      "dimensions": {
+        "recommendation_fit": {
+          "verdict": "pass",
+          "evidence": [
+            "Base reuses existing chat/manual replies without building an app. V01 revisits that recommendation: public group replies no longer fit; private collection/owner-only record plus final group announcement is conditional advice."
+          ],
+          "l0_ids": [
+            "L0-06"
+          ]
+        },
+        "clarification": {
+          "verdict": "pass",
+          "evidence": [
+            "Two base requests ask candidate dates/deadline; only responsive date clause supplied and deadline stays unknown. Two variation requests ask future volunteer/date counts; those changed-workflow values are not fabricated from old one-off answers. Explicit provisional close respects reserved variation budget."
+          ],
+          "l0_ids": [
+            "L0-03"
+          ]
+        },
+        "risk_and_unknowns": {
+          "verdict": "pass",
+          "evidence": [
+            "Proposed base tie rule and reply-by deadline are labeled unchosen; unknown deadline is not re-asked. V01 carries privacy, membership change, owner single point of failure, deletion copies, unverified provider features/pricing and unknown season-end date."
+          ],
+          "l0_ids": [
+            "L0-04",
+            "L0-05"
+          ]
+        },
+        "owner_view_clarity": {
+          "verdict": "pass",
+          "evidence": [
+            "Requested owner_view explains the minimum workflow, current confirmed facts, proposals, unknowns, responsibilities and next action in ordinary language. Variation clearly says public poll no longer fits."
+          ],
+          "l0_ids": [
+            "L0-07"
+          ]
+        },
+        "brief_and_view_consistency": {
+          "verdict": "pass",
+          "evidence": [
+            "Base views agree on one-off, six adult volunteers, existing chat and final announcement. V01 views both become monthly seasonal coordination, changing volunteers, owner-only individual availability, group-visible final date, owner choice, season-end deletion, and no reminders/task assignments. Earlier one-off counts are explicitly not confirmed for the new workflow."
+          ],
+          "l0_ids": [
+            "L0-08",
+            "L0-09"
+          ]
+        }
+      },
+      "blocking_findings": [],
+      "operator_deviations": [],
+      "minor_issues": [
+        "Base owner text says cost should be nothing and nothing needs maintenance/recovery after the decision; exact tool pricing and data-retention needs were not verified. Explicit tool-pricing caveats elsewhere narrow that statement."
+      ],
+      "phases_not_checked": []
+    },
+    {
+      "job": "C04-baseline",
+      "case_id": "C04",
+      "phase": "V01",
+      "approach": "baseline",
+      "outcome": "delivered_provisional",
+      "review_status": "reviewed_with_independent_routing_adjudication",
+      "journal_finish_line": 120,
+      "final_output_line": 118,
+      "calls_total": 4,
+      "questions_total": 4,
+      "dimensions": {
+        "recommendation_fit": {
+          "verdict": "pass",
+          "evidence": [
+            "Base reuses existing chat/manual replies without building an app. V01 revisits that recommendation: public group replies no longer fit; private collection/owner-only record plus final group announcement is conditional advice."
+          ],
+          "l0_ids": [
+            "L0-06"
+          ]
+        },
+        "clarification": {
+          "verdict": "pass",
+          "evidence": [
+            "Independent ruling V7-A-C04-ROUTING finds no exact prior clause committing to the requested future monthly headcount/date-option practice. Treating those quantities as unknown is consistent with routing rules. Four information requests remain within the cap, and the final text preserves unknowns without re-asking. Alternative-answer outcome impact is not established."
+          ],
+          "l0_ids": [
+            "L0-03"
+          ]
+        },
+        "risk_and_unknowns": {
+          "verdict": "pass",
+          "evidence": [
+            "Proposed base tie rule and reply-by deadline are labeled unchosen; unknown deadline is not re-asked. V01 carries privacy, membership change, owner single point of failure, deletion copies, unverified provider features/pricing and unknown season-end date."
+          ],
+          "l0_ids": [
+            "L0-04",
+            "L0-05"
+          ]
+        },
+        "owner_view_clarity": {
+          "verdict": "pass",
+          "evidence": [
+            "Requested owner_view explains the minimum workflow, current confirmed facts, proposals, unknowns, responsibilities and next action in ordinary language. Variation clearly says public poll no longer fits."
+          ],
+          "l0_ids": [
+            "L0-07"
+          ]
+        },
+        "brief_and_view_consistency": {
+          "verdict": "pass",
+          "evidence": [
+            "Base views agree on one-off, six adult volunteers, existing chat and final announcement. V01 views both become monthly seasonal coordination, changing volunteers, owner-only individual availability, group-visible final date, owner choice, season-end deletion, and no reminders/task assignments. Earlier one-off counts are explicitly not confirmed for the new workflow."
+          ],
+          "l0_ids": [
+            "L0-08",
+            "L0-09"
+          ]
+        }
+      },
+      "blocking_findings": [],
+      "operator_deviations": [
+        "V7-O-C04-ROUTING"
+      ],
+      "minor_issues": [
+        "The all-copies deletion criterion is an intended operating requirement; verification must distinguish copies the owner controls from provider/recipient copies. No completed-deletion claim was made."
+      ],
+      "phases_not_checked": [],
+      "initial_review_status": "open_operator_ambiguity",
+      "initial_clarification_review": {
+        "verdict": "not checked",
+        "evidence": [
+          "Unresolved operator-routing ambiguity at journal line115/finish120: applicability of earlier one-off counts to changed monthly work is disputed. Other counted information requests total four and fit limits; no rerun repairs this uncertainty."
+        ],
+        "l0_ids": [
+          "L0-03"
+        ]
+      },
+      "routing_adjudication": {
+        "artifact": "artifacts/l0-comparison-adjudication-v7.json",
+        "sha256": "abac48ceca7d865be874ccdd52ca4bbfcdc357f53931e6d4b0ae793423218bb3",
+        "ruling_id": "V7-A-C04-ROUTING",
+        "verdict": "no_confirmed_deviation",
+        "effect": "V01 clarification passes on observed evidence; alternative-answer causal/outcome impact remains unestablished. No rerun performed."
+      }
+    },
+    {
+      "job": "C04-wrapper",
+      "case_id": "C04",
+      "phase": "C04",
+      "approach": "wrapper",
+      "outcome": "technical_stop",
+      "review_status": "reviewed",
+      "journal_finish_line": 141,
+      "calls": 3,
+      "questions": 3,
+      "failure_cause": {
+        "kind": "wrapper_only_continuity_gate",
+        "code": "invalid_output",
+        "native_output_line": 137,
+        "missing_records": [
+          "open_questions/0"
+        ],
+        "invalid_or_unneeded_records": [],
+        "evidence": "Returned accounting does not exactly address every changed prior tracked item. Terminal assessment is absent; old answers and prior assessment remain retained as stale context. No semantic loss is inferred solely from this gate."
+      },
+      "dimensions": {
+        "recommendation_fit": {
+          "verdict": "not checked",
+          "evidence": [
+            "No delivered current result at technical stop; actual rendered views/download remain unchecked."
+          ],
+          "l0_ids": [
+            "L0-06"
+          ]
+        },
+        "risk_and_unknowns": {
+          "verdict": "not checked",
+          "evidence": [
+            "No delivered current result at technical stop; actual rendered views/download remain unchecked."
+          ],
+          "l0_ids": [
+            "L0-04",
+            "L0-05"
+          ]
+        },
+        "owner_view_clarity": {
+          "verdict": "not checked",
+          "evidence": [
+            "No delivered current result at technical stop; actual rendered views/download remain unchecked."
+          ],
+          "l0_ids": [
+            "L0-07"
+          ]
+        },
+        "brief_and_view_consistency": {
+          "verdict": "not checked",
+          "evidence": [
+            "No delivered current result at technical stop; actual rendered views/download remain unchecked."
+          ],
+          "l0_ids": [
+            "L0-08",
+            "L0-09"
+          ]
+        },
+        "clarification": {
+          "verdict": "pass",
+          "evidence": [
+            "Chat membership/access and decision rule questions were consequential. Operator counted three requests, retained declared membership uncertainty, and closed provisionally to reserve the variation."
+          ],
+          "l0_ids": [
+            "L0-03"
+          ]
+        }
+      },
+      "blocking_findings": [],
+      "operator_deviations": [],
+      "phases_not_checked": [
+        "V01"
+      ],
+      "rejected_candidate_diagnostic": {
+        "classification": "unaccounted minimal rewrite of an unresolved-question reason",
+        "semantic_loss_in_guard_triggered_items": "Not established. The same membership question, fact key, unknown declaration and resolution step remain; only the reason changes from answer the poll to answer.",
+        "examples": [
+          {
+            "previous": "open_questions/0",
+            "old": "Owner does not know. If someone is not in the chat, they need another way to see and answer the poll. The owner can settle this by checking the member list.",
+            "new": "Owner does not know. If someone is not in the chat, they need another way to see and answer. The owner can settle this by checking the member list."
+          }
+        ]
+      }
+    },
+    {
+      "job": "C04-wrapper",
+      "case_id": "C04",
+      "phase": "V01",
+      "approach": "wrapper",
+      "outcome": "unreached",
+      "review_status": "reviewed",
+      "journal_finish_line": 141,
+      "calls": 3,
+      "questions": 3,
+      "failure_cause": {
+        "kind": "wrapper_only_continuity_gate",
+        "code": "invalid_output",
+        "native_output_line": 137,
+        "missing_records": [
+          "open_questions/0"
+        ],
+        "invalid_or_unneeded_records": [],
+        "evidence": "Returned accounting does not exactly address every changed prior tracked item. Terminal assessment is absent; old answers and prior assessment remain retained as stale context. No semantic loss is inferred solely from this gate."
+      },
+      "dimensions": {
+        "recommendation_fit": {
+          "verdict": "not checked",
+          "evidence": [
+            "The base stopped before V01 could be supplied; no variation result exists."
+          ],
+          "l0_ids": [
+            "L0-06"
+          ]
+        },
+        "risk_and_unknowns": {
+          "verdict": "not checked",
+          "evidence": [
+            "The base stopped before V01 could be supplied; no variation result exists."
+          ],
+          "l0_ids": [
+            "L0-04",
+            "L0-05"
+          ]
+        },
+        "owner_view_clarity": {
+          "verdict": "not checked",
+          "evidence": [
+            "The base stopped before V01 could be supplied; no variation result exists."
+          ],
+          "l0_ids": [
+            "L0-07"
+          ]
+        },
+        "brief_and_view_consistency": {
+          "verdict": "not checked",
+          "evidence": [
+            "The base stopped before V01 could be supplied; no variation result exists."
+          ],
+          "l0_ids": [
+            "L0-08",
+            "L0-09"
+          ]
+        },
+        "clarification": {
+          "verdict": "not checked",
+          "evidence": [
+            "The base stopped before V01 could be supplied; no variation result exists."
+          ],
+          "l0_ids": [
+            "L0-03"
+          ]
+        }
+      },
+      "blocking_findings": [],
+      "operator_deviations": [],
+      "phases_not_checked": [
+        "V01"
+      ]
+    },
+    {
+      "job": "C05-wrapper",
+      "case_id": "C05",
+      "phase": "C05",
+      "approach": "wrapper",
+      "outcome": "delivered_provisional",
+      "review_status": "reviewed_without_rendered_views",
+      "journal_finish_line": 168,
+      "final_http_line": 153,
+      "calls_total": 4,
+      "questions_total": 4,
+      "dimensions": {
+        "recommendation_fit": {
+          "verdict": "pass",
+          "evidence": [
+            "Existing cross-device notes/journal tool with separate export backup and recovery is a conditional minimum solution; no specific provider features or price are guaranteed. Entry fields, privacy and device-loss durability remain in canonical facts and assessment."
+          ],
+          "l0_ids": [
+            "L0-06"
+          ]
+        },
+        "clarification": {
+          "verdict": "pass",
+          "evidence": [
+            "Three base requests ask phone platform, laptop platform and existing account; all receive a question-bound unknown. One later budget request is independently consequential. The GPS unknown declaration is supplied once after base and is not re-asked as an active clarification. All four requests fit the cap."
+          ],
+          "l0_ids": [
+            "L0-03"
+          ]
+        },
+        "risk_and_unknowns": {
+          "verdict": "pass",
+          "evidence": [
+            "Assessment distinguishes sync from backup, adds export/restore/account recovery and private-location caution. V02 retains GPS metadata as unknown/null with owner evidence and an open decision, keeps original photos, and warns that sync/backup/export copies may expose exact locations. No removal of existing GPS or photos is asserted."
+          ],
+          "l0_ids": [
+            "L0-04",
+            "L0-05"
+          ]
+        },
+        "owner_view_clarity": {
+          "verdict": "not checked",
+          "evidence": [
+            "No actual rendered Owner View was inspected; API assessment text alone cannot close this dimension for the wrapper."
+          ],
+          "l0_ids": [
+            "L0-07"
+          ]
+        },
+        "brief_and_view_consistency": {
+          "verdict": "not checked",
+          "evidence": [
+            "HTTP exports follow current assessment/facts, but actual rendered Owner/Developer views and browser download were not checked. This remains incomplete."
+          ],
+          "l0_ids": [
+            "L0-08",
+            "L0-09"
+          ]
+        }
+      },
+      "blocking_findings": [],
+      "operator_deviations": [],
+      "minor_issues": [
+        "The base risk reason calls the hobby data non-sensitive while another reason correctly warns that private locations may reveal the owner's home. This overbroad characterization should be qualified; the privacy risk is nevertheless explicit."
+      ],
+      "phases_not_checked": []
+    },
+    {
+      "job": "C05-wrapper",
+      "case_id": "C05",
+      "phase": "V02",
+      "approach": "wrapper",
+      "outcome": "delivered_provisional",
+      "review_status": "reviewed_without_rendered_views",
+      "journal_finish_line": 168,
+      "final_http_line": 165,
+      "calls_total": 4,
+      "questions_total": 4,
+      "dimensions": {
+        "recommendation_fit": {
+          "verdict": "pass",
+          "evidence": [
+            "Existing cross-device notes/journal tool with separate export backup and recovery is a conditional minimum solution; no specific provider features or price are guaranteed. Entry fields, privacy and device-loss durability remain in canonical facts and assessment."
+          ],
+          "l0_ids": [
+            "L0-06"
+          ]
+        },
+        "clarification": {
+          "verdict": "pass",
+          "evidence": [
+            "Three base requests ask phone platform, laptop platform and existing account; all receive a question-bound unknown. One later budget request is independently consequential. The GPS unknown declaration is supplied once after base and is not re-asked as an active clarification. All four requests fit the cap."
+          ],
+          "l0_ids": [
+            "L0-03"
+          ]
+        },
+        "risk_and_unknowns": {
+          "verdict": "pass",
+          "evidence": [
+            "Assessment distinguishes sync from backup, adds export/restore/account recovery and private-location caution. V02 retains GPS metadata as unknown/null with owner evidence and an open decision, keeps original photos, and warns that sync/backup/export copies may expose exact locations. No removal of existing GPS or photos is asserted."
+          ],
+          "l0_ids": [
+            "L0-04",
+            "L0-05"
+          ]
+        },
+        "owner_view_clarity": {
+          "verdict": "not checked",
+          "evidence": [
+            "No actual rendered Owner View was inspected; API assessment text alone cannot close this dimension for the wrapper."
+          ],
+          "l0_ids": [
+            "L0-07"
+          ]
+        },
+        "brief_and_view_consistency": {
+          "verdict": "not checked",
+          "evidence": [
+            "HTTP exports follow current assessment/facts, but actual rendered Owner/Developer views and browser download were not checked. This remains incomplete."
+          ],
+          "l0_ids": [
+            "L0-08",
+            "L0-09"
+          ]
+        }
+      },
+      "blocking_findings": [],
+      "operator_deviations": [],
+      "minor_issues": [
+        "The accepted owner_update reason says locations are now private, although privacy was already in initial intent. The substantive new input is explicit GPS uncertainty and photo-preservation/location requirements. The record does not validate that causal explanation."
+      ],
+      "phases_not_checked": []
+    },
+    {
+      "job": "C05-baseline",
+      "case_id": "C05",
+      "phase": "C05",
+      "approach": "baseline",
+      "outcome": "native_usage_limit_stop",
+      "review_status": "reviewed",
+      "journal_finish_line": 180,
+      "native_failure_line": 177,
+      "calls_total": 2,
+      "questions_total": 1,
+      "failure_cause": {
+        "kind": "native_quota",
+        "code": "unavailable",
+        "native_exit": 1,
+        "native_api_error_status": 429,
+        "native_api_error": "usage_limit_reached",
+        "terminal_reason": "api_error"
+      },
+      "dimensions": {
+        "recommendation_fit": {
+          "verdict": "not checked",
+          "evidence": [
+            "No completed base result at the native usage-limit stop; V02 was never supplied. Earlier needs_answer output is not a passed final handoff."
+          ],
+          "l0_ids": [
+            "L0-06"
+          ]
+        },
+        "clarification": {
+          "verdict": "pass",
+          "evidence": [
+            "One consequential existing-service question was counted and received a frozen-bank unknown; no repeated settled question or question-limit overrun was observed."
+          ],
+          "l0_ids": [
+            "L0-03"
+          ]
+        },
+        "risk_and_unknowns": {
+          "verdict": "not checked",
+          "evidence": [
+            "No completed base result at the native usage-limit stop; V02 was never supplied. Earlier needs_answer output is not a passed final handoff."
+          ],
+          "l0_ids": [
+            "L0-04",
+            "L0-05"
+          ]
+        },
+        "owner_view_clarity": {
+          "verdict": "not checked",
+          "evidence": [
+            "No completed base result at the native usage-limit stop; V02 was never supplied. Earlier needs_answer output is not a passed final handoff."
+          ],
+          "l0_ids": [
+            "L0-07"
+          ]
+        },
+        "brief_and_view_consistency": {
+          "verdict": "not checked",
+          "evidence": [
+            "No completed base result at the native usage-limit stop; V02 was never supplied. Earlier needs_answer output is not a passed final handoff."
+          ],
+          "l0_ids": [
+            "L0-08",
+            "L0-09"
+          ]
+        }
+      },
+      "blocking_findings": [],
+      "operator_deviations": [],
+      "phases_not_checked": [
+        "V02"
+      ]
+    },
+    {
+      "job": "C05-baseline",
+      "case_id": "C05",
+      "phase": "V02",
+      "approach": "baseline",
+      "outcome": "unreached",
+      "review_status": "reviewed",
+      "journal_finish_line": 180,
+      "native_failure_line": 177,
+      "calls_total": 2,
+      "questions_total": 1,
+      "failure_cause": {
+        "kind": "native_quota",
+        "code": "unavailable",
+        "native_exit": 1,
+        "native_api_error_status": 429,
+        "native_api_error": "usage_limit_reached",
+        "terminal_reason": "api_error"
+      },
+      "dimensions": {
+        "recommendation_fit": {
+          "verdict": "not checked",
+          "evidence": [
+            "No completed base result at the native usage-limit stop; V02 was never supplied. Earlier needs_answer output is not a passed final handoff."
+          ],
+          "l0_ids": [
+            "L0-06"
+          ]
+        },
+        "clarification": {
+          "verdict": "not checked",
+          "evidence": [
+            "No completed base result at the native usage-limit stop; V02 was never supplied. Earlier needs_answer output is not a passed final handoff."
+          ],
+          "l0_ids": [
+            "L0-03"
+          ]
+        },
+        "risk_and_unknowns": {
+          "verdict": "not checked",
+          "evidence": [
+            "No completed base result at the native usage-limit stop; V02 was never supplied. Earlier needs_answer output is not a passed final handoff."
+          ],
+          "l0_ids": [
+            "L0-04",
+            "L0-05"
+          ]
+        },
+        "owner_view_clarity": {
+          "verdict": "not checked",
+          "evidence": [
+            "No completed base result at the native usage-limit stop; V02 was never supplied. Earlier needs_answer output is not a passed final handoff."
+          ],
+          "l0_ids": [
+            "L0-07"
+          ]
+        },
+        "brief_and_view_consistency": {
+          "verdict": "not checked",
+          "evidence": [
+            "No completed base result at the native usage-limit stop; V02 was never supplied. Earlier needs_answer output is not a passed final handoff."
+          ],
+          "l0_ids": [
+            "L0-08",
+            "L0-09"
+          ]
+        }
+      },
+      "blocking_findings": [],
+      "operator_deviations": [],
+      "phases_not_checked": [
+        "V02"
+      ]
+    },
+    {
+      "job": "C06-baseline",
+      "case_id": "C06",
+      "phase": "C06",
+      "approach": "baseline",
+      "outcome": "not_started",
+      "review_status": "not checked",
+      "calls": 0,
+      "questions": 0,
+      "reported_usage": null,
+      "reported_cost": null,
+      "latency_seconds": null,
+      "reason": "Matrix stopped after the preceding native usage-limit response; no claim or native request for this job exists.",
+      "dimensions": {
+        "recommendation_fit": {
+          "verdict": "not checked",
+          "evidence": [
+            "Job never started; no model output exists."
+          ],
+          "l0_ids": [
+            "L0-06"
+          ]
+        },
+        "clarification": {
+          "verdict": "not checked",
+          "evidence": [
+            "Job never started; no model output exists."
+          ],
+          "l0_ids": [
+            "L0-03"
+          ]
+        },
+        "risk_and_unknowns": {
+          "verdict": "not checked",
+          "evidence": [
+            "Job never started; no model output exists."
+          ],
+          "l0_ids": [
+            "L0-04",
+            "L0-05"
+          ]
+        },
+        "owner_view_clarity": {
+          "verdict": "not checked",
+          "evidence": [
+            "Job never started; no model output exists."
+          ],
+          "l0_ids": [
+            "L0-07"
+          ]
+        },
+        "brief_and_view_consistency": {
+          "verdict": "not checked",
+          "evidence": [
+            "Job never started; no model output exists."
+          ],
+          "l0_ids": [
+            "L0-08",
+            "L0-09"
+          ]
+        }
+      },
+      "blocking_findings": [],
+      "operator_deviations": []
+    },
+    {
+      "job": "C06-wrapper",
+      "case_id": "C06",
+      "phase": "C06",
+      "approach": "wrapper",
+      "outcome": "not_started",
+      "review_status": "not checked",
+      "calls": 0,
+      "questions": 0,
+      "reported_usage": null,
+      "reported_cost": null,
+      "latency_seconds": null,
+      "reason": "Matrix stopped after the preceding native usage-limit response; no claim or native request for this job exists.",
+      "dimensions": {
+        "recommendation_fit": {
+          "verdict": "not checked",
+          "evidence": [
+            "Job never started; no model output exists."
+          ],
+          "l0_ids": [
+            "L0-06"
+          ]
+        },
+        "clarification": {
+          "verdict": "not checked",
+          "evidence": [
+            "Job never started; no model output exists."
+          ],
+          "l0_ids": [
+            "L0-03"
+          ]
+        },
+        "risk_and_unknowns": {
+          "verdict": "not checked",
+          "evidence": [
+            "Job never started; no model output exists."
+          ],
+          "l0_ids": [
+            "L0-04",
+            "L0-05"
+          ]
+        },
+        "owner_view_clarity": {
+          "verdict": "not checked",
+          "evidence": [
+            "Job never started; no model output exists."
+          ],
+          "l0_ids": [
+            "L0-07"
+          ]
+        },
+        "brief_and_view_consistency": {
+          "verdict": "not checked",
+          "evidence": [
+            "Job never started; no model output exists."
+          ],
+          "l0_ids": [
+            "L0-08",
+            "L0-09"
+          ]
+        }
+      },
+      "blocking_findings": [],
+      "operator_deviations": []
+    },
+    {
+      "job": "C07-baseline",
+      "case_id": "C07",
+      "phase": "C07",
+      "approach": "baseline",
+      "outcome": "not_started",
+      "review_status": "not checked",
+      "calls": 0,
+      "questions": 0,
+      "reported_usage": null,
+      "reported_cost": null,
+      "latency_seconds": null,
+      "reason": "Matrix stopped after the preceding native usage-limit response; no claim or native request for this job exists.",
+      "dimensions": {
+        "recommendation_fit": {
+          "verdict": "not checked",
+          "evidence": [
+            "Job never started; no model output exists."
+          ],
+          "l0_ids": [
+            "L0-06"
+          ]
+        },
+        "clarification": {
+          "verdict": "not checked",
+          "evidence": [
+            "Job never started; no model output exists."
+          ],
+          "l0_ids": [
+            "L0-03"
+          ]
+        },
+        "risk_and_unknowns": {
+          "verdict": "not checked",
+          "evidence": [
+            "Job never started; no model output exists."
+          ],
+          "l0_ids": [
+            "L0-04",
+            "L0-05"
+          ]
+        },
+        "owner_view_clarity": {
+          "verdict": "not checked",
+          "evidence": [
+            "Job never started; no model output exists."
+          ],
+          "l0_ids": [
+            "L0-07"
+          ]
+        },
+        "brief_and_view_consistency": {
+          "verdict": "not checked",
+          "evidence": [
+            "Job never started; no model output exists."
+          ],
+          "l0_ids": [
+            "L0-08",
+            "L0-09"
+          ]
+        }
+      },
+      "blocking_findings": [],
+      "operator_deviations": []
+    },
+    {
+      "job": "C07-wrapper",
+      "case_id": "C07",
+      "phase": "C07",
+      "approach": "wrapper",
+      "outcome": "not_started",
+      "review_status": "not checked",
+      "calls": 0,
+      "questions": 0,
+      "reported_usage": null,
+      "reported_cost": null,
+      "latency_seconds": null,
+      "reason": "Matrix stopped after the preceding native usage-limit response; no claim or native request for this job exists.",
+      "dimensions": {
+        "recommendation_fit": {
+          "verdict": "not checked",
+          "evidence": [
+            "Job never started; no model output exists."
+          ],
+          "l0_ids": [
+            "L0-06"
+          ]
+        },
+        "clarification": {
+          "verdict": "not checked",
+          "evidence": [
+            "Job never started; no model output exists."
+          ],
+          "l0_ids": [
+            "L0-03"
+          ]
+        },
+        "risk_and_unknowns": {
+          "verdict": "not checked",
+          "evidence": [
+            "Job never started; no model output exists."
+          ],
+          "l0_ids": [
+            "L0-04",
+            "L0-05"
+          ]
+        },
+        "owner_view_clarity": {
+          "verdict": "not checked",
+          "evidence": [
+            "Job never started; no model output exists."
+          ],
+          "l0_ids": [
+            "L0-07"
+          ]
+        },
+        "brief_and_view_consistency": {
+          "verdict": "not checked",
+          "evidence": [
+            "Job never started; no model output exists."
+          ],
+          "l0_ids": [
+            "L0-08",
+            "L0-09"
+          ]
+        }
+      },
+      "blocking_findings": [],
+      "operator_deviations": []
+    }
+  ],
+  "blocking_findings": [],
+  "operator_deviations": [
+    {
+      "id": "V7-O-C04-ROUTING",
+      "job": "C04-baseline",
+      "phase": "V01",
+      "status": "resolved; no confirmed deviation",
+      "journal_line": 115,
+      "finish_line": 120,
+      "issue": "The operator answered future monthly volunteer/date counts as unknown although earlier one-off input supplied six volunteers and three candidate dates. The changed workflow clearly changes duration/privacy and participants, but does not explicitly give new counts. Whether old counts should carry is ambiguous.",
+      "observed_effect": "Final output treats future counts as unknown and offers private collection with a conditional form option. Required changed access, retention, owner decision and feature exclusions are retained.",
+      "outcome_impact": "Not established. A different answer could affect uncertainty or selection advice; no corrective/counterfactual rerun was performed. Do not call this harmless or a proven outcome-changing deviation.",
+      "adjudication_action": "Compare the frozen changed-answer precondition, actual question scope and prior clauses. Leave the affected phase open until another reviewer resolves carry-forward applicability.",
+      "initial_review_status": "ambiguous; adjudication required",
+      "adjudication": {
+        "artifact": "artifacts/l0-comparison-adjudication-v7.json",
+        "sha256": "abac48ceca7d865be874ccdd52ca4bbfcdc357f53931e6d4b0ae793423218bb3",
+        "ruling_id": "V7-A-C04-ROUTING",
+        "verdict": "no_confirmed_deviation",
+        "effect": "V01 clarification passes on observed evidence; alternative-answer causal/outcome impact remains unestablished. No rerun performed."
+      }
+    }
+  ],
+  "minor_issues": [],
+  "service_failure_double": {
+    "verdict": "pass",
+    "artifact": "artifacts/l0-failure-double-v7.json",
+    "artifact_sha256": "0884db2809f9237efefc8811e236dcf2923f64d41246d534937cdf77e395e249",
+    "native_model_calls": 0,
+    "paths": 2,
+    "scope": "Synthetic production ASGI/HTTP plus local Python process doubles only; rendered UI/live native reliability/browser download/comprehension remain not checked."
+  },
+  "evidence_limits": [
+    "Only closed job_finished jobs are reviewed. Open jobs are excluded.",
+    "No actual browser/render/download evidence exists. Wrapper rendered-view dimensions remain not checked. Baseline requested text/JSON views are reviewed directly.",
+    "Protocol failures, operator deviations and semantic findings are separate. An accounting record does not establish preserved meaning.",
+    "Human N06 adjudication, adult comprehension T011 and owner sign-off T032 remain pending.",
+    "No first attempt is repaired, retried or replaced by this review."
+  ],
+  "updated_at_utc": "2026-11-03T15:07:56.375539+00:00",
+  "journal_sha256_at_review": "56a5426152f0feff6b6e97bee35bf550a9be3f93c77ff63883b4037081f5139f",
+  "journal_lines_at_review": 180,
+  "closed_jobs_at_review": [
+    "C01-wrapper",
+    "C01-baseline",
+    "C02-baseline",
+    "C02-wrapper",
+    "C03-wrapper",
+    "C03-baseline",
+    "C04-baseline",
+    "C04-wrapper",
+    "C05-wrapper",
+    "C05-baseline"
+  ],
+  "reviewed_jobs": [
+    "C01-baseline",
+    "C01-wrapper",
+    "C02-baseline",
+    "C02-wrapper",
+    "C03-baseline",
+    "C03-wrapper",
+    "C04-baseline",
+    "C04-wrapper",
+    "C05-baseline",
+    "C05-wrapper",
+    "C06-baseline",
+    "C06-wrapper",
+    "C07-baseline",
+    "C07-wrapper"
+  ],
+  "native_calls_started_at_review": 28,
+  "continuity_semantic_review": {
+    "scope": "Changed bookkeeping claims were independently compared with raw prior/current assessment text. Exact structural acceptance was not treated as semantic equivalence.",
+    "rejected_candidates": {
+      "C01-wrapper": {
+        "classification": "unaccounted rewrites/consolidation plus a superfluous unchanged-item record",
+        "semantic_loss_in_guard_triggered_items": "Not established. On independent inspection, phone/stable-link criterion is extended to PDF, print-binder sync is folded into another responsibility, and both offline/no-machine-control rationale clauses remain in reworded text.",
+        "examples": [
+          {
+            "previous": "acceptance_criteria/0",
+            "old": "Each machine has one page that loads and reads well on a phone and has its own stable address.",
+            "new": "Each machine has one page or PDF that loads and reads well on a phone and has its own stable address."
+          },
+          {
+            "previous": "recommendation.owner_responsibilities/2",
+            "old": "Keep the printed binder in sync with the site.",
+            "new": "Export updated PDFs and republish them when equipment changes, and keep the printed binder in sync."
+          }
+        ],
+        "additional_limit": "Some declared alternative mappings are not semantically equivalent: a previous shared-document/PDF alternative is mapped to a hand-built-site alternative although the reason says it moved into the main recommendation. Bookkeeping reason/mapping quality still needs semantic review."
+      },
+      "C02-wrapper": {
+        "classification": "wrong field path prefix in otherwise plausible owner-resolved removal",
+        "semantic_loss_in_guard_triggered_items": "Not established. The prior request to tell the laptop type is obsolete after the owner supplies Windows; retained backup and OS-maintenance duties remain. The record says owner_responsibilities/0 rather than recommendation.owner_responsibilities/0.",
+        "examples": [
+          {
+            "previous": "recommendation.owner_responsibilities/0",
+            "old": "Tell us the laptop type so the right approach is chosen.",
+            "new": "Removed after Windows is supplied; explicit quoted owner_update reason exists under an invalid reference."
+          }
+        ]
+      },
+      "C03-wrapper": {
+        "classification": "wrong field path prefix in otherwise plausible rewrite of unresolved rule advice",
+        "semantic_loss_in_guard_triggered_items": "Not established. Revised responsibility retains exact-repeat detection, leaves near-repeat rules undecided and labels case/space/plural defaults proposed. Its record lacks the recommendation. prefix.",
+        "examples": [
+          {
+            "previous": "recommendation.owner_responsibilities/2",
+            "old": "Decide how strict the repeat check should be (proposed: ignore capitalization and surrounding spaces).",
+            "new": "Exact repeats are flagged (your decision). Near-repeats are undecided; proposed default unless you decide otherwise: ignore capitalization and surrounding spaces, and treat plurals as different words."
+          }
+        ]
+      },
+      "C04-wrapper": {
+        "classification": "unaccounted minimal rewrite of an unresolved-question reason",
+        "semantic_loss_in_guard_triggered_items": "Not established. The same membership question, fact key, unknown declaration and resolution step remain; only the reason changes from answer the poll to answer.",
+        "examples": [
+          {
+            "previous": "open_questions/0",
+            "old": "Owner does not know. If someone is not in the chat, they need another way to see and answer the poll. The owner can settle this by checking the member list.",
+            "new": "Owner does not know. If someone is not in the chat, they need another way to see and answer. The owner can settle this by checking the member list."
+          }
+        ]
+      }
+    },
+    "accepted_changes": [
+      {
+        "job": "C03-wrapper",
+        "native_output_line": 81,
+        "finding": "Owner-update changes distinguish online page opening from an in-progress round surviving connection loss. The corresponding new facts, criteria and responsibilities preserve that difference on inspection. This intermediate adoption does not pass its later stopped phase."
+      },
+      {
+        "job": "C04-wrapper",
+        "native_output_line": 131,
+        "finding": "Reworded unknown-membership reason retains its decision/consequence and labels the owner unknown. Later technical refusal remains unchanged."
+      },
+      {
+        "job": "C05-wrapper",
+        "native_output_line": 158,
+        "finding": "Accepted GPS-related records expand privacy uncertainty across risk/recovery/export handling while preserving photos and existing backup requirements. Metadata uncertainty remains unknown; removal is not asserted. The claim that privacy itself is newly stated is inaccurate because initial intent was private."
+      }
+    ],
+    "advice_withdrawn_live_evidence": "No accepted live advice_withdrawn record was observed; semantic justification of withdrawal remains unverified.",
+    "scalar_changes": "Outside D018 list accounting; no scalar correctness or semantic preservation guarantee is inferred.",
+    "no_repair": "All four rejected candidates remain rejected; diagnostics do not create a current assessment, reopen export, or reclassify their attempts as successful."
+  },
+  "job_metrics": [
+    {
+      "job": "C01-wrapper",
+      "calls": 2,
+      "questions": 2,
+      "wall_elapsed_seconds": 109.70834803581238,
+      "native_elapsed_seconds": 92.22546970896656,
+      "native_reported_num_turns": [
+        4,
+        2
+      ],
+      "reported_input_tokens": 8,
+      "reported_cache_creation_input_tokens": 16774,
+      "reported_cache_read_input_tokens": 28208,
+      "reported_output_tokens": 10680,
+      "reported_list_cost_usd": 0.17673280000000002,
+      "cost_limit": "Native subscription list-cost estimate, not a new charge or spending proof. Missing fields remain null.",
+      "peak_prompt_plus_stdin_bytes": 20637
+    },
+    {
+      "job": "C01-baseline",
+      "calls": 3,
+      "questions": 4,
+      "wall_elapsed_seconds": 118.92005705833435,
+      "native_elapsed_seconds": 101.17056999995839,
+      "native_reported_num_turns": [
+        3,
+        3,
+        3
+      ],
+      "reported_input_tokens": 18,
+      "reported_cache_creation_input_tokens": 22136,
+      "reported_cache_read_input_tokens": 28759,
+      "reported_output_tokens": 13473,
+      "reported_list_cost_usd": 0.2261859,
+      "cost_limit": "Native subscription list-cost estimate, not a new charge or spending proof. Missing fields remain null.",
+      "peak_prompt_plus_stdin_bytes": 17449
+    },
+    {
+      "job": "C02-baseline",
+      "calls": 4,
+      "questions": 3,
+      "wall_elapsed_seconds": 135.28631401062012,
+      "native_elapsed_seconds": 111.45400304102805,
+      "native_reported_num_turns": [
+        3,
+        3,
+        2,
+        2
+      ],
+      "reported_input_tokens": 16,
+      "reported_cache_creation_input_tokens": 23516,
+      "reported_cache_read_input_tokens": 26109,
+      "reported_output_tokens": 15352,
+      "reported_list_cost_usd": 0.2502269,
+      "cost_limit": "Native subscription list-cost estimate, not a new charge or spending proof. Missing fields remain null.",
+      "peak_prompt_plus_stdin_bytes": 23307
+    },
+    {
+      "job": "C02-wrapper",
+      "calls": 2,
+      "questions": 1,
+      "wall_elapsed_seconds": 43.32567024230957,
+      "native_elapsed_seconds": 32.16292937498656,
+      "native_reported_num_turns": [
+        2,
+        2
+      ],
+      "reported_input_tokens": 4,
+      "reported_cache_creation_input_tokens": 6679,
+      "reported_cache_read_input_tokens": 14386,
+      "reported_output_tokens": 4340,
+      "reported_list_cost_usd": 0.0715626,
+      "cost_limit": "Native subscription list-cost estimate, not a new charge or spending proof. Missing fields remain null.",
+      "peak_prompt_plus_stdin_bytes": 19479
+    },
+    {
+      "job": "C03-wrapper",
+      "calls": 3,
+      "questions": 3,
+      "wall_elapsed_seconds": 96.9701030254364,
+      "native_elapsed_seconds": 72.13705945797847,
+      "native_reported_num_turns": [
+        3,
+        2,
+        2
+      ],
+      "reported_input_tokens": 8,
+      "reported_cache_creation_input_tokens": 12769,
+      "reported_cache_read_input_tokens": 31376,
+      "reported_output_tokens": 10166,
+      "reported_list_cost_usd": 0.15588960000000002,
+      "cost_limit": "Native subscription list-cost estimate, not a new charge or spending proof. Missing fields remain null.",
+      "peak_prompt_plus_stdin_bytes": 21663
+    },
+    {
+      "job": "C03-baseline",
+      "calls": 1,
+      "questions": 0,
+      "wall_elapsed_seconds": 39.876522064208984,
+      "native_elapsed_seconds": 32.28723233300843,
+      "native_reported_num_turns": [
+        3
+      ],
+      "reported_input_tokens": 6,
+      "reported_cache_creation_input_tokens": 4185,
+      "reported_cache_read_input_tokens": 8602,
+      "reported_output_tokens": 4561,
+      "reported_list_cost_usd": 0.0632222,
+      "cost_limit": "Native subscription list-cost estimate, not a new charge or spending proof. Missing fields remain null.",
+      "peak_prompt_plus_stdin_bytes": 4737
+    },
+    {
+      "job": "C04-baseline",
+      "calls": 4,
+      "questions": 4,
+      "wall_elapsed_seconds": 112.01769995689392,
+      "native_elapsed_seconds": 83.93818595903576,
+      "native_reported_num_turns": [
+        2,
+        2,
+        3,
+        2
+      ],
+      "reported_input_tokens": 12,
+      "reported_cache_creation_input_tokens": 20249,
+      "reported_cache_read_input_tokens": 22589,
+      "reported_output_tokens": 11956,
+      "reported_list_cost_usd": 0.2028389,
+      "cost_limit": "Native subscription list-cost estimate, not a new charge or spending proof. Missing fields remain null.",
+      "peak_prompt_plus_stdin_bytes": 21724
+    },
+    {
+      "job": "C04-wrapper",
+      "calls": 3,
+      "questions": 3,
+      "wall_elapsed_seconds": 89.05547595024109,
+      "native_elapsed_seconds": 67.49088941700757,
+      "native_reported_num_turns": [
+        2,
+        3,
+        3
+      ],
+      "reported_input_tokens": 14,
+      "reported_cache_creation_input_tokens": 16189,
+      "reported_cache_read_input_tokens": 44771,
+      "reported_output_tokens": 10263,
+      "reported_list_cost_usd": 0.17189110000000002,
+      "cost_limit": "Native subscription list-cost estimate, not a new charge or spending proof. Missing fields remain null.",
+      "peak_prompt_plus_stdin_bytes": 21121
+    },
+    {
+      "job": "C05-wrapper",
+      "calls": 4,
+      "questions": 4,
+      "wall_elapsed_seconds": 193.03961491584778,
+      "native_elapsed_seconds": 160.30676450001192,
+      "native_reported_num_turns": [
+        3,
+        3,
+        5,
+        4
+      ],
+      "reported_input_tokens": 28,
+      "reported_cache_creation_input_tokens": 29536,
+      "reported_cache_read_input_tokens": 118621,
+      "reported_output_tokens": 25059,
+      "reported_list_cost_usd": 0.3806521,
+      "cost_limit": "Native subscription list-cost estimate, not a new charge or spending proof. Missing fields remain null.",
+      "peak_prompt_plus_stdin_bytes": 23673
+    },
+    {
+      "job": "C05-baseline",
+      "calls": 2,
+      "questions": 1,
+      "wall_elapsed_seconds": 43.16838598251343,
+      "native_elapsed_seconds": 18.406353918020613,
+      "native_reported_num_turns": [
+        2,
+        1
+      ],
+      "reported_input_tokens": 2,
+      "reported_cache_creation_input_tokens": 1648,
+      "reported_cache_read_input_tokens": 3479,
+      "reported_output_tokens": 1589,
+      "reported_list_cost_usd": 0.0228339,
+      "cost_limit": "Native subscription list-cost estimate, not a new charge or spending proof. Missing fields remain null.",
+      "peak_prompt_plus_stdin_bytes": 9773
+    }
+  ],
+  "quota_stop": {
+    "job": "C05-baseline",
+    "native_call": 28,
+    "journal_line": 177,
+    "native_exit": 1,
+    "api_error_status": 429,
+    "api_error": "usage_limit_reached",
+    "terminal_reason": "api_error",
+    "raw_result": "You've hit your 5-hour limit · resets 2am (Asia/Tokyo)",
+    "reported_reset_clock": "02:00 Asia/Tokyo",
+    "inferred_next_reset_date": "2026-11-04 (inferred from the event timestamp; not an explicit absolute timestamp)",
+    "retry_after_seconds": null,
+    "retry_after_header": null,
+    "limits": "No machine-readable retry-after or absolute reset timestamp was present. Clock text is not confirmation that quota is restored. No quota probe or new native request was sent.",
+    "continuation": "Only the four never-started jobs may continue under the unchanged plan/source/case/agent configuration and existing total cap, after quota recovery and a fresh independent approval binding the exact current journal. No failed job can retry, and no unused allowance is added or reset."
+  },
+  "reviewed_closed_jobs": [
+    "C01-wrapper",
+    "C01-baseline",
+    "C02-baseline",
+    "C02-wrapper",
+    "C03-wrapper",
+    "C03-baseline",
+    "C04-baseline",
+    "C04-wrapper",
+    "C05-wrapper",
+    "C05-baseline"
+  ],
+  "summary": {
+    "matrix_jobs": 14,
+    "closed_jobs": 10,
+    "unstarted_jobs": 4,
+    "native_calls_started": 28,
+    "authorized_total_cap": 98,
+    "closed_wrapper_jobs": 5,
+    "closed_baseline_jobs": 5,
+    "wrapper_continuity_gate_stops": 4,
+    "other_wrapper_guard_stops": 0,
+    "native_quota_stops": 1,
+    "delivered_final_jobs": 5,
+    "phase_rows": 20,
+    "fully_passing_phase_rows_under_first_review": [
+      {
+        "job": "C01-baseline",
+        "phase": "C01"
+      },
+      {
+        "job": "C03-baseline",
+        "phase": "C03"
+      },
+      {
+        "job": "C04-baseline",
+        "phase": "C04"
+      }
+    ],
+    "semantic_dimension_failures": [
+      {
+        "job": "C02-baseline",
+        "phase": "C02",
+        "dimension": "risk_and_unknowns"
+      },
+      {
+        "job": "C02-baseline",
+        "phase": "V03",
+        "dimension": "risk_and_unknowns"
+      }
+    ],
+    "confirmed_semantic_blocking_findings": 0,
+    "open_operator_ambiguities": 0,
+    "live_forced_provisional_closes_observed": 0,
+    "note": "First-review dimension counts are not final adjudication, full matched-comparison evidence or Level 0 acceptance. Live forced close was not reached; deterministic tests cover it separately.",
+    "adjudicated_operator_deviations": 0,
+    "fully_passing_phase_rows_after_routing_adjudication": [
+      {
+        "job": "C01-baseline",
+        "phase": "C01"
+      },
+      {
+        "job": "C03-baseline",
+        "phase": "C03"
+      },
+      {
+        "job": "C04-baseline",
+        "phase": "C04"
+      },
+      {
+        "job": "C04-baseline",
+        "phase": "V01"
+      }
+    ]
+  },
+  "adjudication_required": [],
+  "readiness": {
+    "level_0_accepted": false,
+    "comparison_complete": false,
+    "blocked_by": [
+      "Native quota stop leaves four matrix jobs unstarted.",
+      "Four wrapper attempts fail continuity-reference accounting; no current handoff can be exported for those attempts.",
+      "C02-baseline base and correction omit explicit inaccessible-folder/output-error/incomplete-catalog handling under first semantic review.",
+      "Actual rendered wrapper views and browser downloads remain unchecked.",
+      "Human N06 adjudication, adult sessions T011 and owner sign-off T032 remain pending."
+    ],
+    "no_superiority_claim": "Unequal validation/state contracts and deliberate 32000/64000-byte input budgets must accompany any result summary. This partial run establishes no causal or general advantage."
+  },
+  "post_review_adjudication": {
+    "artifact": "artifacts/l0-comparison-adjudication-v7.json",
+    "sha256": "abac48ceca7d865be874ccdd52ca4bbfcdc357f53931e6d4b0ae793423218bb3",
+    "pre_ruling_review_sha256": "5e0247c2c050d47b61eac436367f58979202ff6aea996eb8f2e2dec4149c3e90",
+    "pre_ruling_review_snapshot": "/tmp/mvc-t033/review-v7-before-adjudication.json",
+    "notes": [
+      "Original ambiguity and initial dimension rating are retained, with a separate adjudicated rating.",
+      "Second review confirms C02 missing-error-handling dimension failures as nonblocking and finds no additional established blocker in the scoped potentially material minor issues.",
+      "This is independent agent judgment, not human review or acceptance."
+    ]
+  }
+}

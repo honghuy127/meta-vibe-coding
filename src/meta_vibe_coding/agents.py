@@ -34,6 +34,9 @@ class Agent(Protocol):
     async def assess(self, state: State, provisional: bool) -> tuple[Candidate, Usage]: ...
 
 
+CLAUDE_SCHEMA_ATTEMPTS = 10
+
+
 def agent_environment(agent: str) -> dict[str, str]:
     # Forward native authentication/config references without reading or storing them.
     common = {"PATH", "HOME", "USER", "LOGNAME", "LANG", "TMPDIR", "XDG_CONFIG_HOME",
@@ -45,13 +48,17 @@ def agent_environment(agent: str) -> dict[str, str]:
     explicit = {name.strip() for name in os.getenv("MVC_AGENT_ENV", "").split(",") if name.strip()}
     env = {key: value for key, value in os.environ.items() if key in common | native[agent] | explicit}
     env.setdefault("PATH", os.defpath)
+    if agent == "claude":
+        # Claude Code's structured-output tool gives up after 5 tries by default (D016).
+        env["MAX_STRUCTURED_OUTPUT_RETRIES"] = str(CLAUDE_SCHEMA_ATTEMPTS)
     return env
 
 
 def invocation(agent: str, binary: str, model: str | None, env: dict[str, str], *, prompt: str = PROMPT,
                output_schema: str | None = None) -> list[str]:
-    if output_schema is not None and agent != "codex":
-        raise ValueError("Native schema-file constraints are currently supported only for Codex")
+    # Codex takes a schema file path; Claude takes the schema text.
+    if output_schema is not None and agent == "opencode":
+        raise ValueError("Native schema constraints are supported only for Codex and Claude")
     if agent == "opencode":
         # Use v2's ordered permission rules; the inline deny rule follows native defaults.
         config = json.loads(env.get("OPENCODE_CONFIG_CONTENT", "{}"))
@@ -68,6 +75,8 @@ def invocation(agent: str, binary: str, model: str | None, env: dict[str, str], 
                 "--strict-mcp-config", "--mcp-config", '{"mcpServers":{}}',
                 "--disable-slash-commands", "--no-session-persistence", "--output-format", "json",
                 "--append-system-prompt", prompt]
+        if output_schema is not None:
+            args.extend(["--json-schema", output_schema])
     else:
         args = [binary, "exec", "--json", "--ephemeral", "--ignore-user-config", "--ignore-rules",
                 "--skip-git-repo-check", "--sandbox", "read-only", "--strict-config",
@@ -117,7 +126,9 @@ def parse_completion(agent: str, raw: bytes) -> tuple[str, dict]:
         models = body.get("modelUsage") or {}
         reported = ", ".join(sorted(models)) if models else None
         usage = body.get("usage") or {}
-        return body["result"], {"model": reported, "input_tokens": usage.get("input_tokens"),
+        structured = body.get("structured_output")
+        text = json.dumps(structured, ensure_ascii=False) if isinstance(structured, dict) else body["result"]
+        return text, {"model": reported, "input_tokens": usage.get("input_tokens"),
             "output_tokens": usage.get("output_tokens"), "cost": body.get("total_cost_usd")}
 
     events = [json.loads(line) for line in raw.splitlines() if line.strip()]
@@ -208,7 +219,7 @@ class CodingAgent:
         help_text = (await run_cli(command + ["--help"], content="", cwd=cwd, env=env,
             timeout=min(5, remaining()))).decode()
         required = {"opencode": ["--standalone", "--format", "--agent"],
-                    "claude": ["--safe-mode", "--restricted", "--tools", "--strict-mcp-config", "--no-session-persistence", "--append-system-prompt"],
+                    "claude": ["--safe-mode", "--restricted", "--tools", "--strict-mcp-config", "--no-session-persistence", "--append-system-prompt", "--json-schema"],
                     "codex": ["--json", "--ephemeral", "--ignore-user-config", "--ignore-rules", "--sandbox", "--disable", "--output-schema"]}
         if any(flag not in help_text for flag in required[self.agent]):
             raise FlowError("unavailable", "This agent CLI lacks the required flags. No inference request was sent.")
@@ -237,13 +248,13 @@ class CodingAgent:
                 with tempfile.TemporaryDirectory(prefix="mvc-agent-") as cwd:
                     env = agent_environment(self.agent)
                     env["PWD"] = cwd
-                    schema_path = None
+                    schema_option = SCHEMA if self.agent == "claude" else None
                     if self.agent == "codex":
-                        schema_path = str(Path(cwd) / "response-schema.json")
-                        descriptor = os.open(schema_path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+                        schema_option = str(Path(cwd) / "response-schema.json")
+                        descriptor = os.open(schema_option, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
                         with os.fdopen(descriptor, "w") as file:
                             file.write(SCHEMA)
-                    args = invocation(self.agent, self.binary, self.model, env, output_schema=schema_path)
+                    args = invocation(self.agent, self.binary, self.model, env, output_schema=schema_option)
                     await self.probe(cwd, env, remaining)
                     if remaining() <= 0:
                         raise TimeoutError()

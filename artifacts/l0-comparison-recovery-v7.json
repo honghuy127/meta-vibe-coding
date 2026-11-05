@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "kind": "independent-append-only-recovery-preflight",
+  "task": "T033 / T031",
+  "reviewed_at_utc": "2026-11-03T15:09:09.033369+00:00",
+  "reviewer": "Separate Codex reviewer continuity_review; agent preflight, not human sign-off",
+  "verdict": "not_ready",
+  "technical_review_verdict": "pass",
+  "reason": "All exact-hash append-only recovery prerequisites checked, but the provider-reported quota reset is still in the future. No launcher-compatible pass approval is issued before that condition. Recheck unchanged hashes/journal and launch conditions at or after the reported reset; no new human scope authorization is inferred or requested.",
+  "plan_sha256": "f4eee8851058eb338128e1c90cc60810cf8abeb48eb0d4e659f6e2ee2141ac88",
+  "harness_sha256": "a51847a47f7361476e9f90ff00eb0d4b8ff060d61772652c7ee5b9497a3c1f99",
+  "case_sha256": "3dc0aa4fe58bce677f875b7830677febeb23ce58a44bed00cf1984e557219921",
+  "source_snapshot_sha256": "82d8478e5e81129a83a1af5e01032e76098cd14b30f6aa0b03cfecb37cb6932f",
+  "journal_sha256": "56a5426152f0feff6b6e97bee35bf550a9be3f93c77ff63883b4037081f5139f",
+  "journal_lines": 180,
+  "manifest_sha256": "491e2f4a77c26b7ec014184076854ba0c6868051632b49b5046e56473480d347",
+  "agent_binary_sha256": "09f153b46b5df9e8b3454716d682a91901de020cbca630f61dec1a015b32b5e9",
+  "agent_binary_matches_now": true,
+  "recorded_agent_version": "2.1.317 (Claude Code)",
+  "not_before_utc": "2026-11-03T17:00:00+00:00",
+  "reported_local_reset": "2026-11-04 02:00 Asia/Tokyo (date inferred from quota event; availability not guaranteed)",
+  "reset_has_passed_at_review": false,
+  "retry_after_seconds": null,
+  "quota_restored": null,
+  "native_login_rechecked_in_this_review": false,
+  "native_calls": 0,
+  "run_mutated": false,
+  "new_allowance": 0,
+  "existing_total_cap": 98,
+  "native_calls_already_started": 28,
+  "closed_jobs_never_reopened": [
+    "C01-wrapper",
+    "C01-baseline",
+    "C02-baseline",
+    "C02-wrapper",
+    "C03-wrapper",
+    "C03-baseline",
+    "C04-baseline",
+    "C04-wrapper",
+    "C05-wrapper",
+    "C05-baseline"
+  ],
+  "remaining_jobs_in_frozen_order": [
+    "C06-baseline",
+    "C06-wrapper",
+    "C07-wrapper",
+    "C07-baseline"
+  ],
+  "maximum_additional_calls": 28,
+  "allowance_explanation": "The global cap has 70 numerical slots unused, but closed jobs forfeit their unused job allowance. Only four never-started jobs remain, each capped at seven, so at most 28 further top-level calls are usable; no allowance is added or transferred.",
+  "passed_checks": [
+    "Harness.verify confirms unchanged plan, harness, cases, runtime, native schemas and requirements lock.",
+    "Manifest hash matches the first journal entry, and its plan/harness/native binary bindings match current state.",
+    "All 28 native starts have matching finishes; all ten opened jobs are closed with no in-flight native request.",
+    "Job claims equal the ten journal-started jobs and the frozen matrix prefix. Claims and run allowance remain intact.",
+    "Offline rebuild of every opened job confirms it is closed; no resume method or journal mutation was called."
+  ],
+  "required_before_launcher_approval": [
+    "Reach the reported not-before reset time; this is necessary timing guidance, not proof quota is available.",
+    "Recompute exact plan/harness/case/source/manifest/current journal hashes and preserve every existing claim. Any journal change requires a fresh binding.",
+    "Check the same native login, version and binary through the launcher check_runtime path before resume; no API-key route, model change, fallback or new purchase.",
+    "Issue a new independent verdict=pass binding the current journal only once launch conditions are satisfied; this not_ready artifact deliberately cannot launch the harness.",
+    "Resume append-only with zero new allowance and start only the four never-started jobs. Never retry C05-baseline or any other closed attempt."
+  ],
+  "limits": [
+    "Claude has no inference-free quota read. Reset-clock text may be stale or quota may remain unavailable; the first later request can still fail and its first attempt must be retained.",
+    "Native login/version were not queried during this review; those launcher checks remain mandatory. Only the current native binary file hash was read.",
+    "No semantic acceptance, actual browser/download, adult comprehension, human N06 ruling, owner sign-off, release or spending authority is established."
+  ]
+}

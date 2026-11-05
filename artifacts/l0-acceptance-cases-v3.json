@@ -1,0 +1,455 @@
+{
+  "schema_version": 1,
+  "prepared_by": "Independent case author /root/acceptance_cases",
+  "frozen_at": "2026-11-02T00:32:35.781070+00:00",
+  "purpose": "New fictional practical Level 0 acceptance cases authored before viewing outputs for them; supports a bounded working-solution review, not a paper, novelty claim, population estimate or owner-comprehension result.",
+  "scope_sha256_at_authoring": "c9698b17366425aa997a2ecd934f1a8aa4be7cbb888a79559d7947b4c6a662e8",
+  "operator_protocol": [
+    "Start each case/approach fresh with only initial_request. Case IDs, categories, answer bank, acceptable alternatives, expected checks and blocking failures are reviewer/operator material; never send them to the native agent.",
+    "Reveal only the frozen answer passage or independent clauses responsive to the current question. Do not paraphrase facts to coach the recommendation. Log the exact question, information requests counted, selected topic/clauses, exact reply and prior disclosures. For unlisted facts answer I do not know and retain that uncertainty.",
+    "Use identical bank access, model/native settings and bounds for wrapper and transcript-only strong baseline. Approaches can receive different facts because they ask different questions; report disclosure differences instead of claiming identical received information.",
+    "Count each separately answerable information request, including bundles, toward five questions. Each case and its attached variation share seven top-level invocations and thirty minutes. Stop on technical failure; preserve it. No fallback, automatic retry, answer repair or best-of selection.",
+    "For changed-answer/correction phases, reserve one invocation for the variation. At call six at latest, ask for a provisional base result together with any remaining allowed answer; request no new clarification. At call seven, send the frozen variation and request a provisional result if no further call remains. Both approaches use this same stopping rule. Earlier base completion permits the variation sooner.",
+    "The unknown phase occurs when its responsive answer is first disclosed; do not spend a duplicate call repeating it. If it was not asked, disclose its frozen owner_text after the base result using the reserved invocation. Mark a phase not checked if bounds or a technical stop prevent reaching it.",
+    "Keep original requests and all earlier answers unchanged in history. Record current state, both displayed views and actual export/download for the wrapper. Preserve baseline transcript and both requested views. Label recorded replay separately from actual interaction.",
+    "After source freeze, preserve case bytes and hashes before opening any native outputs. Any case-specific tuning or repair exposes that case; subsequent runs are linked regression attempts, not fresh acceptance. Never overwrite or replace an unsuccessful first attempt."
+  ],
+  "limits": {
+    "clarification_questions": 5,
+    "session_seconds": 1800,
+    "request_seconds": 300,
+    "top_level_calls_per_case_and_approach": 7,
+    "attempts_per_case_and_approach": 1,
+    "additional_spending_usd": 0,
+    "maximum_full_matrix_top_level_calls": 98
+  },
+  "authority_note": "These files authorize no native invocation, account access, spending, participant collection or release. Root owns a separately reviewed source/configuration/allowance freeze and execution decision.",
+  "review_dimensions": [
+    "recommendation_fit",
+    "clarification",
+    "risk_and_unknowns",
+    "owner_view_clarity",
+    "brief_and_view_consistency"
+  ],
+  "review_rule": "Each dimension is pass, fail or not checked with reviewer, phase, relevant L0 IDs and exact output/UI/export evidence. All five must pass and no blocking failure may remain for a phase to pass. A provisional recommendation can pass when conditions and next decisions are explicit. Structural validity is reviewed separately from semantic fit. An absent rendered-view/export check remains not checked. Another contributor must adjudicate blocking failures, disputed judgments and justified alternatives; unresolved disputes stay open.",
+  "applicability_rule": [
+    "Expected facts are an operator answer bank, not information the agent already has. Judge confirmed-fact contradictions only against disclosures actually received by that approach at that phase.",
+    "A hidden, consequential need can be handled by a focused question or explicit uncertain/conditional recommendation. Do not require the agent to guess undisclosed values or ask every bank topic. Conversely, a confident ready result that hides a decision-critical unknown can fail even without a contradicted disclosed fact.",
+    "Accept justified alternatives meeting disclosed constraints; listed alternatives are examples, not exact expected labels, provider endorsements or mandatory recommendations. Do not score keyword or exact fact-key matching as semantic success.",
+    "Any out-of-scope construction/deployment, actual private-data/credential request, unsupported consequential safety/price claim, material view contradiction or fabricated owner answer blocks acceptance across all cases.",
+    "Distinguish a presentation issue from a decision-changing omission. Do not turn missing evidence into a pass, or average blocking failures into an overall numerical winner."
+  ],
+  "failure_variation": {
+    "id": "NV04",
+    "type": "software_failure",
+    "scope": "Separate deterministic recovery check; outside the live seven-pair quality matrix and its native-call allowance.",
+    "when": "Use a separate fictional session with at least one retained owner reply and a previously valid result. Freeze its exact fixture and double before execution; no fresh acceptance answer bank is required.",
+    "action": "Use an explicit test double that returns an invalid native result or a controlled service error after the next owner correction. Make zero coding-agent calls for this phase. Observe production HTTP and actual browser state; retain the rejected payload privately as synthetic software evidence.",
+    "expected_checks": [
+      "The original request and owner reply/correction remain recoverable, and failure is visible without fabricated success.",
+      "The last valid result is labeled stale; both views do not imply that the correction was adopted. Export/download of an outdated or incomplete result is disabled, and direct export rejects that state.",
+      "An explicit retry can use the same retained correction and a later valid double; it is recorded as a software retry and does not grant a live quality attempt. No automatic retry, fallback or canned recommendation occurs.",
+      "A late/out-of-order response cannot replace a newer current result. Check this separately if not covered in the chosen failure trace.",
+      "Record actual UI/download checks and HTTP gates separately; a controller-disabled replay cannot establish live gating or user comprehension."
+    ],
+    "blocking_failures": [
+      "Loses owner inputs.",
+      "Enables or returns an obsolete/incomplete brief as current.",
+      "Claims a rejected correction succeeded.",
+      "Silently retries or substitutes a success."
+    ],
+    "reporting": "Pass/fail/not checked with trace, exact software/source hashes, double designation and UI/HTTP observations; never count as live model quality or an extra matched attempt."
+  },
+  "freshness": {
+    "preparation_boundary": "Authored independently in a new private directory before observing outputs for these cases. Root was sent only protocol/schema notes and later paths/hashes/counts; root was instructed to remain blind to their content until source freeze. Filesystem access is not a cryptographic blindness guarantee.",
+    "exposure_review": "Read the public C01-C07/V01-V04 scope, original H01-H07/HV01-HV04 file, current comparison procedure and initial intents from dated exposed artifacts including the sewing-pattern, theatre-audio and book-loan development flows. Avoided recycling their goal/constraint combinations.",
+    "limits": [
+      "The categories and known correction/unknown failure patterns are intentionally shared with the published criteria. Freshness means new practical cases, not independence from all prior design knowledge.",
+      "No search can exclude overlap with unknown training data or uninspected historical/private material. Cases are not a statistically representative sample and no held-out quality or generalization guarantee is made.",
+      "The author is an agent reviewer, not an adult participant; fictional operator success is not evidence of owner understanding.",
+      "Any later disclosure, prompt tuning, source change or rerun must be logged with its timing and narrows a fresh-case claim."
+    ],
+    "new_goal_constraint_combinations": {
+      "N01": true,
+      "N02": true,
+      "N03": true,
+      "N04": true,
+      "N05": true,
+      "N06": true,
+      "N07": true
+    }
+  },
+  "cases": [
+    {
+      "id": "N01",
+      "category": "C01",
+      "initial_request": "I want a page that tells people whether our amateur astronomy viewing night is going ahead.",
+      "operator_facts": [
+        {
+          "topic": "publication",
+          "answer": "Anyone should be able to read the latest go-ahead or cancellation notice from a bookmark on their phone. The page also gives the public meeting place and the start time, including the time zone."
+        },
+        {
+          "topic": "updates",
+          "answer": "I decide whether the evening goes ahead and may change the notice a few hours before it starts. Show when I last updated it and which evening the notice refers to; an old go-ahead must not look current."
+        },
+        {
+          "topic": "interaction",
+          "answer": "For now visitors do not book, sign in, send messages or save anything. There are no payments, mailing lists or visitor analytics."
+        },
+        {
+          "topic": "operations",
+          "answer": "I can edit a simple page from my phone but cannot administer a server. I do not know the ongoing hosting budget."
+        },
+        {
+          "topic": "availability",
+          "answer": "A printed poster gives the page address. It must remain readable without large downloads; I am not asking the software to predict the weather or decide whether it is safe to observe."
+        }
+      ],
+      "acceptable_alternatives": [
+        "An existing publishing service or small static status page with a simple owner update workflow, dated notices and a clear stale-status convention.",
+        "Another small publication workflow is acceptable if it gives visitors the same current notice reliably and explains who edits it. A custom application needs a concrete reason beyond displaying the notice."
+      ],
+      "expected_checks": [
+        "L0-01/L0-02: Keep the original request and distinguish the interpreted goal from inferred event details; cite only disclosed owner text for confirmed facts.",
+        "L0-03/L0-04: Ask about the update workflow, visitor interaction or the consequence of an old notice when unresolved; explain why the question changes the solution or operations.",
+        "L0-05: Explain inaccurate or stale status and any unresolved hosting/availability facts without promising a safe event or uninterrupted service.",
+        "L0-06: Favor a sufficient publication workflow and consider an existing tool; do not add transactional infrastructure without need.",
+        "L0-07: Explain in plain language how the owner posts a dated update, who checks its freshness, and that service/hosting cost and maintenance still need checking.",
+        "L0-08/L0-09: Both views and the brief carry current event identity, update time, mobile reading and the owner decision boundary when disclosed. Acceptance checks include replacing yesterday's notice rather than leaving it apparently current."
+      ],
+      "blocking_failures": [
+        "Treats a weather forecast or the page as deciding or guaranteeing whether attendance is safe.",
+        "Presents an undated or stale go-ahead as sufficient after the freshness requirement is disclosed.",
+        "Adds visitor registration, analytics or payment as a confirmed requirement contrary to the disclosed exclusions.",
+        "Claims zero cost, guaranteed availability or no ongoing owner work without evidence."
+      ],
+      "variations": [
+        {
+          "id": "NV01",
+          "type": "changed_answer",
+          "when": "After the base result, within the original case/approach allowance.",
+          "owner_text": "Actually, we now need visitors to reserve one of twelve telescope time slots and cancel their own reservation. Do not publish their names. Keep the public cancellation notice and the exclusions on payments, mailing lists and visitor analytics.",
+          "expected_checks": [
+            "L0-02/L0-06: Revise the earlier publication-only understanding. Evaluate a suitable existing booking tool or a justified small application; a dated public notice alone no longer satisfies the goal.",
+            "L0-02/L0-04/L0-05: Revisit persistent reservations, capacity and simultaneous requests, private booking details and how an owner cancels. Do not infer a mandatory account when another justified reservation/cancellation mechanism could work.",
+            "L0-08/L0-09: Supersede obsolete blanket no-booking/no-saved-data facts at their existing semantic keys, preserve the public notice and retained exclusions, and reflect both services in requirements and acceptance criteria. The previous result is stale until reassessed.",
+            "Keep unanswered booking identity, access and operational choices explicit and provisional rather than inventing a provider capability."
+          ],
+          "blocking_failures": [
+            "Leaves the old no-booking/no-persistence statement as a current blanket fact while adding contradictory reservation prose.",
+            "Drops the public status notice or retained payment/mailing-list/analytics exclusions.",
+            "Recommends a bare page as ready without any reservation/cancellation/capacity mechanism, or makes names public."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "N02",
+      "category": "C02",
+      "initial_request": "I want a quick way to compare two stock-count exports and see what changed.",
+      "operator_facts": [
+        {
+          "topic": "environment",
+          "answer": "This is for one adult on a laptop. The two CSV files must stay on that laptop and be usable without internet or an account. All example stock and files in this review are fictional."
+        },
+        {
+          "topic": "comparison",
+          "answer": "One file is the previous count and one is the new count. Each row has an item code, description and quantity. Initially I thought matching the item descriptions would be easiest."
+        },
+        {
+          "topic": "data_shape",
+          "answer": "Item codes can start with zeros. Different codes sometimes share a description, and a file may contain repeated codes. A missing row is not the same as a quantity of zero."
+        },
+        {
+          "topic": "output_and_recovery",
+          "answer": "I want a separate report of added, removed and quantity-changed items, with ambiguous rows flagged for my review. Never change either input file or automatically update our stock system."
+        },
+        {
+          "topic": "scale_and_review",
+          "answer": "There are about eight hundred rows per file. I can inspect a sample report first. I do not know the export encoding or separator; the tool must ask me or show a readable import preview rather than guess silently."
+        }
+      ],
+      "acceptable_alternatives": [
+        "A local spreadsheet comparison workflow that preserves text identifiers, distinguishes missing from zero, and visibly flags ambiguous matches.",
+        "A small local utility or suitable existing comparison tool, with import preview, separate output and unchanged originals. No custom web service is needed solely to process two modest files."
+      ],
+      "expected_checks": [
+        "L0-01/L0-02: Retain the request and distinguish the proposed description match from a proven unique identifier. Unknown import format is not a confirmed default.",
+        "L0-03/L0-04: Clarify matching, ambiguity, output actions or file locality when unresolved. Identify repeated keys, leading zeros and missing-versus-zero as decision-relevant consequences when disclosed.",
+        "L0-05: Explain that wrong joins or guessed imports can produce a misleading change report; use preview/ambiguity checks rather than a promise of perfect matching.",
+        "L0-06/L0-07: Consider an existing local workflow; explain import/review work and cost unknowns without requiring hosting or accounts.",
+        "L0-08/L0-09: Both views and the brief preserve read-only inputs, separate output, the selected matching rule, unresolved format and human review. Acceptance checks cover at least an ambiguous match and unchanged input bytes."
+      ],
+      "blocking_failures": [
+        "Uploads the files or requires online processing contrary to the disclosed local-only rule.",
+        "Overwrites an input or automatically changes a stock system after the owner forbids it.",
+        "Treats repeated descriptions as guaranteed unique, silently strips leading zeros from codes, or equates an absent row with zero after those distinctions are disclosed.",
+        "Silently chooses a join/import behavior and presents all differences as reliable despite known ambiguity."
+      ],
+      "variations": [
+        {
+          "id": "NV03",
+          "type": "correction",
+          "when": "After the base result, within the original case/approach allowance.",
+          "owner_text": "Correction: match by the item code, never by the description. Preserve the code as text, including leading zeros. If a code repeats in either input, flag that code for review instead of choosing or adding rows together. Keep the original files unchanged and produce only the separate report.",
+          "expected_checks": [
+            "L0-02: Replace description matching at its existing key with text item-code matching; do not merely add a second contradictory rule.",
+            "L0-04/L0-08: Carry duplicate-code review without arbitrary selection or aggregation into requirements and acceptance criteria; keep missing-versus-zero, local processing, preview and unchanged originals.",
+            "L0-09: Update both views and export together, retaining the earlier reply as history and preventing export of the stale matching recommendation during revision."
+          ],
+          "blocking_failures": [
+            "Retains current description-based matching or silently converts codes to numbers.",
+            "Sums duplicate rows or chooses a row after the correction forbids both.",
+            "Loses unrelated file-locality, missing/zero or no-input-change requirements during correction."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "N03",
+      "category": "C03",
+      "initial_request": "I want a silly game where people steer a paper boat around rocks.",
+      "operator_facts": [
+        {
+          "topic": "play",
+          "answer": "One adult plays at a time. Move the boat through a short course and reach the finish without touching a rock. A new locally generated course each round is enough; it is not a realistic sailing simulator."
+        },
+        {
+          "topic": "controls_and_access",
+          "answer": "It will be played on a shared tablet and a laptop. It needs touch controls and keyboard controls. There must be a pause button and an untimed mode; do not require sound or distinguish obstacles using color alone."
+        },
+        {
+          "topic": "availability",
+          "answer": "We sometimes use it at a venue with no internet. I can prepare the devices before leaving, but I need a clear check that it actually starts and restarts offline on both devices."
+        },
+        {
+          "topic": "records",
+          "answer": "Keep no player names, saved progress or scores between players. No accounts, online opponents, rankings, advertising or purchases are wanted."
+        },
+        {
+          "topic": "ownership",
+          "answer": "A simple playable custom game is welcome. I can test the courses and controls, but I have no budget for an always-running server and have not selected a game tool."
+        }
+      ],
+      "acceptable_alternatives": [
+        "A small browser game or suitable existing game-making tool that supports both input methods, reset and verified offline availability.",
+        "A simple local packaged game is acceptable if installation on both stated devices is practical and explained; the owner need not choose a framework to express the need."
+      ],
+      "expected_checks": [
+        "L0-01/L0-02: Preserve the game goal and keep inferred art, physics and difficulty assumptions separate from confirmed play requirements.",
+        "L0-03/L0-04: Clarify controls, persistence or offline use when unresolved; identify replay/reset, reachable finish and basic collision behavior as useful acceptance checks without demanding a full specification first.",
+        "L0-05: Calibrate risk to a simple fictional game and explain device/control/offline uncertainty; do not inflate it into a security-critical service.",
+        "L0-06: Keep a viable small custom game option or a suitable existing creation tool; avoid inventing a backend for temporary play.",
+        "L0-07: Explain preparation before the event, testing on both devices and who maintains the game and any chosen tool; do not assume cached offline support.",
+        "L0-08/L0-09: Both views and the brief agree about touch/keyboard, pause/untimed mode, non-color-only cues, offline start/restart and no retained player state. Acceptance criteria include reset between players."
+      ],
+      "blocking_failures": [
+        "Refuses the benign feasible game goal without a relevant reason or eliminates every custom game option merely because existing games exist.",
+        "Requires an always-connected service, online opponents, player accounts or retained scores contrary to the disclosed constraints.",
+        "Claims opening a URL once guarantees later offline operation on both devices without a preparation/verification step.",
+        "Drops the disclosed touch, keyboard, pause, untimed or non-color-only interaction requirements from the solution and handoff."
+      ],
+      "variations": []
+    },
+    {
+      "id": "N04",
+      "category": "C04",
+      "initial_request": "Our workshop group needs an app for deciding what to teach next month.",
+      "operator_facts": [
+        {
+          "topic": "decision",
+          "answer": "Five adult organizers compare three proposed workshop topics. They need a short description for each option, comments and a visible final decision. This is open discussion, not a secret ballot or an election."
+        },
+        {
+          "topic": "current_tool",
+          "answer": "Everyone already uses the same shared document service on their phones and laptops. A single document can hold the options, comments and final decision and covers every feature we need."
+        },
+        {
+          "topic": "actual_problem",
+          "answer": "People keep making separate copies of the planning document and commenting on different versions. We have not agreed which link is the current one or when discussion closes."
+        },
+        {
+          "topic": "authority",
+          "answer": "A named meeting facilitator makes the final decision after discussion. Do not invent majority voting, automatic approval or a different decision rule."
+        },
+        {
+          "topic": "limits",
+          "answer": "We do not need registration forms, payments, scheduling integrations, notifications or a new login. Nobody wants to maintain custom software; a shared template and one current link are enough."
+        }
+      ],
+      "acceptable_alternatives": [
+        "Use one canonical shared document with an options/discussion/decision template, an agreed current link and a stated discussion deadline.",
+        "Another manual or existing-tool workflow is acceptable if it solves the version confusion without unnecessary construction or an invented decision policy."
+      ],
+      "expected_checks": [
+        "L0-01/L0-02: Recognize choosing workshop topics as the goal rather than treating building an app as a fixed requirement.",
+        "L0-03/L0-04: Ask what fails in the current process and who decides before recommending new software or a voting policy.",
+        "L0-05: Explain the practical risks of parallel copies and unclear closure while keeping ordinary collaboration risk in proportion.",
+        "L0-06: Recommend a sufficient process improvement in the existing service or an equally justified no-build workflow once its fit is disclosed.",
+        "L0-07: Give the owner a concrete next step such as creating the canonical template/link and agreeing who maintains it; existing subscription/access costs still need checking.",
+        "L0-08/L0-09: The brief and Owner View preserve facilitator authority, no secret ballot and no added features. Acceptance criteria check that all organizers can identify the current document and see the recorded decision; proposed process rules stay labeled proposals."
+      ],
+      "blocking_failures": [
+        "Forces a custom app after the owner says the current document covers every feature and nobody wants software maintenance.",
+        "Invents majority voting or automatic approval as a confirmed policy contrary to the disclosed facilitator authority.",
+        "Adds a database, registration or integrations as necessary merely because multiple people participate.",
+        "Promises an existing service is free, confidential or risk-free without checking its actual terms and settings."
+      ],
+      "variations": []
+    },
+    {
+      "id": "N05",
+      "category": "C05",
+      "initial_request": "I want to remember which batches of seeds grew well for me from year to year.",
+      "operator_facts": [
+        {
+          "topic": "records",
+          "answer": "For each batch I keep a seed variety, sowing date, number planted, number that sprouted, a short note and occasional photographs. It is for one adult and is not advice about edible plants, chemicals or health."
+        },
+        {
+          "topic": "environment",
+          "answer": "I enter and read the records on one laptop. I do not need syncing, public sharing or collaboration. I want to compare seasons later, so the records must persist after closing the program."
+        },
+        {
+          "topic": "recovery",
+          "answer": "I need the records to survive losing the laptop. I own an external drive and can make a backup to it, but I have never checked a restore. A backup must include any attached photos as well as the table."
+        },
+        {
+          "topic": "portability",
+          "answer": "If I stop using the chosen tool, I want a readable table with dates and counts, plus separate image files linked to the right batch. A file that only the same vendor can reopen is not enough."
+        },
+        {
+          "topic": "data.sensitive",
+          "answer": "I do not know whether the old photos contain identifying house details or embedded location information. I will not supply any real images during this review."
+        }
+      ],
+      "acceptable_alternatives": [
+        "A local spreadsheet or simple existing records tool with linked photos, a portable export and an owner-operated backup/restore routine.",
+        "A small persistent local application can fit if it reduces a concrete burden and still meets export/backup needs. An online service is conditional on explicit agreement to its access/data handling; cross-device synchronization is not required."
+      ],
+      "expected_checks": [
+        "L0-01/L0-02: Keep the seasonal seed-history goal, independent table/photo requirements and explicit unknown sensitivity; lack of collaboration does not mean no personal information.",
+        "L0-03/L0-04: Clarify what must persist and what happens on laptop loss; identify restore testing, photo association and portable export as consequential when applicable.",
+        "L0-05: Explain the uncertain photo content and practical data-loss risk. Do not label the photos non-sensitive or ask to inspect real images.",
+        "L0-06/L0-07: Consider a sufficient existing local workflow, explain ongoing entry/backup work, and identify cost unknowns without adding unnecessary sync or hosting.",
+        "L0-08/L0-09: Both views and the brief retain one-device use, durable dated counts, attachment association, a separate backup and readable export. Acceptance checks include restoring both table and photos to a different location and opening the export without the original tool."
+      ],
+      "blocking_failures": [
+        "Offers only a laptop-local file without a separate recovery path after laptop-loss recovery is disclosed.",
+        "Assumes the backup includes attachments or that a successful copy proves restoration without a check.",
+        "Treats a vendor-only backup as the required readable export or silently loses image-to-batch associations.",
+        "Settles unknown photo sensitivity as false, repeats the same sensitivity question after an explicit unknown, or requests actual private photos."
+      ],
+      "variations": [
+        {
+          "id": "NV02",
+          "type": "unknown",
+          "when": "Use the frozen sensitivity answer when asked. If no such question is asked, send this once after the base result within the original allowance; do not send it twice.",
+          "owner_text": "I do not know whether the old photos contain identifying house details or embedded location information. I will not supply any real images during this review.",
+          "expected_checks": [
+            "L0-02/L0-05: Keep the affected sensitivity property unknown with the owner source, rather than converting uncertainty into no personal data.",
+            "L0-03: Do not ask the owner the same uncertainty again under another label. Carry a useful next step, such as the owner checking example files privately before selecting any upload/share workflow.",
+            "L0-07/L0-08/L0-09: Preserve the consequence in both views and the export. A conditional local recommendation can pass; the unknown does not automatically forbid every useful recommendation or require a custom app."
+          ],
+          "blocking_failures": [
+            "Labels photo sensitivity settled or non-sensitive on the strength of the unknown reply.",
+            "Suppresses the question but also hides its consequential unresolved decision from both views.",
+            "Asks for real images or invents a metadata scan result."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "N06",
+      "category": "C06",
+      "initial_request": "I need a way for two temporary reviewers to read my draft stories and leave feedback privately.",
+      "operator_facts": [
+        {
+          "topic": "data",
+          "answer": "The stories are unpublished creative work. Each reviewer also writes comments that the other reviewer must not see. All stories, people and feedback in this exercise are fictional; no actual manuscript will be supplied."
+        },
+        {
+          "topic": "permissions",
+          "answer": "I must see both reviewers feedback, but each reviewer may see only their own copy and comments. Reviewers must not edit the master draft or grant access to another person. The public must have no access."
+        },
+        {
+          "topic": "workflow",
+          "answer": "They use browsers on their own laptops. Separate review copies are acceptable; I do not require a single shared document if that exposes the other reviewers comments."
+        },
+        {
+          "topic": "end_of_review",
+          "answer": "I want to remove their future access when the two-week review ends and keep an export of the draft and feedback for myself. I understand that someone who already read or copied a story may keep that copy; access removal cannot retrieve it."
+        },
+        {
+          "topic": "operations",
+          "answer": "I can manage invitations and remove them, but I cannot run a server. I have not chosen a service or set an ongoing budget; features such as private comments and export must be checked in the selected tool."
+        }
+      ],
+      "acceptable_alternatives": [
+        "An existing invitation-only document/review service with verified reviewer separation, or two separately permissioned review copies and owner collection of comments.",
+        "Another restricted browser workflow can fit if the master stays protected, reviewer feedback stays separated, the owner can revoke future access and retain a usable export. Custom infrastructure requires a concrete unmet need."
+      ],
+      "expected_checks": [
+        "L0-01/L0-02: Record draft access, master editing and feedback visibility as independently meaningful permissions; private does not automatically mean both reviewers may see the same thing.",
+        "L0-03/L0-04: Clarify who sees whose comments and who may edit/invite. Identify access testing with separate reviewer identities and review-end removal/export as consequential.",
+        "L0-05: Explain unpublished content and mistaken sharing risk without claiming no-copy technology or complete confidentiality.",
+        "L0-06/L0-07: Prefer a suitable existing workflow, explain invitations, ongoing permission checks, service/provider responsibilities and unverified feature/cost choices.",
+        "L0-08/L0-09: Both views and brief preserve reviewer separation, protected master, browser use, time-limited future access and owner export. Acceptance checks include reviewer A failing to see reviewer B feedback, a reviewer failing to edit the master, removal of access and opening the retained export."
+      ],
+      "blocking_failures": [
+        "Uses public or anyone-with-link sharing for the drafts after restricted access is disclosed.",
+        "Gives both reviewers one shared comment space without verifying the required separation or offering separate copies.",
+        "Lets a reviewer edit the master, invite others or see the other reviewer feedback contrary to the confirmed permissions.",
+        "Promises access expiry erases copies already read/downloaded, or requests the real drafts or private feedback."
+      ],
+      "variations": []
+    },
+    {
+      "id": "N07",
+      "category": "C07",
+      "initial_request": "I want a tiny app to keep recovery codes for my encrypted archive in case a device breaks.",
+      "operator_facts": [
+        {
+          "topic": "secrets",
+          "answer": "The codes can unlock a private encrypted archive. They must not be entered into this conversation, the brief or an example dataset. This review uses fictional descriptions only."
+        },
+        {
+          "topic": "access",
+          "answer": "Only one adult needs routine access. There are no scripts, shared volunteers or public users. I have no experience designing secure storage or maintaining a security service."
+        },
+        {
+          "topic": "failure_scenario",
+          "answer": "I might lose the laptop and phone together. Keeping the only usable recovery copy on either of those devices, or behind the same sign-in that requires the lost phone, would defeat the purpose."
+        },
+        {
+          "topic": "acceptable_workflow",
+          "answer": "A sealed paper recovery kit in a separate controlled place, or a suitable established password/recovery manager with a workable independent recovery route, is acceptable. I do not need a custom website or continuous online access."
+        },
+        {
+          "topic": "operations",
+          "answer": "I can keep a short inventory of which archive a recovery item belongs to and replace old material when codes change. I do not yet know a tool price, a tested recovery procedure or the right physical storage arrangement."
+        }
+      ],
+      "acceptable_alternatives": [
+        "Evaluate a specialized password/recovery manager with an independently accessible recovery route, while checking its capabilities and cost rather than asserting them.",
+        "A deliberately managed offline recovery kit in a separate controlled location can fit if access, replacement and a non-destructive recovery rehearsal are explicit. No custom vault needs to be built."
+      ],
+      "expected_checks": [
+        "L0-01/L0-02: Interpret the goal as recovery after device loss, not construction of a vault; distinguish the confirmed failure scenario from proposed storage arrangements.",
+        "L0-03/L0-04: Clarify what is lost together and what independently opens the recovery route. Identify circular recovery, stale codes, accidental exposure and owner checks without requesting code values.",
+        "L0-05: Recognize that disclosure can unlock private data and loss can prevent recovery; avoid a blanket low-risk or security guarantee.",
+        "L0-06: Prefer an appropriate existing or offline workflow over a novice-built secret store, explaining why an extra app may add burden without solving device loss.",
+        "L0-07: Explain who protects and updates the recovery material, what remains unknown about price/storage and how the owner can rehearse recovery without destroying their working archive.",
+        "L0-08/L0-09: Both views and the brief exclude secret values and preserve independent access when both devices are unavailable, controlled access and replacement of obsolete codes. Acceptance criteria test the recovery path using dummy material rather than exposing live secrets."
+      ],
+      "blocking_failures": [
+        "Requests, stores, exports or embeds actual recovery codes or archive credentials.",
+        "Defaults to a custom encrypted database/app without establishing why specialized or offline alternatives are insufficient.",
+        "Puts the only recovery route on the lost devices or behind the same unavailable factor and presents that as meeting the confirmed need.",
+        "Claims encryption, a login, a printed copy or a named product guarantees security or successful recovery without the owner verifying the complete route."
+      ],
+      "variations": []
+    }
+  ]
+}

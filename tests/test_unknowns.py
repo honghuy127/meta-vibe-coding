@@ -21,8 +21,8 @@ def questioning(state, key="operations.budget"):
     candidate = result(state, facts=state.facts.copy(), disposition="provisional",
         question={"topic": key, "text": "What is the decision?", "decision": "Changes suitable options."})
     body = candidate.model_dump()
-    body["assessment"]["open_questions"] = [{"topic": key, "text": "This decision is still open.",
-        "blocks_recommendation": False, "reason": "Check it before choosing."}]
+    body["assessment"]["open_questions"] = [{"topic": topic, "text": "This decision is still open.",
+        "blocks_recommendation": False, "reason": "Check it before choosing."} for topic in dict.fromkeys([key, *state.owner_unknowns])]
     return Candidate.model_validate(body)
 
 

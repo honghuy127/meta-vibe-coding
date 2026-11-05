@@ -1,0 +1,374 @@
+{
+  "schema_version": 1,
+  "kind": "independent-scoped-complete-matrix-agent-adjudication",
+  "task": "T035 / T031; frozen v7",
+  "created_at_utc": "2026-11-04T15:53:33.367095+00:00",
+  "status": "scoped_adjudication_complete",
+  "reviewer": {
+    "id": "fresh_cases_blind",
+    "role": "Separate from operator and complete primary reviewer; independent agent adjudication, not human review or ground truth.",
+    "prior_involvement": "Authored the frozen v7 cases. This is not a case-design-uninvolved review. Judgments use frozen bytes and actual disclosures, not remembered author intent.",
+    "post_run_role_context": "Initial frozen-plan read displayed the beginning of embedded historical source. Coordinator confirmed post-run historical-source exposure is permitted in this adjudicator role after all fourteen jobs closed; it does not retroactively alter original blind authorship. No future blind-author claim can reuse this context. No current source files were opened or edited."
+  },
+  "inputs": {
+    "instructions": {
+      "path": "AGENTS.md",
+      "sha256": "628fe6820ea1b954868638b6490aee305873f8e254efd6a5eefbf354186476cf"
+    },
+    "frozen_plan": {
+      "path": "artifacts/l0-comparison-plan-v7.json",
+      "sha256": "f4eee8851058eb338128e1c90cc60810cf8abeb48eb0d4e659f6e2ee2141ac88"
+    },
+    "frozen_cases": {
+      "path": "artifacts/l0-acceptance-cases-v7.json",
+      "sha256": "3dc0aa4fe58bce677f875b7830677febeb23ce58a44bed00cf1984e557219921"
+    },
+    "complete_primary_review": {
+      "path": "artifacts/l0-comparison-review-v7-complete.json",
+      "sha256": "c2017911360b469eca84aef7637d0a45e3b1e401a3e5627ccc0df78e73ae527e"
+    },
+    "prior_adjudication": {
+      "path": "artifacts/l0-comparison-adjudication-v7.json",
+      "sha256": "abac48ceca7d865be874ccdd52ca4bbfcdc357f53931e6d4b0ae793423218bb3"
+    },
+    "continuation_operator_review": {
+      "path": "/tmp/mvc-acceptance-v7-2026-11-03/operator-review-2026-11-04.json",
+      "sha256": "4a01a9c88e44a85d4ff5b64ace79fff714a37a1ea44fdefc772bf97de43ba472"
+    },
+    "raw_journal": {
+      "path": "/tmp/mvc-acceptance-v7-2026-11-03/journal.jsonl",
+      "sha256": "d0b8c181e5cb624be464c13908d121b83581bd4d986ce68e3fc847a03e9d4c5a"
+    }
+  },
+  "binding": {
+    "journal_lines": 250,
+    "closed_jobs": 14,
+    "frozen_runtime_snapshot_sha256": "82d8478e5e81129a83a1af5e01032e76098cd14b30f6aa0b03cfecb37cb6932f",
+    "grading_basis": "Frozen plan 7/cases 7 and original D018. Post-run D021 normalization, tolerance or missing-record repair is not applied to v7.",
+    "D021_timing": "Coordinator states D021 changes occurred after all fourteen jobs closed. No independent current-source edit-time audit was performed.",
+    "prior_artifacts": "Earlier partial review and adjudication remain unchanged. Only the new C06 finding and two continuation operator notes are resolved here."
+  },
+  "comparison_contracts": {
+    "wrapper": {
+      "input_bytes": 32000,
+      "native_contract": 3,
+      "gates": [
+        "canonical fact/source/readiness and unresolved question targets",
+        "provisional open questions and limitations, including owner-unknown fact keys (case/outer spaces normalized)",
+        "explicit accounting for changed tracked prior assessment list items"
+      ]
+    },
+    "baseline": {
+      "input_bytes": 64000,
+      "context": "owner/assistant transcript only",
+      "gates": [
+        "strict native completion/tool/error and closed JSON response checks"
+      ],
+      "absent_wrapper_gates": [
+        "no canonical state or fact-key open-question matching",
+        "no assessment-change accounting/adoption gate"
+      ]
+    },
+    "shared_semantic_review": "Judge preserved uncertainty, confirmed requirements and material caveats by meaning on both sides; report protocol/validation stops separately from delivered-output quality. No validation feedback is sent to baseline.",
+    "reporting": "Disclose these differences before the run and next to outcomes. Unequal contracts and input budgets are deliberate; no causal or general superiority claim."
+  },
+  "finding_adjudication": {
+    "id": "V7-A-C06-UNKNOWN-ATTRIBUTION",
+    "resolves": "V7-R-C06-UNKNOWN-ATTRIBUTION",
+    "job": "C06-baseline",
+    "phase": "C06",
+    "verdict": "confirmed",
+    "severity": "nonblocking_dimension_failure",
+    "primary_classification": "agree",
+    "affected_properties": [
+      "download permission",
+      "video file sizes",
+      "retention period"
+    ],
+    "l0_ids": [
+      "L0-02",
+      "L0-05"
+    ],
+    "evidence": [
+      {
+        "journal_line": 186,
+        "json_pointer": "/result/question/text",
+        "quote": "Do you already use a cloud storage account, such as Google Drive, iCloud, Dropbox or OneDrive? If so, which one? And are you happy for the two coaches to sign in or use an account of their own to watch?"
+      },
+      {
+        "journal_line": 188,
+        "json_pointer": "/answer",
+        "quote": "Each coach can use their own account.\nI do not know the rest of this question."
+      },
+      {
+        "journal_line": 191,
+        "json_pointer": "/result/question/text",
+        "quote": "Do the dancers in the videos know, and are they comfortable, that the two coaches will watch these clips? If you're not sure, just say so."
+      },
+      {
+        "journal_line": 193,
+        "json_pointer": "/answer",
+        "quote": "The adult performers have agreed to this limited review by these two coaches."
+      },
+      {
+        "journal_line": 191,
+        "json_pointer": "/result/owner_view",
+        "quote": "You said you don't know the rest of my earlier question, so I'm treating these as unknown and won't ask again. They are: whether you already use a cloud storage service, whether coaches may download the videos, how big the files are, and how long to keep the videos."
+      },
+      {
+        "journal_line": 196,
+        "json_pointer": "/result/owner_view",
+        "quote": "You said you don't know these, so I'm treating them as undecided and won't ask again:\n- which cloud service you already use, if any\n- whether coaches may download the videos\n- how big the files are\n- how long to keep the videos"
+      },
+      {
+        "journal_line": 196,
+        "json_pointer": "/result/owner_view",
+        "quote": "My suggested defaults, which you haven't chosen yet:"
+      },
+      {
+        "journal_line": 196,
+        "json_pointer": "/result/developer_view/data_access/4",
+        "quote": "Download permission and retention are undecided. Proposed default: no download if the service allows, and delete after the review."
+      },
+      {
+        "journal_line": 196,
+        "json_pointer": "/result/developer_view/open_questions/1",
+        "quote": "Are coaches allowed to download? (unknown)"
+      },
+      {
+        "journal_line": 196,
+        "json_pointer": "/result/developer_view/open_questions/2",
+        "quote": "Video length and file size? (unknown)"
+      },
+      {
+        "journal_line": 196,
+        "json_pointer": "/result/developer_view/open_questions/3",
+        "quote": "Retention period after the review? (unknown)"
+      },
+      {
+        "journal_line": 196,
+        "json_pointer": "/result/developer_view/acceptance_criteria/3",
+        "quote": "The owner has decided on download permission and retention, or accepts the proposed defaults."
+      },
+      {
+        "journal_line": 196,
+        "json_pointer": "/result/developer_view/recommendation/rationale/3",
+        "quote": "Dancer agreement is confirmed for this limited scope, so no further blocking question remains."
+      },
+      {
+        "journal_line": 196,
+        "json_pointer": "/result/owner_view",
+        "quote": "Next step: pick the service, create a private folder, share it with the two coaches, and check it works before the review."
+      }
+    ],
+    "actual_operator_actions": [
+      {
+        "journal_line": 183,
+        "answer": null,
+        "question_count": 0,
+        "fact_passages": []
+      },
+      {
+        "journal_line": 188,
+        "answer": "Each coach can use their own account.\nI do not know the rest of this question.",
+        "question_count": 2,
+        "fact_passages": [
+          {
+            "topic": "sharing.access",
+            "text": "Each coach can use their own account."
+          }
+        ]
+      },
+      {
+        "journal_line": 193,
+        "answer": "The adult performers have agreed to this limited review by these two coaches.",
+        "question_count": 1,
+        "fact_passages": [
+          {
+            "topic": "sharing.permissions",
+            "text": "The adult performers have agreed to this limited review by these two coaches."
+          }
+        ]
+      }
+    ],
+    "source_comparison": "Initial input does not give these three values or declare inability to answer. Line186 asks existing service identity and willingness to use coach accounts; line188 unknown is bounded by rest of this question. Line191 asks performer awareness/agreement, and line193 supplies scoped performer agreement. Its decision explanation mentions download/access-period consequences, but is not a question asking for those policies. Assistant open-question lists are also not owner declarations. The unsupported expansion first appears in line191 and persists in final line196.",
+    "frozen_rules": [
+      {
+        "pointer": "plan/review/required_evidence",
+        "quote": "Check every recorded owner unknown against the questions actually asked; an unknown attributed to the owner for something never asked is a finding."
+      },
+      {
+        "pointer": "plan/operator_protocol/1",
+        "quote": "The plan is authoritative over the suite generic complete-topic answer instruction: select only exact clauses responsive to the current question. A complete topic may be sent only when all clauses are responsive. Same questions receive the same responsive clauses; unknowns are tied to the current question."
+      },
+      {
+        "pointer": "cases/applicability_rule/owner_evidence",
+        "quote": "Only the initial request, actually supplied operator replies, and actually delivered variation owner_text are owner evidence. Undisclosed operator_facts are case design, not owner facts; they must never be required as confirmed facts or silently fed into either approach."
+      },
+      {
+        "pointer": "cases/applicability_rule/inferable",
+        "quote": "Inferable checks concern consequential needs reasonably suggested by disclosed input. A focused consequential question, a reasoned open decision, or clearly conditional advice satisfies identification; the hidden case value need not be guessed. Do not mark a model wrong for declining to confirm an undisclosed value."
+      },
+      {
+        "pointer": "cases/C06/expected_checks/C06-E2",
+        "quote": "Raise permission for identifiable adult recordings and provider storage/retention as consequential questions or open decisions until answered; do not invent consent."
+      },
+      {
+        "pointer": "plan/review/blocking_rule",
+        "quote": "Confirmed-fact contradiction, hidden material uncertainty, missing necessary data/access/recovery, requests for secrets, unsupported safety/price, inconsistent views, unjustified refusal or out-of-scope action blocks the case. Do not average blocking failures away."
+      }
+    ],
+    "applicability": "Retention/provider handling and copying consequences are inferable needs, addressable by a question, reasoned open decision or conditional advice. The undisclosed sharing.copies answer is not owner evidence and cannot be required as a confirmed value. This does not excuse fabricating an owner declaration of ignorance.",
+    "decision_effect": {
+      "observed": "The model misreports provenance and announces that three unasked properties will not be asked again. It then closes with question=null after three actual requests, with two question slots remaining. This is a substantive provenance/adaptive-dialogue defect, not a presentation typo.",
+      "not_established": "No later answer is observed being suppressed/rejected, no actual sharing occurs, and no supplied requirement is observed lost because of this attribution. Unused question allowance does not establish a counterfactual outcome.",
+      "why_nonblocking": "The three uncertainties remain explicit in the final Owner View and developer constraints/open questions. View-only/deletion defaults are expressly unchosen; the criterion still requires an owner decision or acceptance of defaults. Named-account restriction, browser access, scoped performer agreement, revocation and limits on recalling copies remain. The source error does not on this record hide the unresolved policy, confirm a false download/retention value, contradict a supplied access requirement, or establish a C06-B1/B2/B3 trigger. This supports a dimension failure rather than a confirmed consequential-decision blocker.",
+      "readiness_limit": "The ready label, claim that no blocking question remains and upload/share next step are overconfident beside unchosen decisions. They do not approve defaults or establish implementation readiness. This scoped attribution adjudication does not independently certify every readiness/product-selection claim or upgrade the row to pass.",
+      "counterfactual_or_rerun_performed": false
+    },
+    "affected_rows_and_dimensions": [
+      {
+        "job": "C06-baseline",
+        "phase": "C06",
+        "dimension": "risk_and_unknowns",
+        "verdict": "fail",
+        "effect": "Confirm existing primary failure. The phase cannot pass even without a confirmed semantic blocker."
+      },
+      {
+        "job": "C06-baseline",
+        "phase": "C06",
+        "dimension": "clarification",
+        "verdict": "retain_primary_pass_in_scope",
+        "effect": "Actual three requests were consequential and within budget. False attribution/proposed suppression is scored under the confirmed risk/unknowns failure; frozen rules permit inferable needs to remain explicit open decisions."
+      },
+      {
+        "job": "C06-baseline",
+        "phase": "C06",
+        "dimension": "owner_view_clarity",
+        "verdict": "no_change_to_primary_in_scope",
+        "effect": "Readability does not cure provenance. No second full clarity review is claimed."
+      },
+      {
+        "job": "C06-baseline",
+        "phase": "C06",
+        "dimension": "brief_and_view_consistency",
+        "verdict": "no_additional_material_inconsistency_established_in_scope",
+        "effect": "Both views retain unresolved policy values; the false owner-attribution claim remains inaccurate."
+      }
+    ],
+    "new_confirmed_semantic_blocking_findings": [],
+    "scope_limit": "Not a second complete acceptance review of all twenty phase rows or evidence that no other finding exists."
+  },
+  "continuation_operator_adjudications": [
+    {
+      "id": "V7-A-C06-ACCESS-CHOICE",
+      "resolves": "V7-O-C06-ACCESS-CHOICE",
+      "job": "C06-wrapper",
+      "phase": "C06",
+      "verdict": "no_confirmed_deviation",
+      "evidence": [
+        {
+          "journal_line": 204,
+          "json_pointer": "/response/state/questions/0/text",
+          "quote": "Do you want only the two coaches, signed in with their own accounts, to be able to watch? Or is it fine for anyone who has the link to watch, as long as you can switch the link off afterward?"
+        },
+        {
+          "journal_line": 207,
+          "json_pointer": "/answer",
+          "quote": "Each coach can use their own account. Only those two and I should have access."
+        }
+      ],
+      "question_count": 1,
+      "reason": "The two alternatives form one access-policy choice: named viewers versus link possession. Account capability and authorized roster are exact responsive sharing.access clauses for the selected branch. Counting both offered answers as separate requests would split a single choice. Individual-revocation timing is a separate management requirement not requested; omitting it follows frozen plan precedence over whole-topic disclosure.",
+      "affected_dimensions": {
+        "clarification": "retain primary pass on disputed question/count evidence",
+        "others": "No change. The original frozen-gate stop and lack of current export remain."
+      },
+      "outcome_impact": "No routing/count violation established. No claim that a different disclosure would be harmless or outcome-changing; no counterfactual run."
+    },
+    {
+      "id": "V7-A-C07-PROVIDER-PURPOSE",
+      "resolves": "V7-O-C07-PROVIDER-PURPOSE",
+      "job": "C07-baseline",
+      "phase": "C07",
+      "verdict": "no_confirmed_deviation",
+      "evidence": [
+        {
+          "journal_line": 243,
+          "json_pointer": "/result/question/text",
+          "quote": "Which payment services does the association use, for example a bank, PayPal, Stripe or a ticketing platform? Names only, please. Don't share any codes, logins or account numbers. If you aren't sure, say so and tell me roughly what the accounts are used for."
+        },
+        {
+          "journal_line": 245,
+          "json_pointer": "/answer",
+          "quote": "I do not know."
+        },
+        {
+          "journal_line": 248,
+          "json_pointer": "/result/developer_view/goal",
+          "quote": "Give a small adult theatre association continuity of access to one-time recovery codes for its payment accounts across treasurer changes, with access restricted to the current treasurer and one adult deputy, and without requiring the owner to run security or server infrastructure."
+        },
+        {
+          "journal_line": 248,
+          "json_pointer": "/result/developer_view/constraints/3",
+          "quote": "Owner answered 'I do not know' on which payment services are used. This is unresolved."
+        }
+      ],
+      "question_count": 2,
+      "reason": "Provider identity and the conditional fallback account-purpose description request two values. Because identity is unknown, the fallback request is active. Counting both follows independent-information-request counting. No exact provider identity or finer account-use detail exists in the bank. Broad payment-account purpose is already visible in initial input and is not erased by the short unknown response. Final goal retains payment accounts and attributes ignorance to provider identity, not that known purpose. No vendor, capability or financial action is invented.",
+      "ambiguity_limit": "Roughly what the accounts are used for can also invite repeating the visible payment-account context. That context stayed available; the initial sentence gives no finer use. This does not establish consequential misrouting or deletion of a confirmed purpose, or identical phrasing by every possible operator.",
+      "affected_dimensions": {
+        "clarification": "retain primary pass on scoped request/count/routing issue",
+        "risk_and_unknowns": "No new failure from this operator note; provider identity remains unknown and broad purpose remains known."
+      },
+      "outcome_impact": "Alternative-answer impact is unestablished. No counterfactual run or repair."
+    }
+  ],
+  "summary": {
+    "new_finding_confirmed": 1,
+    "new_finding_severity": "nonblocking_dimension_failure",
+    "new_confirmed_semantic_blockers_in_scope": 0,
+    "new_confirmed_operator_deviations_in_scope": 0,
+    "continuation_operator_notes_resolved": 2,
+    "affected_failure_rows": [
+      {
+        "job": "C06-baseline",
+        "phase": "C06",
+        "dimension": "risk_and_unknowns"
+      }
+    ],
+    "case_pass_changes": "None. C06-baseline remains failed; no stopped, quota-failed or unchecked row is upgraded.",
+    "prior_C02_C04_rulings": "Preserved unchanged and not reopened."
+  },
+  "historical_N06_human_ruling": {
+    "decision": "D019",
+    "status": "unchanged",
+    "packet_sha256_recorded_by_primary_review": "77072de04ec30446a90749b6f96d7e4d17642564330c277e5627e1e47252861e",
+    "limit": "Older repository-owner ruling is not reopened, amended or replaced by this agent."
+  },
+  "verification": {
+    "exact_input_hashes_verified": true,
+    "requested_journal_hash_matches": true,
+    "plan_case_review_bindings": "pass",
+    "journal_lines": 250,
+    "exact_quote_pointer_assertions": 20,
+    "all_C06_operator_actions_checked": [
+      183,
+      188,
+      193
+    ],
+    "native_calls": 0,
+    "model_calls": 0,
+    "reruns": 0,
+    "write_boundary": "artifacts/l0-comparison-adjudication-v7-complete.json",
+    "input_preservation": "All input hashes rechecked after artifact creation."
+  },
+  "limitations": [
+    "Agent adjudication, not human review or ground truth; prior frozen-case authorship disclosed.",
+    "Scoped to one new finding and two continuation operator interpretations; no exhaustive second review of every phase/dimension.",
+    "No current source execution/editing, native inference, provider request, counterfactual rerun, rendered view, actual download or adult comprehension evidence.",
+    "Frozen D018 outcomes remain historical outcomes. Post-run D021 changes neither repair v7 nor establish current effectiveness.",
+    "Six wrapper gate stops, preserved C05-baseline quota failure, semantic failures and unchecked view/participant/sign-off evidence remain distinct. Level 0 remains unaccepted.",
+    "No general reliability, safety, comprehension, universal fairness or causal wrapper advantage claim follows."
+  ]
+}

@@ -4,8 +4,8 @@ from typing import Literal
 
 from pydantic import Field, field_validator
 
-from .models import (Assessment, Candidate, Fact, FactKey, Model, ProposedQuestion,
-                     Scalar, State, UnknownEvidence)
+from .models import (Assessment, AssessmentChange, Candidate, Fact, FactKey, Model, ProposedQuestion,
+                     Scalar, State, UnknownEvidence, quoted_in)
 
 
 class NativeFactUpdate(Model):
@@ -18,11 +18,12 @@ class NativeFactUpdate(Model):
 
 
 class NativeResponse(Model):
-    contract_version: Literal[2]
+    contract_version: Literal[3]
     fact_updates: list[NativeFactUpdate] = Field(max_length=100)
     remove_fact_keys: list[FactKey] = Field(max_length=100)
     assessment: Assessment
     question: ProposedQuestion | None
+    assessment_changes: list[AssessmentChange] = Field(max_length=500)
 
     @field_validator('contract_version', mode='before')
     @classmethod
@@ -49,9 +50,8 @@ class NativeResponse(Model):
         unknowns = {}
         for row in self.fact_updates:
             for evidence in row.evidence:
-                if (not evidence.quote.strip() or evidence.source_turn_id not in sources
-                        or evidence.quote not in sources[evidence.source_turn_id]):
-                    raise ValueError('Evidence needs an exact nonempty owner quote')
+                if evidence.source_turn_id not in sources or not quoted_in(evidence.quote, sources[evidence.source_turn_id]):
+                    raise ValueError('Evidence must quote the owner\'s own words')
             source_ids = list(dict.fromkeys(e.source_turn_id for e in row.evidence))
             fact = Fact(value=row.value, status=row.status, source_turn_ids=source_ids, reason=row.reason)
             if row.owner_unknown:
@@ -69,7 +69,8 @@ class NativeResponse(Model):
             raise ValueError('The resulting facts need a goal')
         if self.question and self.question.topic not in facts:
             raise ValueError('Question target must reference a resulting fact')
-        return Candidate(facts=facts, assessment=self.assessment, question=self.question, owner_unknowns=unknowns)
+        return Candidate(facts=facts, assessment=self.assessment, question=self.question,
+                         owner_unknowns=unknowns, assessment_changes=self.assessment_changes)
 
 
 def native_schema(model: type[Model]) -> dict:

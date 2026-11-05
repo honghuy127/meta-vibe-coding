@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "freeze_id": "l0-case-freeze-v7",
+  "frozen_at_utc": "2026-11-03T13:55:28.901271+00:00",
+  "source_snapshot_sha256": "82d8478e5e81129a83a1af5e01032e76098cd14b30f6aa0b03cfecb37cb6932f",
+  "source_hash_metadata_sha256": "086f67bb814b7f3b581ff437f3f2f725071e43cd014e72a3e7c3a992812502d8",
+  "case_file": "artifacts/l0-acceptance-cases-v7.json",
+  "case_sha256": "3dc0aa4fe58bce677f875b7830677febeb23ce58a44bed00cf1984e557219921",
+  "case_count": 7,
+  "category_counts": {
+    "public_content": 1,
+    "local_automation": 1,
+    "simple_game": 1,
+    "shared_planning": 1,
+    "personal_records": 1,
+    "private_sharing": 1,
+    "sensitive_secrets": 1
+  },
+  "variation_counts": {
+    "changed_answer": 1,
+    "correction": 1,
+    "unknown": 1
+  },
+  "separate_service_failure_double_count": 1,
+  "separate_service_failure_injection_paths": 2,
+  "author_declaration": {
+    "author_id": "fresh_cases_blind",
+    "runtime_frozen_before_authorship": true,
+    "runtime_source_or_prompt_read": false,
+    "prior_case_content_or_outputs_read": false,
+    "source_freeze_json_read": false,
+    "native_inference_executed": false,
+    "freshness_basis": "Independently devised goals and constraints from the seven public scope categories after receiving only the runtime digest. No comparison with prior private cases was performed because that would breach blindness.",
+    "allowed_reads": [
+      "AGENTS.md",
+      "CONTRIBUTING.md",
+      "docs/level-0.md",
+      "/tmp/mvc-t033/source-hashes-only.json"
+    ],
+    "additional_reads": "Current working directory, git status path list, and existence checks of the two owned paths only.",
+    "scope_document_exposure": "The permitted Level 0 scope includes public development examples and historical milestone summaries; no linked artifact contents were opened.",
+    "shared_edit_boundary": "Only the two v7 artifacts were created. No shared docs, source, index, or prior artifacts edited."
+  },
+  "validation": {
+    "json_roundtrip": "pass",
+    "required_case_fields": "pass",
+    "one_case_per_category": "pass",
+    "unique_check_ids": "pass",
+    "check_applicability_topics": "pass",
+    "all_three_owner_variation_types": "pass",
+    "variation_call_budget_path": "pass: initial + three base answers + optional closeout + variation + one variation answer <= seven; no guaranteed answer completion",
+    "question_budget_path": "pass: three base questions plus one variation follow-up <= five; bundled information requests count separately",
+    "fictional_adults_no_real_secrets": "author self-review pass",
+    "independent_semantic_review": "pending"
+  },
+  "limits_per_case_per_approach": {
+    "clarification_questions": 5,
+    "top_level_calls": 7,
+    "call_timeout_seconds": 300,
+    "case_timeout_seconds": 1800,
+    "attempts": 1,
+    "shared_across_base_and_variations": true,
+    "bundled_questions_count_separately": true,
+    "elapsed_case_deadline_overrides_remaining_calls": true,
+    "diagnostic_reruns": "Outside acceptance only; separately labelled and never substituted for a first attempt."
+  },
+  "limitations": [
+    "Structural validation and author self-review only; acceptance execution, independent outcome adjudication, and adult comprehension remain unperformed.",
+    "All hidden operator facts are conditional on actual disclosure. Inferable consequences may be met by a question or explicit open decision rather than a guessed value.",
+    "Budgets may leave a base or variation incomplete; retain not-checked phases rather than adding calls, questions, retries, or hidden answers.",
+    "The author cannot certify distinctness from unseen prior private suites. The cases are not mere rewordings of the permitted public examples.",
+    "The deterministic service-failure specification is separate from native seven-case acceptance and provides no live reliability evidence."
+  ],
+  "execution_authority": {
+    "live_execution_authorized": false,
+    "spending_authorized": false,
+    "participant_recruitment_authorized": false,
+    "public_deployment_authorized": false
+  }
+}

@@ -125,12 +125,24 @@ settings have no supported execution path.
 
 Each request uses a fresh temporary working directory, passes the state through
 stdin, bounds output, and validates the final JSON through one native response
-contract before applying the state guards. Native contract 2 returns fact updates
+contract before applying the state guards. Native contract 3 returns fact updates
 with attached evidence and questions referring to fact keys. The wrapper carries
 untouched facts forward and derives source citations and explicit-unknown markers
 from the evidence. Confirmed updates need exact owner quotes. Quotes establish source presence,
-not semantic support or complete extraction. Native contract 2 and exported brief
-schema 1 remain unchanged; see [D011](docs/decisions.md#d011-return-fact-changes-with-attached-evidence).
+not semantic support or complete extraction. Native contract 3 also requires explicit
+accounting for changed prior assessment list items: a rewrite points to replacements,
+an owner update quotes new input, and withdrawn agent advice needs a reason. Missing
+or invalid accounting blocks adoption. Unambiguous shorthand for the three
+recommendation list fields and valid records for unchanged items are accepted;
+[D021](docs/decisions.md#d021-tolerate-unambiguous-continuity-references-and-surface-sharing-authority)
+keeps reference/evidence checks while reducing syntax friction. Prompt guidance
+also asks about represented people and unresolved sharing authority when relevant.
+These instructions require live semantic review. Accounting does not validate
+preserved meaning or the justification for withdrawing advice, and it does not cover scalar summaries,
+recommendation kind or risk level. State and export schema remain 1; see
+[D018](docs/decisions.md#d018-account-explicitly-for-changed-assessment-items).
+Native contract 2 responses from older sessions are rejected; reload and start a
+new idea after updating. Historical results are unchanged.
 Pending runtime state retains one previous assessment for the agent to reconsider
 earlier caveats. It is stale context, never owner evidence or an exportable result,
 and clears after successful adoption. Failed requests retain it for explicit retry,
@@ -167,7 +179,7 @@ agent/provider retention. Invocation counts and time limits are not dollar caps;
 use the selected agent/provider's spending controls before enabling calls.
 
 CLI contracts checked: OpenCode 2.0.12, 2.2.0 and 2.2.1, Claude Code 2.1.312,
-Codex CLI 0.165.0 and 0.166.0.
+2.1.316 and 2.1.317, Codex CLI 0.165.0 and 0.166.0.
 Help/version inspection and mocked events do not establish live compatibility.
 Codex development checks do not establish product acceptance. Its exact
 disabled Code Mode host startup notice is accepted; other errors and tool activity
@@ -179,9 +191,14 @@ References: [OpenCode CLI](https://opencode.ai/v2/docs/cli/),
 
 Codex receives a private, request-owned `response-schema.json` through its native
 `--output-schema` option, with identical schema content in stdin. This file is
-wrapper input, not agent-created output. OpenCode and Claude receive the schema
-in stdin and use the same local validation; native constrained decoding is not
-claimed for them. The schema-file invocation with native contract 1 was exercised in the
+wrapper input, not agent-created output. Claude Code receives the same schema text
+through native `--json-schema`. OpenCode receives the schema in stdin only. All three
+use the same strict local validation; native constrained decoding is not claimed
+for OpenCode. Fenced or otherwise wrapped JSON stays rejected. Claude calls set
+Claude Code's undocumented `MAX_STRUCTURED_OUTPUT_RETRIES` to 10, overriding any
+value you set, so one request can make several hidden attempts. Sonnet's fit the
+default 300-second limit; a slower model may need a longer `MVC_REQUEST_TIMEOUT_SECONDS`
+([D016](docs/decisions.md#d016-give-claude-more-structured-output-attempts-and-match-quotes-by-words)). The schema-file invocation with native contract 1 was exercised in the
 [version 2 regression run](artifacts/2026-10-31-codex-luna-comparison-v2.json).
 All fourteen attempts closed using 50 calls: five wrapper protocol/state stops,
 one baseline deadline expiry during a coordinator interruption, and eight delivered
@@ -238,20 +255,68 @@ The default writes nothing. Rehearsal uses a separate fictional fixture and a
 double; its new private output file includes source snapshots and unchecked review
 rows. Run from this source checkout; a different installed package or changes
 during capture fail the provenance check. Existing files are never overwritten.
-This entry point has no live execution mode. T019 used the audited local harness
-retained in its result artifact; it made no repairs, retries or fallback requests.
+This entry point has no live execution mode. Live runs use
+[`scripts/acceptance_run.py`](scripts/acceptance_run.py), which needs a frozen plan
+naming the agent and a separate approval of the exact plan, harness and journal
+hashes; see [D015](docs/decisions.md#d015-name-the-agent-in-the-plan-and-run-acceptance-through-one-harness).
+T019 used the audited local harness retained in its result artifact; it made no
+repairs, retries or fallback requests.
 The fourteen first attempts are closed. Current preparation previews separate
 closed response schemas for both approaches; the baseline remains transcript-only.
 Another live run needs a new versioned matched plan, reviewed settings and an
 invocation allowance. It must account for the changed schemas and native flags.
 Owner sessions remain separate.
 
-The [fresh correction plan](artifacts/2026-11-01-codex-luna-correction-plan.json)
-retains a separate development harness and a no-inference rehearsal. It proposes
-up to five sequential coding-agent calls through production in-process HTTP
-handlers, followed by separately labeled recorded-view checks. Its replay viewer
-cannot invoke an agent. Preparation authorizes no live run; see T029 on the work
-board for review evidence and the next action.
+The [fresh correction check](artifacts/2026-11-02-codex-luna-correction-verification.json)
+completed five production HTTP calls. Scoped access and download corrections were
+observed, and all five recorded views plus the replay download matched exports.
+Independent review found a blocking fact that mixed the owner's requirement with
+an agent-derived copy-retention consequence. Generic prompt guidance now separates
+those claims; software checks do not establish live improvement. Browser evidence
+is read-only replay, not live owner interaction.
+The [Codex matrix](artifacts/2026-11-02-codex-luna-acceptance-v3-interrupted.json)
+stopped at a usage limit after 15 calls and stays partial evidence. The
+[Claude Code and Haiku 4.5 matrix](artifacts/2026-11-02-claude-haiku-acceptance-v4.json)
+ran all fourteen jobs of [plan 4](artifacts/l0-comparison-plan-v4.json) in 54 calls.
+No phase passes. Four of seven wrapper jobs stopped with no result, and 19 blocking
+findings stand across wrapper and baseline after separate agent review and
+adjudication. The [Sonnet 5.5 matrix](artifacts/2026-11-02-claude-sonnet-acceptance-v5.json)
+reran [plan 5](artifacts/l0-comparison-plan-v5.json), identical except for the model,
+in 46 calls. Six jobs pass every phase on recorded replay and one has a blocking
+failure. Two wrappers stopped after exhausting structured-output retries, and five
+baseline rows are open because a test answer wording misled the baseline. After
+fixes, a [final run](artifacts/2026-11-02-claude-sonnet-acceptance-v6.json) of
+[plan 6](artifacts/l0-comparison-plan-v6.json) on seven new cases found an export
+defect for incomplete provisional results; operator protocol misses also changed
+three wrapper outcomes. Level 0 acceptance is not met, and these cases are now exposed. Results do not establish
+which approach is better, and owner comprehension is untested.
+
+The [complete native contract 3 comparison](artifacts/2026-11-05-claude-sonnet-acceptance-v7-complete.json)
+closed all fourteen original first attempts using 39 calls and 34 questions after
+reviewed recovery. The [28-call partial record](artifacts/2026-11-03-claude-sonnet-acceptance-v7.json)
+is unchanged. Six wrapper continuity stops and the original baseline quota stop
+remain failures. Separate semantic review and scoped adjudication are complete;
+preserved meaning in rejected outputs does not make those attempts successful.
+The wrapper alone has fact-key, open-question readiness and continuity gates, and
+its input limit is 32,000 bytes versus the transcript baseline's 64,000. These
+protocol costs and semantic findings stay separate. Actual wrapper
+rendering/download and adult comprehension remain unchecked. Level 0 is not
+accepted; [T035](docs/work-board.md#t035-frozen-comparison-repair-and-browser-verification)
+records the later D021 repair and remaining verification.
+
+D021 passed separate code review, 366 Python tests and 14 UI checks. Its bounded
+[browser development run](artifacts/2026-11-05-ui-development-t035-blocked.json)
+stopped before any assessment because browser control was unavailable. No live
+effect, actual download or full-interface AI walkthrough is established.
+
+
+A [three-reader AI rehearsal](artifacts/2026-11-04-ai-owner-rehearsal.json) uses
+recorded Owner Views and preserves the first generated teach-back answers. Separate
+review found mostly faithful summaries, while the known N06 omission remained in
+the source handoff. Two complaints about a missing provisional label came from
+ambiguity in the replay pack; the actual disposition label was present. This is
+synthetic explanation review, with no actual participants, product calls, browser
+tasks or downloads. T011 and T032 remain incomplete.
 
 Earlier direct-model experiments are retained under `artifacts/legacy/`; they are
 historical evidence, not acceptance of the current agent wrappers. Their Git
