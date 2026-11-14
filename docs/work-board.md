@@ -426,4 +426,20 @@ outdated result; a kept input cannot be silently replaced; rejected input offers
 Retry; an idea is charged only after the process spawned; the provisional flag
 survives a reload. Checks after the fixes: 317 Python and 21 UI tests pass.
 
-Next action: step 2 of the next-phase plan above.
+Step 2, live check on 2026-11-14 and 2026-11-15: the
+[record](../artifacts/2026-11-15-claude-sonnet-t037-live-check.json) keeps four bounded
+attempts through the production HTTP handlers with Claude Code 2.1.325 and Sonnet 5.5,
+ten native calls in all. The first was blocked by the command sandbox's DNS, the
+second stopped on the account's 5-hour limit after two valid calls, and the third
+returned an empty assessment skeleton. Two source fixes followed: Claude usage-limit
+failures are named (`deba96d`) and Claude's schema keeps minimum lengths (`11e8ebc`).
+The fourth attempt completed every stage within five calls: an unknown reply was kept
+and not re-asked, an answer and a privacy correction updated facts and advice, a
+declared timeout used no assessment and kept the correction, retry and a provisional
+close succeeded, and the export was available. No update was weakened, so the D022
+downgrade paths were not exercised live. The advice comparison is noisy: after one
+answer it listed 17 removed and 25 added lines, mostly rewording. No browser was used;
+reload was checked as a state round-trip only. Operator self-review only.
+
+Next action: step 3 of the next-phase plan above, on source `11e8ebc` and the fresh
+[v8 cases](../artifacts/l0-acceptance-cases-v8.json).

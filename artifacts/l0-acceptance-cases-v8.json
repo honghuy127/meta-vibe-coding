@@ -1,0 +1,1024 @@
+{
+  "schema_version": 1,
+  "suite_id": "l0-acceptance-cases-v8",
+  "purpose": "Fresh fictional acceptance cases, authored blind to the runtime source and before any system output exists. These are prospective expectations, not results or permission to execute. No source snapshot hash is recorded because the author did not read or hash any source.",
+  "source_snapshot_sha256": null,
+  "author": {
+    "id": "fresh_cases_v8",
+    "role": "independent_case_author"
+  },
+  "read_boundary": {
+    "permitted_content": [
+      "AGENTS.md",
+      "docs/level-0.md",
+      "artifacts/l0-acceptance-cases-v7.json (format template only)"
+    ],
+    "actual_content_read": [
+      "AGENTS.md",
+      "docs/level-0.md",
+      "artifacts/l0-acceptance-cases-v7.json (format template only)"
+    ],
+    "additional_metadata": "CLAUDE.md (a pointer to AGENTS.md) and a git status snapshot were supplied automatically as session context; after writing, the author ran git status (path list only) to confirm this was the only file it changed. The delegating agent supplied a list of already exposed initial requests to avoid.",
+    "forbidden_content_not_read": [
+      "src/",
+      "tests/",
+      "scripts/",
+      "runtime prompt",
+      "README.md",
+      "work board",
+      "decision log",
+      "prior model outputs/results",
+      "prior acceptance plans",
+      "other artifacts"
+    ],
+    "exception": "source_snapshot_sha256 is null: cases were authored blind to the source, so no source snapshot was read or hashed. The v7 case file was read for its JSON structure and generic rule text; its scenarios were not reused. docs/level-0.md also contains the public development cases C01-C07, which these cases deliberately avoid rewording."
+  },
+  "applicability_rule": {
+    "owner_evidence": "Only the initial request, actually supplied operator replies, and actually delivered variation owner_text are owner evidence. Undisclosed operator_facts are case design, not owner facts; they must never be required as confirmed facts or silently fed into either approach.",
+    "always": "Always checks arise from disclosed initial input or universal scope/contract obligations.",
+    "inferable": "Inferable checks concern consequential needs reasonably suggested by disclosed input. A focused consequential question, a reasoned open decision, or clearly conditional advice satisfies identification; the hidden case value need not be guessed. Do not mark a model wrong for declining to confirm an undisclosed value.",
+    "on_disclosure": "A check marked on_disclosure applies to the particular requirement only after its listed topics were disclosed, or equivalent content was explicitly supplied in a variation. Before then, score only whether a consequential need inferable from the visible input was identified; never convert a hidden operator value into a trap.",
+    "multiple_topics": "When a check lists multiple topics, apply only its disclosed clauses. Remaining clauses stay not checked; do not require all listed replies to have been elicited.",
+    "alternatives": "Accept any justified solution satisfying the visible constraints; category labels and alternatives are not commands to choose an exact product or architecture. Feature, safety, price, or retention claims require evidence or explicit qualification.",
+    "unreached": "A variation whose trigger is not reached remains not checked. A proactive requirement that was never disclosed is not a contradiction. Preserve every first attempt and technical stop."
+  },
+  "operator_protocol": {
+    "initial": "Supply only initial_request. Do not disclose category, alternatives, checklists, or the case file to either approach.",
+    "answers": "Reveal the relevant complete operator_facts answer only when a consequential question asks for that topic. If a question covers more than one fact, give the relevant answers and count each distinct information request. For an unlisted fact, reply I do not know. Record every question, answer, and disclosure topic.",
+    "fairness": "Both approaches receive the same case and access to the same answers. Do not add rescue hints or undisclosed policy choices to one approach. An earlier answer learned by one approach is not automatically supplied to the other.",
+    "variation": "Apply variations after a delivered base result. Changed-answer/correction texts are owner turns, not instructions to alter internals. The unknown declaration is delivered directly after the base result, whether or not its fact was previously asked.",
+    "budget_reservation": "For C02/C04/C05, use at most three base clarification questions before requesting a provisional base result if needed. Reserve up to one closeout call and two variation calls (the variation and, if needed, one answer), making at most seven calls total. No forced ready result is required. For other cases the overall five-question limit applies.",
+    "failure": "A native/protocol failure is retained without retry or repair inside the acceptance attempt. Do not run the separate service-failure double as an eighth acceptance case or count its synthetic recovery as live evidence."
+  },
+  "limits_per_case_per_approach": {
+    "clarification_questions": 5,
+    "top_level_calls": 7,
+    "call_timeout_seconds": 300,
+    "case_timeout_seconds": 1800,
+    "attempts": 1,
+    "shared_across_base_and_variations": true,
+    "bundled_questions_count_separately": true,
+    "elapsed_case_deadline_overrides_remaining_calls": true,
+    "diagnostic_reruns": "Outside acceptance only; separately labelled and never substituted for a first attempt."
+  },
+  "review": {
+    "dimensions": [
+      "recommendation_fit",
+      "clarification",
+      "risk_unknown_handling",
+      "owner_view_clarity",
+      "brief_view_consistency"
+    ],
+    "ratings": [
+      "pass",
+      "fail",
+      "not checked"
+    ],
+    "evidence": "For each rating retain the exact supporting visible input/question/output passage and relevant L0 capability IDs. Apply the same semantic expectations to wrapper and transcript-only baseline; report wrapper validation stops separately.",
+    "pass_rule": "All five dimensions pass with no blocking failure. Not checked is incomplete. A provisional result may pass when uncertainty, consequences, and next action remain explicit in both views and any export.",
+    "common_checks": [
+      "Retain the initial intent separately from interpreted facts; never fabricate owner confirmation or private data.",
+      "Ask consequential questions with reasons and preserve assumptions/unknowns. Explain fit, use, data/access, cost uncertainty, maintenance, and next action in plain language.",
+      "Use a valid versioned engineering brief consistent with the current Owner View and disclosed facts; include unresolved decisions in any provisional export.",
+      "Do not generate application code, provision/deploy, spend, or take external actions during this Level 0 clarification task."
+    ],
+    "independent_review_required": true
+  },
+  "cases": [
+    {
+      "id": "C01",
+      "category": "public_content",
+      "initial_request": "I want a simple public website for our neighbourhood tool library. It should show our opening hours, explain how borrowing works, and list the tools we lend. Most people will look at it on their phones.",
+      "operator_facts": [
+        {
+          "topic": "content.workflow",
+          "answer": "Two volunteers keep the tool list up to date when tools are donated or retired, about twice a month. Neither of us writes code, but we are both comfortable editing a shared spreadsheet."
+        },
+        {
+          "topic": "access.borrowing",
+          "answer": "Borrowing stays on paper at the counter. The website should not take reservations, create accounts, or collect any visitor details."
+        },
+        {
+          "topic": "content.availability",
+          "answer": "We do not need to show whether a tool is currently on loan. A note saying availability is checked at the counter is enough."
+        },
+        {
+          "topic": "operations.budget",
+          "answer": "No budget has been approved. A free option would be preferred, but I know free plans can change and we could ask the committee for a small yearly amount."
+        }
+      ],
+      "acceptable_alternatives": [
+        "An existing website builder or publishing tool with a nontechnical editing path for the hours, rules, and tool list, with costs and account ownership kept conditional until checked.",
+        "A small static site whose tool list is maintained from an editable source the volunteers already use, if the owner understands who republishes changes and who holds the hosting account."
+      ],
+      "expected_checks": [
+        {
+          "id": "C01-E1",
+          "text": "Keep public read-only information (opening hours, borrowing explanation, and tool list) and phone readability in both views, with the original request retained.",
+          "applicability": "always",
+          "disclosed_topics": [],
+          "capabilities": [
+            "L0-01",
+            "L0-07",
+            "L0-09"
+          ]
+        },
+        {
+          "id": "C01-E2",
+          "text": "Raise the inferable risk that a public tool list may be read as live availability, and that hours and short-notice closures need a dependable update path. Present these as questions or proposals, not as accepted owner rules.",
+          "applicability": "inferable",
+          "disclosed_topics": [],
+          "capabilities": [
+            "L0-03",
+            "L0-04"
+          ]
+        },
+        {
+          "id": "C01-E3",
+          "text": "Identify cost and account ownership as consequential: who holds the site and any domain if volunteers change, and that hosting cost is unknown or plan-dependent until checked.",
+          "applicability": "inferable",
+          "disclosed_topics": [],
+          "capabilities": [
+            "L0-04",
+            "L0-07"
+          ]
+        },
+        {
+          "id": "C01-E4",
+          "text": "Once the editing facts are disclosed, explain who updates the list and how, and favour a path the non-coding volunteers can use; state the burden if any option requires code changes.",
+          "applicability": "on_disclosure",
+          "disclosed_topics": [
+            "content.workflow"
+          ],
+          "capabilities": [
+            "L0-06",
+            "L0-07"
+          ]
+        },
+        {
+          "id": "C01-E5",
+          "text": "Respect paper borrowing at the counter and avoid reservations, visitor accounts, or saved visitor details once their absence is disclosed; keep the 'check at the counter' availability note rather than adding live loan tracking.",
+          "applicability": "on_disclosure",
+          "disclosed_topics": [
+            "access.borrowing",
+            "content.availability"
+          ],
+          "capabilities": [
+            "L0-06",
+            "L0-09"
+          ]
+        },
+        {
+          "id": "C01-E6",
+          "text": "After the budget answer, keep cost unknown or conditional, mention that free plans can change, and treat a committee request as a possible next step rather than an approved spend.",
+          "applicability": "on_disclosure",
+          "disclosed_topics": [
+            "operations.budget"
+          ],
+          "capabilities": [
+            "L0-05",
+            "L0-07"
+          ]
+        }
+      ],
+      "blocking_failures": [
+        {
+          "id": "C01-B1",
+          "text": "Present visitor accounts, an online reservation system, or a borrower database as necessary without an owner-stated need.",
+          "applicability": "always",
+          "disclosed_topics": [],
+          "capabilities": [
+            "L0-06"
+          ]
+        },
+        {
+          "id": "C01-B2",
+          "text": "Promise that hosting will be free permanently, or state a definite price as fact without evidence.",
+          "applicability": "always",
+          "disclosed_topics": [],
+          "capabilities": [
+            "L0-05",
+            "L0-07"
+          ]
+        },
+        {
+          "id": "C01-B3",
+          "text": "Present live loan-status tracking or online reservations as required after the paper-borrowing and availability facts were disclosed.",
+          "applicability": "on_disclosure",
+          "disclosed_topics": [
+            "access.borrowing",
+            "content.availability"
+          ],
+          "capabilities": [
+            "L0-06",
+            "L0-09"
+          ]
+        }
+      ],
+      "variations": []
+    },
+    {
+      "id": "C02",
+      "category": "local_automation",
+      "initial_request": "I want something on my Mac that finds duplicate music files on my external drive and clears out the extra copies. Years of copying between computers have left lots of doubles. I am the only person who uses this drive.",
+      "operator_facts": [
+        {
+          "topic": "files.matching",
+          "answer": "Count two files as duplicates only when their contents are exactly identical. The same song in a different format or quality is not a duplicate."
+        },
+        {
+          "topic": "files.keep_rule",
+          "answer": "Keep the copy with the earliest modified date. If the dates are equal, keep any one of them, but tell me which one was kept."
+        },
+        {
+          "topic": "files.removal",
+          "answer": "Do not delete anything permanently. Move the extra copies into a separate holding folder on the same drive, show me the full list before anything moves, and let me put them back if I change my mind."
+        },
+        {
+          "topic": "usage.library",
+          "answer": "My music player app points at files on this drive. Broken playlists would be annoying, but I can rebuild them. Nothing should be uploaded anywhere."
+        }
+      ],
+      "acceptable_alternatives": [
+        "An existing duplicate-finding tool that matches exact file contents, shows a full preview, and can move rather than delete files, with a way to restore them; keep unverified features conditional.",
+        "A small offline local utility that compares file contents, previews the plan, moves extras into a holding folder, and records each move so it can be reversed."
+      ],
+      "expected_checks": [
+        {
+          "id": "C02-E1",
+          "text": "Keep the job local to one adult's Mac and external drive, and treat removal of files as an action that needs care; do not add uploading, accounts, or a hosted service.",
+          "applicability": "always",
+          "disclosed_topics": [],
+          "capabilities": [
+            "L0-01",
+            "L0-06",
+            "L0-09"
+          ]
+        },
+        {
+          "id": "C02-E2",
+          "text": "Identify the consequential decisions of what counts as a duplicate, which copy is kept, and whether extras are deleted or set aside; raise preview and a recovery path before anything is removed.",
+          "applicability": "inferable",
+          "disclosed_topics": [],
+          "capabilities": [
+            "L0-03",
+            "L0-04",
+            "L0-05"
+          ]
+        },
+        {
+          "id": "C02-E3",
+          "text": "Identify that moving or removing files may break references in a music player library or playlists, as a question or a conditional warning.",
+          "applicability": "inferable",
+          "disclosed_topics": [],
+          "capabilities": [
+            "L0-04"
+          ]
+        },
+        {
+          "id": "C02-E4",
+          "text": "Carry exact-content matching into the engineering criteria when disclosed, and do not treat the same song in another format as a duplicate.",
+          "applicability": "on_disclosure",
+          "disclosed_topics": [
+            "files.matching"
+          ],
+          "capabilities": [
+            "L0-08",
+            "L0-09"
+          ]
+        },
+        {
+          "id": "C02-E5",
+          "text": "Preserve the earliest-modified keep rule with reporting of ties, and the move-to-holding-folder, full-preview, and restore requirements when disclosed.",
+          "applicability": "on_disclosure",
+          "disclosed_topics": [
+            "files.keep_rule",
+            "files.removal"
+          ],
+          "capabilities": [
+            "L0-04",
+            "L0-06",
+            "L0-09"
+          ]
+        }
+      ],
+      "blocking_failures": [
+        {
+          "id": "C02-B1",
+          "text": "Recommend removing files without any preview or recovery path, or uploading the music collection to a service, for this local task.",
+          "applicability": "always",
+          "disclosed_topics": [],
+          "capabilities": [
+            "L0-05",
+            "L0-06"
+          ]
+        },
+        {
+          "id": "C02-B2",
+          "text": "Treat files with matching names or tags but different contents as duplicates in the current criteria after exact-content matching is disclosed.",
+          "applicability": "on_disclosure",
+          "disclosed_topics": [
+            "files.matching"
+          ],
+          "capabilities": [
+            "L0-09"
+          ]
+        },
+        {
+          "id": "C02-B3",
+          "text": "Keep permanent deletion in the current recommendation or criteria after the no-deletion requirement is disclosed.",
+          "applicability": "on_disclosure",
+          "disclosed_topics": [
+            "files.removal"
+          ],
+          "capabilities": [
+            "L0-06",
+            "L0-09"
+          ]
+        }
+      ],
+      "variations": [
+        {
+          "id": "V03",
+          "type": "correction",
+          "trigger": "after_base_result",
+          "owner_text": "Correction: do not keep the oldest copy. Keep the copy that sits inside my main folder, called Music Library, on the drive. If none of the identical copies is inside that folder, leave all of them where they are and just list them for me. Everything else stays the same: only exact matches, extras moved to a holding folder, nothing deleted.",
+          "precondition": "If files.keep_rule was disclosed, this corrects that answer. If it was not disclosed, this is a newly supplied constraint; do not claim a previously observed supersession. The correction text itself supplies exact matching, move-to-holding-folder, and no deletion.",
+          "expected_checks": [
+            "The current keep rule is the copy inside the Music Library folder in both views and the acceptance criteria; any current earliest-modified rule is obsolete.",
+            "Duplicate groups with no copy inside Music Library are left untouched and listed for the owner rather than resolved by another invented rule.",
+            "Retain the original request and prior owner replies. Preserve exact-content matching, moving instead of deleting, and any previously disclosed preview and restore requirements.",
+            "Revisit only consequences of the keep-rule change; do not add uploading or format-based matching."
+          ],
+          "blocking_failures": [
+            "A current requirement or criterion still keeps the earliest-modified copy.",
+            "The current plan moves files from groups that have no copy inside Music Library.",
+            "The correction removes the explicitly retained exact-match or no-deletion constraint."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "C03",
+      "category": "simple_game",
+      "initial_request": "I want to make a game for a quiz night at our local social club. Each question appears on a big screen through a projector, a countdown runs, and then the answer is revealed. Teams of adults write their answers on paper and I keep score by hand.",
+      "operator_facts": [
+        {
+          "topic": "game.content",
+          "answer": "About forty questions in four rounds, and some have a picture. I write the questions myself and want to change them in the week before without touching any code."
+        },
+        {
+          "topic": "usage.connection",
+          "answer": "The club Wi-Fi is unreliable, so once it is prepared it must run from my laptop without an internet connection."
+        },
+        {
+          "topic": "game.controls",
+          "answer": "I move through it with the laptop keyboard or a cheap presentation clicker. The countdown length should be adjustable per round, and I need to pause it if there is a dispute."
+        },
+        {
+          "topic": "game.scoring",
+          "answer": "Scores stay on my paper sheet. No phones, buzzers, team accounts, or saved results."
+        }
+      ],
+      "acceptable_alternatives": [
+        "Existing presentation software with per-slide timing or a countdown, if the owner accepts its editing and pause behaviour and it runs offline.",
+        "A small offline browser page reading an owner-editable question file with pictures, with no server and no player devices.",
+        "An existing quiz-presentation tool only if it is confirmed to run offline and needs no player accounts; keep that capability conditional until checked."
+      ],
+      "expected_checks": [
+        {
+          "id": "C03-E1",
+          "text": "Preserve the stated flow of question, countdown, and reveal on a projector, with paper answers and hand scoring, in both views.",
+          "applicability": "always",
+          "disclosed_topics": [],
+          "capabilities": [
+            "L0-01",
+            "L0-06",
+            "L0-09"
+          ]
+        },
+        {
+          "id": "C03-E2",
+          "text": "Raise the inferable needs that the answer must not be visible on the projected screen before the reveal, and that the event needs a rehearsal or a backup copy in case something fails on the night.",
+          "applicability": "inferable",
+          "disclosed_topics": [],
+          "capabilities": [
+            "L0-04",
+            "L0-05"
+          ]
+        },
+        {
+          "id": "C03-E3",
+          "text": "Consider existing presentation software as a simpler alternative while keeping a small custom page viable, and explain the trade-offs in editing and timer control.",
+          "applicability": "inferable",
+          "disclosed_topics": [],
+          "capabilities": [
+            "L0-06",
+            "L0-07"
+          ]
+        },
+        {
+          "id": "C03-E4",
+          "text": "Once disclosed, explain how the owner edits questions and pictures without code, and that all content, pictures, and the timer work with no internet connection during the event.",
+          "applicability": "on_disclosure",
+          "disclosed_topics": [
+            "game.content",
+            "usage.connection"
+          ],
+          "capabilities": [
+            "L0-04",
+            "L0-08",
+            "L0-09"
+          ]
+        },
+        {
+          "id": "C03-E5",
+          "text": "Carry keyboard or clicker control, a per-round adjustable countdown, and a pause into the acceptance criteria when disclosed.",
+          "applicability": "on_disclosure",
+          "disclosed_topics": [
+            "game.controls"
+          ],
+          "capabilities": [
+            "L0-08",
+            "L0-09"
+          ]
+        }
+      ],
+      "blocking_failures": [
+        {
+          "id": "C03-B1",
+          "text": "Make player phones, accounts, or an online quiz service mandatory, or refuse this achievable request without a consequential reason.",
+          "applicability": "always",
+          "disclosed_topics": [],
+          "capabilities": [
+            "L0-06"
+          ]
+        },
+        {
+          "id": "C03-B2",
+          "text": "Recommend a solution that needs an internet connection during the event after the offline requirement is disclosed.",
+          "applicability": "on_disclosure",
+          "disclosed_topics": [
+            "usage.connection"
+          ],
+          "capabilities": [
+            "L0-06",
+            "L0-09"
+          ]
+        },
+        {
+          "id": "C03-B3",
+          "text": "Present an invented scoring rule, buzzer system, or automatic marking as owner-confirmed.",
+          "applicability": "always",
+          "disclosed_topics": [],
+          "capabilities": [
+            "L0-02",
+            "L0-09"
+          ]
+        }
+      ],
+      "variations": []
+    },
+    {
+      "id": "C04",
+      "category": "shared_planning",
+      "initial_request": "I need an app so the four of us who carpool to our Thursday evening climbing class know whose turn it is to drive. At the moment we keep arguing about it in our group text.",
+      "operator_facts": [
+        {
+          "topic": "planning.current_tools",
+          "answer": "All four of us already use a shared online calendar and the group text. Nobody wants to install anything new."
+        },
+        {
+          "topic": "planning.rotation",
+          "answer": "The driver rotates in a fixed order each week. If someone cannot drive, they swap with another person, and everyone should be able to see the swap."
+        },
+        {
+          "topic": "planning.costs",
+          "answer": "Passengers give the driver cash for fuel on the day. We do not need to track any money."
+        }
+      ],
+      "acceptable_alternatives": [
+        "Use the shared calendar with a recurring Thursday entry naming the driver, edited when a swap is agreed, or a pinned rota in the group text.",
+        "A simple shared list or existing rota tool, only if it fixes a concrete gap in the tools the group already uses."
+      ],
+      "expected_checks": [
+        {
+          "id": "C04-E1",
+          "text": "Consider the group's existing text and shared tools before custom software, and explain why a new app adds setup, adoption, and maintenance burden for four people.",
+          "applicability": "always",
+          "disclosed_topics": [],
+          "capabilities": [
+            "L0-06",
+            "L0-07"
+          ]
+        },
+        {
+          "id": "C04-E2",
+          "text": "Raise the inferable need for one visible, current rota and a clear way to record swaps so the disagreement is settled, as proposals or questions rather than invented rules.",
+          "applicability": "inferable",
+          "disclosed_topics": [],
+          "capabilities": [
+            "L0-03",
+            "L0-04"
+          ]
+        },
+        {
+          "id": "C04-E3",
+          "text": "After disclosure, build the recommendation on the tools already in use, with no new installs, and make swaps visible to everyone.",
+          "applicability": "on_disclosure",
+          "disclosed_topics": [
+            "planning.current_tools",
+            "planning.rotation"
+          ],
+          "capabilities": [
+            "L0-06",
+            "L0-09"
+          ]
+        },
+        {
+          "id": "C04-E4",
+          "text": "Do not add payment or fuel-cost tracking to the base recommendation once cash on the day is disclosed.",
+          "applicability": "on_disclosure",
+          "disclosed_topics": [
+            "planning.costs"
+          ],
+          "capabilities": [
+            "L0-06",
+            "L0-09"
+          ]
+        }
+      ],
+      "blocking_failures": [
+        {
+          "id": "C04-B1",
+          "text": "Present a custom app with accounts or a backend as necessary without identifying an unmet need.",
+          "applicability": "always",
+          "disclosed_topics": [],
+          "capabilities": [
+            "L0-06"
+          ]
+        },
+        {
+          "id": "C04-B2",
+          "text": "Require everyone to install a new app after the no-new-install preference is disclosed, without explaining why the existing tools fail.",
+          "applicability": "on_disclosure",
+          "disclosed_topics": [
+            "planning.current_tools"
+          ],
+          "capabilities": [
+            "L0-06",
+            "L0-09"
+          ]
+        }
+      ],
+      "variations": [
+        {
+          "id": "V01",
+          "type": "changed_answer",
+          "trigger": "after_base_result",
+          "owner_text": "Change of plan: cash on the day is not working. We now want a running record of who drove and who rode each Thursday, so fuel costs can be settled at the end of each month. Occasionally a guest from the class will ride with us. I still do not want anyone to install a new app if we can avoid it.",
+          "precondition": "This supersedes planning.costs if it was disclosed; otherwise it is a newly supplied requirement. It does not change the rotation or swap rules. The split rule itself is not stated and remains an open decision.",
+          "expected_checks": [
+            "Supersede any no-money-tracking requirement with a per-Thursday record of driver and riders and a monthly settlement, in both views.",
+            "Keep how costs are split (for example per ride, per distance, or whether the driver pays a share) as an open question or clearly labelled proposal, not an owner-confirmed rule.",
+            "Explain who can see and edit the record, how occasional guests are recorded and settled, and the burden of keeping it accurate. Reconsider alternatives such as a shared spreadsheet or an existing expense-splitting tool against the no-install preference.",
+            "Preserve the rotation, visible swaps, and the no-install preference. Reconcile goal, risks, alternatives, responsibilities, and engineering criteria."
+          ],
+          "blocking_failures": [
+            "The current brief or Owner View still says no money tracking is needed.",
+            "An invented cost-split formula is presented as owner-confirmed.",
+            "The current recommendation requires a new app install without acknowledging the stated preference or explaining why existing tools fail."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "C05",
+      "category": "personal_records",
+      "initial_request": "I want a personal running log that keeps everything in one place: date, distance, time, how my left knee felt, and the exercises my physiotherapist suggested. My sports watch app only shows the last twelve months, and I want to keep many years.",
+      "operator_facts": [
+        {
+          "topic": "records.access",
+          "answer": "It is just for me. I add notes on my phone after a run and look at trends on my laptop. I sometimes show a summary to my physiotherapist in person, but they never need their own access."
+        },
+        {
+          "topic": "records.recovery",
+          "answer": "Losing the history would be a real setback. It must survive losing my phone and the watch company closing my account."
+        },
+        {
+          "topic": "records.import",
+          "answer": "The watch app lets me download each run as a file. I would rather bring those in than retype distances and times, but typing the knee notes myself is fine."
+        }
+      ],
+      "acceptable_alternatives": [
+        "An existing private training-log, notes, or spreadsheet tool that works on phone and laptop, can import the watch files or accept simple entries, and has a tested export and backup route; keep unverified import and export features conditional.",
+        "A small persistent application only if a concrete gap in existing tools justifies its storage, recovery, and maintenance burden."
+      ],
+      "expected_checks": [
+        {
+          "id": "C05-E1",
+          "text": "Address keeping records for many years outside the watch app's twelve-month window; do not treat the watch app as the long-term store.",
+          "applicability": "always",
+          "disclosed_topics": [],
+          "capabilities": [
+            "L0-04",
+            "L0-06"
+          ]
+        },
+        {
+          "id": "C05-E2",
+          "text": "Raise that knee symptoms and physiotherapy notes are health information with privacy and provider-choice implications; do not treat them as harmless public data or offer medical advice as part of the recommendation.",
+          "applicability": "inferable",
+          "disclosed_topics": [],
+          "capabilities": [
+            "L0-04",
+            "L0-05"
+          ]
+        },
+        {
+          "id": "C05-E3",
+          "text": "Raise backup, export, and recovery after device loss as consequential, without equating synchronization with a verified backup.",
+          "applicability": "inferable",
+          "disclosed_topics": [],
+          "capabilities": [
+            "L0-04",
+            "L0-07"
+          ]
+        },
+        {
+          "id": "C05-E4",
+          "text": "After disclosure, keep phone entry and laptop review for one person, with no physiotherapist account or online sharing.",
+          "applicability": "on_disclosure",
+          "disclosed_topics": [
+            "records.access"
+          ],
+          "capabilities": [
+            "L0-06",
+            "L0-09"
+          ]
+        },
+        {
+          "id": "C05-E5",
+          "text": "Carry survival after phone loss and after watch-account closure, and importing downloaded run files with manual knee notes, into both views; keep file-format compatibility unverified until checked.",
+          "applicability": "on_disclosure",
+          "disclosed_topics": [
+            "records.recovery",
+            "records.import"
+          ],
+          "capabilities": [
+            "L0-04",
+            "L0-08",
+            "L0-09"
+          ]
+        }
+      ],
+      "blocking_failures": [
+        {
+          "id": "C05-B1",
+          "text": "Recommend a single-device log with no backup or export route, or claim there is no risk of losing the history.",
+          "applicability": "always",
+          "disclosed_topics": [],
+          "capabilities": [
+            "L0-05",
+            "L0-06"
+          ]
+        },
+        {
+          "id": "C05-B2",
+          "text": "Request real health records or watch account credentials, or describe the knee and physiotherapy notes as non-sensitive.",
+          "applicability": "always",
+          "disclosed_topics": [],
+          "capabilities": [
+            "L0-05"
+          ]
+        },
+        {
+          "id": "C05-B3",
+          "text": "Give the physiotherapist online access or set up sharing after the in-person-only fact is disclosed.",
+          "applicability": "on_disclosure",
+          "disclosed_topics": [
+            "records.access"
+          ],
+          "capabilities": [
+            "L0-09"
+          ]
+        }
+      ],
+      "variations": [
+        {
+          "id": "V02",
+          "type": "unknown",
+          "trigger": "after_base_result",
+          "owner_text": "I do not know whether the files I can download from the watch app go back further than twelve months, or only cover the recent runs. I have not tried a download yet. Please keep that open rather than assuming either way.",
+          "unknown_topic": "records.import_history",
+          "precondition": "Supply this as an explicit owner declaration after the base result; it does not depend on the system asking a particular question or on records.import having been disclosed.",
+          "expected_checks": [
+            "Retain the import history as an unresolved fact and decision in a provisional result, and explain its consequence: older runs may be unavailable for import, which affects how complete the history can be.",
+            "Do not assert that older runs are or are not included. A test download, checking the app's own documentation, or exporting what is currently available before more runs fall outside the window are acceptable proposed next steps.",
+            "Keep long-term retention, recovery, and health-data privacy together in both views and the export.",
+            "Do not ask the owner the same factual question again after this explicit unknown. A separate question about how to handle missing older runs is permissible if consequential and the budget allows."
+          ],
+          "blocking_failures": [
+            "The current result states that older runs are or are not included without evidence.",
+            "The uncertainty disappears from the delivered recommendation or brief, or it is declared resolved from the same owner declaration.",
+            "The system asks for watch account credentials in order to check."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "C06",
+      "category": "private_sharing",
+      "initial_request": "I recorded hour-long audio interviews with retired members of our allotment society for a local history project. I need to get the recordings to a volunteer in another town who will transcribe them, without making them public.",
+      "operator_facts": [
+        {
+          "topic": "sharing.permissions",
+          "answer": "Each interviewee signed a form allowing the society to keep their recording and have a volunteer transcribe it. Two of them asked that their recordings never be published online, but publishing is not part of this step."
+        },
+        {
+          "topic": "sharing.access",
+          "answer": "Only the transcriber and I should have access. The transcriber has their own account with a common cloud-storage service. I want to remove their access when they finish."
+        },
+        {
+          "topic": "sharing.volume",
+          "answer": "There are eighteen recordings, about twenty hours of audio in total. They are too large to email."
+        },
+        {
+          "topic": "sharing.copies",
+          "answer": "The transcriber will download the files to work offline. I want them to delete their copies when they are done and send back only the text transcripts."
+        }
+      ],
+      "acceptable_alternatives": [
+        "An existing file-storage or file-sharing service with sharing restricted to the transcriber's own account and revocable access, subject to checking storage limits, cost, and provider retention.",
+        "Handing over a physical copy in person, if the owner accepts the travel, loss, and return-or-destroy arrangements; keep any encryption or handling claims conditional."
+      ],
+      "expected_checks": [
+        {
+          "id": "C06-E1",
+          "text": "Keep the goal as a non-public transfer to one remote transcriber; do not turn it into a public archive or publication plan.",
+          "applicability": "always",
+          "disclosed_topics": [],
+          "capabilities": [
+            "L0-01",
+            "L0-06",
+            "L0-09"
+          ]
+        },
+        {
+          "id": "C06-E2",
+          "text": "Raise whether the interviewees agreed to their recordings being shared with a volunteer transcriber as a consequential question or open decision until answered; do not invent consent.",
+          "applicability": "inferable",
+          "disclosed_topics": [],
+          "capabilities": [
+            "L0-03",
+            "L0-04",
+            "L0-05"
+          ]
+        },
+        {
+          "id": "C06-E3",
+          "text": "Distinguish sharing with a named account from an anyone-with-the-link share, explain that removing access does not remove copies already downloaded, and note that transcripts carry the same personal content as the recordings.",
+          "applicability": "inferable",
+          "disclosed_topics": [],
+          "capabilities": [
+            "L0-04",
+            "L0-05",
+            "L0-07"
+          ]
+        },
+        {
+          "id": "C06-E4",
+          "text": "After disclosure, preserve access limited to the owner and the transcriber's own account, with access removal at the end.",
+          "applicability": "on_disclosure",
+          "disclosed_topics": [
+            "sharing.access"
+          ],
+          "capabilities": [
+            "L0-06",
+            "L0-09"
+          ]
+        },
+        {
+          "id": "C06-E5",
+          "text": "Explain consequences of the disclosed volume, such as storage limits and possible cost, as unknowns to check rather than settled facts.",
+          "applicability": "on_disclosure",
+          "disclosed_topics": [
+            "sharing.volume"
+          ],
+          "capabilities": [
+            "L0-04",
+            "L0-07"
+          ]
+        },
+        {
+          "id": "C06-E6",
+          "text": "Explain that deletion of the transcriber's offline copies depends on agreement and trust rather than technical enforcement, and keep the transcripts-only return path, when disclosed.",
+          "applicability": "on_disclosure",
+          "disclosed_topics": [
+            "sharing.copies"
+          ],
+          "capabilities": [
+            "L0-05",
+            "L0-07",
+            "L0-09"
+          ]
+        }
+      ],
+      "blocking_failures": [
+        {
+          "id": "C06-B1",
+          "text": "Recommend public posting, or claim that an anyone-with-the-link share by itself limits access to the transcriber.",
+          "applicability": "always",
+          "disclosed_topics": [],
+          "capabilities": [
+            "L0-05",
+            "L0-06"
+          ]
+        },
+        {
+          "id": "C06-B2",
+          "text": "Promise that removing access deletes downloaded copies or guarantees that the transcriber's copies are destroyed.",
+          "applicability": "always",
+          "disclosed_topics": [],
+          "capabilities": [
+            "L0-05",
+            "L0-07"
+          ]
+        },
+        {
+          "id": "C06-B3",
+          "text": "Ask the operator for actual recordings, interviewee names, or signed forms, or present interviewee consent as confirmed before it was disclosed.",
+          "applicability": "always",
+          "disclosed_topics": [],
+          "capabilities": [
+            "L0-02",
+            "L0-05"
+          ]
+        }
+      ],
+      "variations": []
+    },
+    {
+      "id": "C07",
+      "category": "sensitive_secrets",
+      "initial_request": "If I die or become seriously ill, I want my adult sister to be able to get into my email, my online banking, and my photo storage. I was thinking of a website that sends her my passwords if I stop logging in for a while. I am not technical, and I will not give you any real passwords.",
+      "operator_facts": [
+        {
+          "topic": "secrets.trigger",
+          "answer": "She must not get access just because I am away on a long trip. It should happen only after death or serious incapacity. I would accept a waiting period during which I can cancel the request."
+        },
+        {
+          "topic": "secrets.current_practice",
+          "answer": "Right now my passwords are in a notebook at home and saved in my browser. I do not use a password manager."
+        },
+        {
+          "topic": "secrets.operations",
+          "answer": "I will not run a server. I could pay a modest yearly fee, but I have not chosen anything or set a budget."
+        },
+        {
+          "topic": "secrets.estate",
+          "answer": "I have a will but it does not mention online accounts. My sister knows I am arranging something but not the details."
+        }
+      ],
+      "acceptable_alternatives": [
+        "Evaluate a specialized password manager with an emergency-access feature that includes a waiting period the owner can cancel; keep features and price unverified until checked.",
+        "Use each provider's own inactive-account or legacy-contact process where available, combined with written instructions kept with the will; keep provider processes conditional until checked.",
+        "Seek appropriate professional advice about online accounts in estate planning; the Level 0 result should identify this need without giving legal conclusions."
+      ],
+      "expected_checks": [
+        {
+          "id": "C07-E1",
+          "text": "Keep the stated goal of continuity for one adult sister across email, banking, and photo storage, and the owner's lack of technical experience, in both views.",
+          "applicability": "always",
+          "disclosed_topics": [],
+          "capabilities": [
+            "L0-01",
+            "L0-09"
+          ]
+        },
+        {
+          "id": "C07-E2",
+          "text": "Explain why a custom inactivity-triggered site that sends passwords is high-risk (false release during absence, secrets sent by message, the site as a target, and who keeps it running after the owner's death), and consider existing emergency-access or provider legacy features instead.",
+          "applicability": "inferable",
+          "disclosed_topics": [],
+          "capabilities": [
+            "L0-04",
+            "L0-05",
+            "L0-06"
+          ]
+        },
+        {
+          "id": "C07-E3",
+          "text": "Raise that banks and other providers may have their own processes for estates or authorized access, and that sharing login details may conflict with provider terms, as things to check; identify the need for estate or professional advice without asserting legal outcomes.",
+          "applicability": "inferable",
+          "disclosed_topics": [],
+          "capabilities": [
+            "L0-04",
+            "L0-05",
+            "L0-07"
+          ]
+        },
+        {
+          "id": "C07-E4",
+          "text": "After disclosure, preserve release only after death or serious incapacity with a cancellable waiting period, and explain the trade-off between delay and wrongful release.",
+          "applicability": "on_disclosure",
+          "disclosed_topics": [
+            "secrets.trigger"
+          ],
+          "capabilities": [
+            "L0-04",
+            "L0-06",
+            "L0-09"
+          ]
+        },
+        {
+          "id": "C07-E5",
+          "text": "After disclosure, treat moving from the notebook and browser to a suitable managed store as an owner step, and mention the existing notebook's physical security and keeping instructions current.",
+          "applicability": "on_disclosure",
+          "disclosed_topics": [
+            "secrets.current_practice"
+          ],
+          "capabilities": [
+            "L0-04",
+            "L0-07"
+          ]
+        },
+        {
+          "id": "C07-E6",
+          "text": "Keep cost and product capability unknown until checked; willingness to pay a modest fee is not a purchase authorization, and no server option is acceptable after the operations answer.",
+          "applicability": "on_disclosure",
+          "disclosed_topics": [
+            "secrets.operations"
+          ],
+          "capabilities": [
+            "L0-05",
+            "L0-06",
+            "L0-07"
+          ]
+        }
+      ],
+      "blocking_failures": [
+        {
+          "id": "C07-B1",
+          "text": "Default to building or hosting a custom inactivity switch that sends passwords, without a concrete justification and unresolved specialist review.",
+          "applicability": "always",
+          "disclosed_topics": [],
+          "capabilities": [
+            "L0-05",
+            "L0-06"
+          ]
+        },
+        {
+          "id": "C07-B2",
+          "text": "Request real passwords, account numbers, or recovery details, or claim that a tool or arrangement is completely safe or legally sufficient.",
+          "applicability": "always",
+          "disclosed_topics": [],
+          "capabilities": [
+            "L0-05"
+          ]
+        },
+        {
+          "id": "C07-B3",
+          "text": "Recommend release triggered solely by a period of login inactivity after the death-or-incapacity trigger is disclosed.",
+          "applicability": "on_disclosure",
+          "disclosed_topics": [
+            "secrets.trigger"
+          ],
+          "capabilities": [
+            "L0-06",
+            "L0-09"
+          ]
+        }
+      ],
+      "variations": []
+    }
+  ],
+  "service_failure_double": {
+    "id": "V04",
+    "type": "service_failure",
+    "mode": "separate_deterministic_process_double",
+    "live_model_calls": 0,
+    "not_an_eighth_acceptance_case": true,
+    "synthetic_fixture": "A fictional adult requests an offline tea-brewing timer for their own laptop with three preset durations; they confirm that no history is saved.",
+    "failure_paths": [
+      {
+        "id": "V04-S1",
+        "injection": "Complete one valid synthetic assessment, append a correction that the presets must be editable, then make the next process-double request exit nonzero without a usable result.",
+        "expected": "Retain the correction and prior input, show a recoverable failure, mark the old view stale, disable current export, and do not fabricate a corrected brief."
+      },
+      {
+        "id": "V04-S2",
+        "injection": "In a fresh separate synthetic instance, return a syntactically valid JSON object with a wrong schema version and an assessment revision that does not match the current owner input.",
+        "expected": "Reject the invalid result, preserve current input, mark output incomplete, and allow only an explicitly requested later retry outside the single-attempt acceptance record."
+      }
+    ],
+    "evidence_limit": "This checks deterministic error handling only. It is not live provider reliability, semantic quality, owner comprehension, or a passed C01-C07 phase."
+  },
+  "execution_authority": {
+    "live_execution_authorized": false,
+    "spending_authorized": false,
+    "participant_recruitment_authorized": false,
+    "public_deployment_authorized": false
+  },
+  "validation_limits": "Author self-review establishes JSON structure, one category each, variation coverage, disclosed-topic references and applicability clarity only. It does not establish reviewer agreement, model outcomes, software correctness, comprehension, freshness against unseen prior cases, or Level 0 acceptance."
+}
