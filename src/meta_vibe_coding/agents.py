@@ -240,6 +240,10 @@ class CodingAgent:
         if len((PROMPT + content).encode("utf-8")) > 32_000:
             raise FlowError("limit", "This idea and reply history exceed the prototype input limit. Your answers are retained.")
         started_process = False
+
+        def mark_started():
+            nonlocal started_process
+            started_process = True
         try:
             async with self.lock:
                 started = time.perf_counter()
@@ -265,12 +269,14 @@ class CodingAgent:
                         if remaining() <= 0:
                             raise TimeoutError()
                         self.calls += 1
-                        started_process = True
-                        raw = await run_cli(args, content=content, cwd=cwd, env=env, timeout=remaining())
+                        raw = await run_cli(args, content=content, cwd=cwd, env=env, timeout=remaining(),
+                                            on_start=mark_started)
+                        mark_started()  # Output means a process ran, whatever runner produced it.
                         candidate, metadata = parse_result(self.agent, raw, state)
                         return candidate, Usage(agent=self.agent, agent_version=self.version,
                             elapsed_seconds=time.perf_counter() - started, **metadata)
                 except CliFailure as exc:
+                    mark_started()
                     raise reported_failure(self.agent, exc.stdout) or exc
                 except TimeoutError as exc:
                     raise FlowError("timeout", "The agent timed out and was stopped. Your answers are retained.") from exc

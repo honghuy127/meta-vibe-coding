@@ -18,7 +18,7 @@ let failure = null;
 function save() {
   // This browser only; cleared by "New idea". Storage can be unavailable, and the page works without it.
   try {
-    if (state) localStorage.setItem(STORE, JSON.stringify({state, previousResult, unsent, failure}));
+    if (state) localStorage.setItem(STORE, JSON.stringify({state, previousResult, unsent, failure, lastProvisional}));
     else localStorage.removeItem(STORE);
   } catch (error) { /* private window or blocked storage */ }
 }
@@ -26,7 +26,7 @@ function restore() {
   try {
     const saved = JSON.parse(localStorage.getItem(STORE) || 'null');
     if (!saved?.state) return;
-    ({state, previousResult = null, unsent = null, failure = null} = saved);
+    ({state, previousResult = null, unsent = null, failure = null, lastProvisional = false} = saved);
     if (unsent && !failure) failure = {message: 'The page was reloaded before a result arrived.',
       next_action: 'Press Retry to send your input again.', retry: true};
   } catch (error) { state = null; }
@@ -34,7 +34,11 @@ function restore() {
 async function api(path, data) {
   const response = await fetch(path, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data)});
   const result = await response.json();
-  if (!response.ok) throw new Error(result.error || 'The request failed. Your answers are still on this page.');
+  if (!response.ok) {
+    const error = new Error(result.error || 'The request failed. Your answers are still on this page.');
+    error.failure = result.failure || null;
+    throw error;
+  }
   return result;
 }
 function status(text, kind = '') { $('status').textContent = text; $('status').className = kind; }
@@ -66,10 +70,12 @@ function showFailure() {
   if (!failure) return;
   status(`Stopped, not running. ${failure.message} ${failure.next_action || ''}`.trim(), 'stopped');
   const waiting = state && state.turns.length > state.assessed_turn_count ? state.turns[state.turns.length - 1].text : null;
-  const text = unsent?.answer ?? waiting;
+  const text = unsent?.answer ?? failure.kept ?? waiting;
   if (text) {
     $('submitted').hidden = false;
-    $('submitted').textContent = `Your last input is kept and will be used on the next attempt: “${text}”`;
+    $('submitted').textContent = failure.retry === false
+      ? `Your last input was not used. Copy it if you need it: “${text}”`
+      : `Your last input is kept and will be used on the next attempt: “${text}”`;
   }
 }
 function showUsage(usage = null) {
@@ -79,7 +85,9 @@ function showUsage(usage = null) {
   if (serverCallsLeft !== null) parts.push(`${serverCallsLeft} agent call${serverCallsLeft === 1 ? '' : 's'} left on this server`);
   $('usage').textContent = parts.join(' · ');
 }
+let renderGeneration = 0;
 async function render() {
+  const generation = ++renderGeneration;
   $('workspace').hidden = !state;
   $('entry').hidden = !!state;
   if (!state) return;
@@ -127,16 +135,22 @@ async function render() {
       const snapshot = state;
       try {
         const exported = await api('/api/export', snapshot);
-        if (state !== snapshot || pending) return;
+        // Any later render, request or kept input makes this export stale.
+        if (state !== snapshot || pending || unsent || generation !== renderGeneration) return;
         brief = exported;
         $('brief').textContent = JSON.stringify(brief, null, 2);
-      } catch (error) { if (state === snapshot && !pending) status(error.message, 'stopped'); }
+      } catch (error) { if (state === snapshot && !pending && generation === renderGeneration) status(error.message, 'stopped'); }
     } else $('brief').textContent = current ? JSON.stringify(state, null, 2) : 'Outdated result. Export is disabled until the current input is assessed.';
   }
   $('download').disabled = pending || !brief;
 }
-async function advance(answer = null, questionId = null, provisional = false, declaresUnknown = false) {
+async function advance(answer = null, questionId = null, provisional = false, declaresUnknown = false, resend = false) {
   if (!state || pending) return;
+  if (unsent && !resend) {
+    // Sending something else would silently drop the kept input.
+    status('Your last input has not been used yet. Press Retry to send it, or start a new idea.', 'stopped');
+    return;
+  }
   if (declaresUnknown) {
     const question = state.questions.find((q) => q.id === questionId);
     if (!['unknown', 'assumed'].includes(state.facts[question?.topic]?.status)) {
@@ -177,7 +191,8 @@ async function advance(answer = null, questionId = null, provisional = false, de
   } catch (error) {
     if (currentRequest !== requestId) return;
     // No acknowledgement: the state is unchanged and `unsent` still holds the input.
-    failure = {message: error.message, next_action: 'Press Retry to send your input again.', retry: true};
+    failure = error.failure || {message: error.message, next_action: 'Press Retry to send your input again.', retry: true};
+    if (failure.retry === false) { failure = {...failure, kept: unsent?.answer ?? null}; unsent = null; }
     setPending(false);
     showFailure();
     save();
@@ -185,7 +200,7 @@ async function advance(answer = null, questionId = null, provisional = false, de
   }
 }
 function retry() {
-  if (unsent) return advance(unsent.answer, unsent.questionId, unsent.provisional, unsent.declaresUnknown);
+  if (unsent) return advance(unsent.answer, unsent.questionId, unsent.provisional, unsent.declaresUnknown, true);
   return advance(null, null, lastProvisional);
 }
 $('idea-form').addEventListener('submit', async (event) => {

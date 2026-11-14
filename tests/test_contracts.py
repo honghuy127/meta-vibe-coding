@@ -363,14 +363,14 @@ def test_retained_unknown_is_carried_and_keeps_its_source_through_an_uncited_upd
     assert adopt(state, NativeResponse.model_validate(body).candidate(state)).owner_unknowns == state.owner_unknowns
 
 
-def test_retained_unknown_question_is_suppressed_only_with_an_open_decision():
+def test_suppressed_question_about_a_retained_unknown_is_kept_as_an_open_decision():
     state = declared_state()
     body = payload(state, result(state, facts=state.facts, disposition='provisional'))
     body['assessment']['open_questions'] = []  # The omission this test is about.
     body['question'] = {'topic': 'use.power', 'text': 'Which power?',
         'decision': 'Changes portability.', 'conflict_turn_id': None}
-    with pytest.raises(FlowError, match='unresolved decision'):
-        adopt(state, NativeResponse.model_validate(body).candidate(state))
+    added = adopt(state, NativeResponse.model_validate(body).candidate(state))
+    assert added.questions == [] and [q.topic for q in added.assessment.open_questions] == ['use.power']
     body['assessment']['open_questions'] = [{'topic': 'use.power', 'text': 'Power is unknown.',
         'blocks_recommendation': False, 'reason': 'Check available power before selection.'}]
     updated = adopt(state, NativeResponse.model_validate(body).candidate(state))

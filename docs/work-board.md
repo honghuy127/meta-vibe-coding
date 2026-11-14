@@ -418,4 +418,12 @@ and whether owners read the new “Check these” section. The English-only list
 replies in `substantive()` is unchanged. Frozen plans 1–7 name contract 3 or earlier
 and cannot run against this source. Nothing was committed.
 
-Next action: step 1 of the next-phase plan above.
+Separate review on 2026-11-14 (read-only agent, doubles only) found no blocking
+issue and ten others. Fixed in a follow-up commit: context quotes no longer become
+owner declarations; a renamed key cannot confirm old text; an omitted open decision
+is added instead of refusing the result; a late export cannot enable Download for an
+outdated result; a kept input cannot be silently replaced; rejected input offers no
+Retry; an idea is charged only after the process spawned; the provisional flag
+survives a reload. Checks after the fixes: 317 Python and 21 UI tests pass.
+
+Next action: step 2 of the next-phase plan above.

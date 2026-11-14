@@ -51,17 +51,19 @@ is scoped to one idea. The browser keeps the current idea across a reload
 Native contract 4 is separate from this canonical state. It returns fact updates
 and explicit removals, with evidence attached to each update, the assessment, and
 at most one question naming a resulting fact key. Untouched facts carry forward
-locally. Evidence supplies source citations; quoted owner words on an unknown fact
-record the owner's own declaration, unless the same reply asks about that fact.
+locally. Evidence supplies source citations. A quote on an unknown fact records the
+owner's own declaration only when it says they do not know (English phrases only).
 Under [D022](decisions.md#d022-weaken-and-report-instead-of-refusing), adoption
 validates against the original state and refuses only what would break it: a wrong
 revision, no usable goal, a dropped confirmed fact or declared unknown, a ready
-result with a question, a suppressed question missing from the open decisions, and
-a provisional result without its open questions and limitations. Other unsupported
+result with a question, a provisional result without its open questions and
+limitations, and a malformed native response. Other unsupported
 content is weakened and reported in runtime `review`: a confirmed update without
 matching quotes becomes an assumption; an unsupported confirmation, change to a
-confirmed fact or resolution of a declared unknown keeps the earlier record; a
-question about a settled, answered or over-limit topic is left out. `review` also
+confirmed fact or resolution of a declared unknown keeps the earlier record; after
+the first result, a new key confirmed without the latest substantive reply becomes
+an assumption; a question about a settled, answered, declared-unknown or over-limit
+topic is left out, and added to the open decisions if the agent omitted it there. `review` also
 lists advice removed and added since the previous result, compared by exact text
 across the assessment lists, risk level and recommendation. This shows change, not
 semantic equivalence, complete extraction, correct corrections or alias detection.

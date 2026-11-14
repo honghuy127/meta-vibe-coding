@@ -18,7 +18,8 @@ class CliFailure(FlowError):
 
 
 async def run_cli(args: list[str], *, content: str, cwd: str, env: dict[str, str], timeout: float,
-                  capture: Callable[[bytes, bytes, int | None], None] | None = None) -> bytes:
+                  capture: Callable[[bytes, bytes, int | None], None] | None = None,
+                  on_start: Callable[[], None] | None = None) -> bytes:
     """No shell; bound both output streams and stop the process group on failure."""
     if timeout <= 0:
         raise TimeoutError()
@@ -27,6 +28,8 @@ async def run_cli(args: list[str], *, content: str, cwd: str, env: dict[str, str
     process = await asyncio.wait_for(asyncio.create_subprocess_exec(*args, cwd=cwd, env=env,
         stdin=asyncio.subprocess.PIPE, stdout=asyncio.subprocess.PIPE,
         stderr=asyncio.subprocess.PIPE, start_new_session=True), timeout)
+    if on_start is not None:
+        on_start()
 
     outputs = [bytearray(), bytearray()]
 

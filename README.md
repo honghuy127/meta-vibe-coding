@@ -135,18 +135,22 @@ stdin, bounds output, and validates the final JSON through one native response
 contract before adoption. Native contract 4 returns fact updates with attached
 evidence, removals, the assessment and at most one question that names a fact key.
 The wrapper carries untouched facts forward and derives source citations from the
-evidence. Quoted owner words on an unknown fact record that the owner said they do
-not know. Quotes establish source presence, not semantic support or complete
+evidence. A quote on an unknown fact records the owner's own declaration only when
+it says they do not know (English phrases only); other quotes are context. Quotes establish source presence, not semantic support or complete
 extraction.
 
 Adoption refuses a result only when it would break the state: a wrong revision, no
 usable goal, a dropped confirmed fact or declared unknown, a ready result that asks
-a question, or a provisional result without its open decisions. Anything else that
+a question, or a provisional result without its open decisions. Malformed responses
+(bad keys, duplicate operations, over-long quotes or too many facts) are also
+refused as invalid output. Anything else that
 the owner's words do not support is weakened and reported
 ([D022](docs/decisions.md#d022-weaken-and-report-instead-of-refusing)). A confirmed
 update without matching quotes becomes an assumption. An unsupported change to a
-confirmed fact or a declared unknown keeps the earlier record. A question about a
-settled or already answered detail is left out. The Owner View lists each of these
+confirmed fact or a declared unknown keeps the earlier record. After the first
+result, a new key confirmed without the owner's latest substantive reply becomes an
+assumption. A question about a settled, answered or declared-unknown detail is left
+out; if the agent did not list it as an open decision, the wrapper adds it. The Owner View lists each of these
 under “Check these”, with the advice removed and added since the last result. That
 comparison is by exact text: it shows change and cannot judge lost meaning. Kept
 facts can sit beside advice written for the rejected update, so the list needs

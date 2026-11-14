@@ -7,6 +7,15 @@ from pydantic import Field, field_validator
 from .models import (Assessment, Candidate, Fact, FactKey, Model, ProposedQuestion,
                      Scalar, State, UnknownEvidence, quoted_in)
 
+# English phrases only; a declaration in another language is recorded as an ordinary unknown.
+NOT_KNOWING = ("don't know", "don’t know", "do not know", "dont know", "not sure", "unsure",
+               "no idea", "haven't decided", "have not decided", "not decided", "can't say", "cannot say")
+
+
+def declares_not_knowing(quote: str) -> bool:
+    text = " ".join(quote.lower().split())
+    return any(phrase in text for phrase in NOT_KNOWING)
+
 
 class NativeFactUpdate(Model):
     key: FactKey
@@ -58,9 +67,11 @@ class NativeResponse(Model):
                 notices.append(f'Recorded “{row.key}” as an assumption: the agent did not quote your words for it.')
             source_ids = list(dict.fromkeys(e.source_turn_id for e in evidence))
             facts[row.key] = Fact(value=row.value, status=status, source_turn_ids=source_ids, reason=reason)
-            if status == 'unknown' and evidence:
-                # Quoted owner words on an unknown fact are the owner's own "I don't know".
-                unknowns[row.key] = evidence[-1]
+            declarations = [e for e in evidence if declares_not_knowing(e.quote)]
+            if status == 'unknown' and declarations:
+                # Only the owner's own words saying they do not know make a declaration (D022).
+                # Other quotes on an unknown fact are context and suppress no later question.
+                unknowns[row.key] = declarations[-1]
         if len(facts) > 100:
             raise ValueError('Too many native facts')
         if 'goal' not in facts:

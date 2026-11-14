@@ -43,9 +43,10 @@ def test_agent_can_annotate_a_verbatim_explicit_unknown_from_the_initial_idea():
     state = State(raw_intent=known.raw_intent)
     candidate = questioning(known)
     candidate.owner_unknowns = known.owner_unknowns.copy()
-    # An agent that asks about the detail is not treating it as the owner's declaration.
+    # The owner's own "I don't know" is a declaration, so a question about it is left out and reported.
     asked = adopt(state, candidate)
-    assert asked.owner_unknowns == {} and asked.questions[-1].topic == "operations.budget"
+    assert asked.owner_unknowns == known.owner_unknowns and asked.questions == []
+    assert "you said you do not know" in asked.review.downgrades[0]
     candidate.question = None
     updated = adopt(state, candidate)
     assert updated.owner_unknowns == known.owner_unknowns and updated.questions == []
@@ -137,8 +138,11 @@ def test_declared_unknown_cannot_be_dropped_or_reanchored_and_suppression_keeps_
     reanchored = Candidate.model_validate(body)
     assert adopt(state, reanchored).owner_unknowns == state.owner_unknowns
     omitted_decision = questioning(state)
+    omitted_decision.assessment.disposition = "needs_answer"
     omitted_decision.assessment.open_questions = []
-    with pytest.raises(FlowError): adopt(state, omitted_decision)
+    # The unasked decision is added to the open decisions instead of discarding the result.
+    kept = weakened(state, omitted_decision)
+    assert [q.topic for q in kept.assessment.open_questions] == ["operations.budget"]
 
 
 def test_goal_and_question_binding_are_canonical_and_legacy_marker_default_is_empty():
@@ -185,6 +189,7 @@ def test_unknown_action_on_a_legacy_settled_target_cannot_erase_it_or_call_an_ag
     with TestClient(create_app(ForbiddenAgent())) as client:
         response = client.post('/api/advance', json=request.model_dump())
         assert response.status_code == 422 and response.json()["code"] == "invalid_input"
+        assert response.json()["failure"]["retry"] is False, "Rejected input must not invite a Retry"
     assert state.model_dump() == before
     assert state.turns == [] and state.owner_unknowns == {} and state.agent_calls == 0
 
@@ -216,3 +221,22 @@ def test_a_confirmed_fact_can_reopen_only_after_a_later_sourced_conflict_makes_i
     assert updated.questions[-1].conflict_turn_id == "t2"
     assert updated.facts["access.visibility"].status == "unknown"
     assert state.facts["access.visibility"].status == "confirmed"
+
+
+def test_context_quotes_on_an_unknown_fact_are_not_declarations_and_new_keys_need_a_fresh_reply():
+    from meta_vibe_coding.contracts import NativeResponse
+    from test_flow import native_result
+    import json
+    base = State(raw_intent="A photo album for my family.")
+    body = json.loads(native_result(base, result(base, disposition="provisional")))
+    body["fact_updates"].append({"key": "audience.size", "value": None, "status": "unknown",
+        "reason": "Not stated.", "evidence": [{"source_turn_id": "t0", "quote": "my family"}]})
+    state = adopt(base, NativeResponse.model_validate(body).candidate(base))
+    assert state.owner_unknowns == {} and state.facts["audience.size"].source_turn_ids == ["t0"]
+    # A renamed key confirmed from old text after the first result stays an assumption.
+    pending = prepare(AdvanceRequest(state=state, request_id="continue", answer="Continue."))
+    renamed = result(pending, facts={**pending.facts, "access.family_only": Fact(
+        value=True, status="confirmed", source_turn_ids=["t0"])}, disposition="provisional")
+    updated = adopt(pending, renamed)
+    assert updated.facts["access.family_only"].status == "assumed"
+    assert "latest reply does not support it" in " ".join(updated.review.downgrades)

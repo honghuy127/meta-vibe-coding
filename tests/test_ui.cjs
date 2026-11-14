@@ -100,7 +100,8 @@ async function page(configOverrides = {}, initialTurns = [], storage = new Map()
       turns: initialTurns, facts: {}, questions: [], assessment: null, agent_calls: 0, started_at: 1, assessed_turn_count: 0});
     if (path === '/api/advance') {
       assert.ok(advances.length, 'Every inference response must be an explicit test double');
-      return response(await advances.shift()(body));
+      const value = await advances.shift()(body);
+      return typeof value?.json === 'function' ? value : response(value);
     }
     if (path === '/api/export') {
       if (exports.length) return exports.shift()(body);
@@ -450,4 +451,65 @@ test('A reload restores the idea, and New idea deletes the stored copy', async (
   assert.match(reloaded.el('owner').textContent, /After reload/);
   await reloaded.el('reset').fire('click');
   assert.equal(ui.storage.size, 0);
+});
+
+test('A late export cannot enable Download after a later input fails', async () => {
+  const ui = await page();
+  const lateExport = deferred();
+  ui.exports.push(() => lateExport.promise);
+  ui.advances.push((body) => assessed(body, 'Original result.'));
+  const first = ui.start('Fictional idea');
+  await settle();
+  ui.advances.push(() => { throw new Error('Fictional lost response.'); });
+  await ui.correct('Members only.');
+  lateExport.resolve(response({revision: 2, raw_intent: 'Fictional idea', recommendation: 'Original result.'}));
+  await first;
+  await ui.el('download').fire('click');
+  assert.equal(ui.el('download').disabled, true);
+  assert.equal(ui.downloads.length, 0);
+});
+
+test('Kept input is not replaced by a different submission', async () => {
+  const ui = await page();
+  ui.advances.push((body) => assessed(body, 'Original result.'));
+  await ui.start('Fictional idea');
+  ui.advances.push(() => { throw new Error('Fictional lost response.'); });
+  await ui.correct('On my phone.');
+  const sent = ui.calls.length;
+  await ui.correct('Also, keep it free.');
+  assert.equal(ui.calls.length, sent, 'Nothing else is sent while input is kept');
+  assert.match(ui.el('status').textContent, /has not been used yet/);
+  let retried;
+  ui.advances.push((body) => { retried = body; return assessed(body, 'After retry.'); });
+  await ui.el('retry').fire('click');
+  assert.equal(retried.answer, 'On my phone.');
+});
+
+test('Rejected input offers no Retry and shows the text to copy', async () => {
+  const ui = await page();
+  ui.advances.push((body) => assessed(body, 'Original result.'));
+  await ui.start('Fictional idea');
+  // The server's 422 shape for input it rejects before any agent call.
+  ui.advances.push(() => response({code: 'invalid_input', error: 'That question is missing, retired, or already answered.',
+    failure: {code: 'invalid_input', message: 'That question is missing, retired, or already answered.',
+      next_action: 'Check your entry and send it again.', retry: false}}, false));
+  await ui.correct('A rejected correction.');
+  assert.equal(ui.el('retry').hidden, true);
+  assert.match(ui.el('submitted').textContent, /was not used.*A rejected correction\./);
+  assert.match(ui.el('owner').textContent, /Original result/);
+  assert.equal(ui.el('download').disabled, false, 'The unchanged current result stays exportable');
+});
+
+test('A provisional request survives a reload and is retried as provisional', async () => {
+  const ui = await page();
+  ui.advances.push((body) => assessed(body, 'Initial.', 'Where is it used?'));
+  await ui.start('Fictional idea');
+  ui.advances.push((body) => failed(body));
+  await ui.el('provisional').fire('click');
+  const reloaded = await page({}, [], ui.storage);
+  await settle();
+  let retried;
+  reloaded.advances.push((body) => { retried = body; return assessed(body, 'Provisional after reload.'); });
+  await reloaded.el('retry').fire('click');
+  assert.equal(retried.provisional, true);
 });

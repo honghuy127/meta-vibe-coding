@@ -3,7 +3,7 @@
 import json
 import time
 
-from .models import (IDEA_ASSESSMENTS, AdvanceRequest, Assessment, Candidate, Review,
+from .models import (IDEA_ASSESSMENTS, AdvanceRequest, Assessment, Candidate, OpenQuestion, Review,
                      State, Turn, normalized_topic)
 from .settings import Limits, load_limits
 
@@ -164,9 +164,18 @@ def adopt(state: State, candidate: Candidate, *, allow_question: bool = True) ->
     unknowns = state.owner_unknowns.copy()
     facts = dict(candidate.facts)
     kept = set()
+    # After the first result, a new confirmed fact needs the owner's latest substantive reply.
+    # Otherwise renaming a key could turn the agent's reading of old text into a confirmation.
+    first_result = state.assessment is None and state.previous_assessment is None
     for key, fact in candidate.facts.items():
         previous = state.facts.get(key)
         if previous is None:
+            if (fact.status == "confirmed" and not first_result
+                    and not (substantive_reply and latest_turn in fact.source_turn_ids)):
+                reason = "Not confirmed: no new answer from you supports this yet."
+                facts[key] = fact.model_copy(update={"status": "assumed",
+                    "reason": (fact.reason.strip() + " " + reason).strip()})
+                notices.append(f"Recorded “{key}” as an assumption: it is new and your latest reply does not support it.")
             continue
         problem = None
         meaning_changed = not same_json(fact.value, previous.value) or fact.status != previous.status
@@ -193,8 +202,6 @@ def adopt(state: State, candidate: Candidate, *, allow_question: bool = True) ->
         previous = unknowns.get(key)
         if key in kept or facts[key].status != "unknown":
             continue
-        if previous is None and question and question.topic == key:
-            continue  # The agent is asking about it, so this is not yet the owner's declaration.
         if previous and evidence != previous and (evidence.source_turn_id not in turn_ids
                 or turn_ids.index(evidence.source_turn_id) <= turn_ids.index(previous.source_turn_id)):
             continue  # Keep the earlier declaration; an older or equal source cannot replace it.
@@ -215,10 +222,16 @@ def adopt(state: State, candidate: Candidate, *, allow_question: bool = True) ->
     # An explicit request for a result ends clarification; open decisions remain
     # in the assessment without creating another question for the owner.
     ask_question = allow_question and question is not None and question.topic not in unknowns
+    assessment = candidate.assessment
     if question and not ask_question:
-        if not any(normalized_topic(q.topic) == normalized_topic(question.topic)
-                   for q in candidate.assessment.open_questions):
-            raise FlowError("invalid_output", "The agent omitted an unresolved decision from its result. Your answers are retained.")
+        if question.topic in unknowns:
+            leave_out("you said you do not know this, so it stays an open decision")
+        if not any(normalized_topic(q.topic) == normalized_topic(question.topic) for q in assessment.open_questions):
+            # Keep the unasked decision visible rather than discarding the whole result.
+            assessment = assessment.model_copy(deep=True)
+            assessment.open_questions.append(OpenQuestion(topic=question.topic, text=question.text,
+                blocks_recommendation=False, reason=question.decision))
+            notices.append(f"Added “{question.text}” to the open decisions: the agent asked it but did not list it.")
         question = None
     if question:
         answered = [q for q in state.questions if q.topic == question.topic and q.answer_turn_id is not None]
@@ -239,11 +252,11 @@ def adopt(state: State, candidate: Candidate, *, allow_question: bool = True) ->
         data["revision"] += 1
     data["facts"] = new_facts
     data["owner_unknowns"] = {key: value.model_dump() for key, value in unknowns.items()}
-    data["assessment"] = candidate.assessment.model_dump()
+    data["assessment"] = assessment.model_dump()
     data["previous_assessment"] = None
     data["assessment"]["based_on_revision"] = data["revision"]
     data["assessed_turn_count"] = len(state.turns)
-    removed_advice, added_advice = advice_changes(state.previous_assessment or state.assessment, candidate.assessment)
+    removed_advice, added_advice = advice_changes(state.previous_assessment or state.assessment, assessment)
     data["review"] = Review(downgrades=[note[:8000] for note in notices], removed_advice=removed_advice,
                             added_advice=added_advice).model_dump()
     for row in data["questions"]:

@@ -345,7 +345,8 @@ def test_full_recorded_flow_through_wrapper_with_explicit_process_double(monkeyp
         assert brief["facts"][key]["value"] is True and brief["facts"][key]["source_turn_ids"] == ["t2"]
     assert {source["id"]: source["text"] for source in brief["sources"]}["t2"] == correction
     assert [turn["id"] for turn in state["turns"]] == ["t1", "t2"]
-    assert len(attempts) == wrapper.calls == state["agent_calls"] == 4
+    # The double's timeout starts no real process, so it uses a server slot but not an assessment (D023).
+    assert len(attempts) == wrapper.calls == 4 and state["agent_calls"] == 3
     assert recovered["usage"]["cost"] is None and recovered["usage"]["model"] is None
     assert "agent_calls" not in brief and "started_at" not in brief
     entries = [json.loads(line) for line in journal.getvalue().splitlines()]

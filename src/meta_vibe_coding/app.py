@@ -71,7 +71,7 @@ def create_app(agent: Agent | None = None) -> FastAPI:
         try:
             state = prepare(body)
         except FlowError as exc:
-            return JSONResponse({"code": exc.code, "error": exc.message}, status_code=422)
+            return JSONResponse({"code": exc.code, "error": exc.message, "failure": exc.payload()}, status_code=422)
 
         def reply(state: State, usage=None, error: FlowError | None = None) -> dict:
             return {"request_id": body.request_id, "state": state.model_dump(),

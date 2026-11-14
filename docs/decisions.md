@@ -480,19 +480,23 @@ no model-quality result or actual live UI flow.
   so they refused sound results and still let semantic omissions through. Prompt and
   schema used 16,784 of 32,000 input bytes.
 - Choice: native contract 4 returns fact updates, removals, the assessment and one
-  question. It has no `assessment_changes` and no `owner_unknown` flag; quoted owner
-  words on an unknown fact are the declaration, unless the same reply asks about that
-  fact. The wrapper compares the new advice with the previous result by exact text,
-  including risk level and recommendation kind, and shows the owner what was removed
-  and added. Adoption refuses only what would break the state: a wrong revision, no
-  usable goal, a dropped confirmed fact or declared unknown, a ready result with a
-  question, a suppressed question missing from the open decisions, and the D017
-  provisional rule. Otherwise it weakens and reports: a confirmed update without
-  matching quotes becomes an assumption; an unsupported change to a confirmed fact,
-  an unsupported confirmation and an unsupported resolution of a declared unknown
-  keep the earlier record; a question about a settled, answered or over-limit topic
-  is left out; a protected removal is ignored. The reports live in runtime `review`,
-  which is neither exported nor sent to the agent. State and brief stay schema 1.
+  question. It has no `assessment_changes` and no `owner_unknown` flag. A quote on an
+  unknown fact records the owner's declaration only when it says they do not know
+  (English phrases only); other quotes are context. The wrapper compares the new
+  advice with the previous result by exact text, including risk level and
+  recommendation kind, and shows the owner what was removed and added. Adoption
+  refuses only what would break the state: a wrong revision, no usable goal, a
+  dropped confirmed fact or declared unknown, a ready result with a question, a
+  malformed native response, and the D017 provisional rule. Otherwise it weakens and
+  reports: a confirmed update without matching quotes becomes an assumption; after
+  the first result, a new key confirmed without the owner's latest substantive reply
+  becomes an assumption, so renaming a key cannot confirm old text; an unsupported
+  change to a confirmed fact, an unsupported confirmation and an unsupported
+  resolution of a declared unknown keep the earlier record; a question about a
+  settled, answered, declared-unknown or over-limit topic is left out and, if the
+  agent did not list it, added to the open decisions; a protected removal is
+  ignored. The reports live in runtime `review`, which is neither exported nor sent
+  to the agent. State and brief stay schema 1.
 - The prompt is rewritten around stewardship behavior and a short format section.
   Examples taken from development and acceptance cases are removed.
 - Consequences: no confirmed fact exists without owner sources, as before. A weakened
@@ -522,7 +526,10 @@ no model-quality result or actual live UI flow.
   idea” or the browser's own clearing, on a shared computer too; the page says so.
   This is still fictional-input prototype use. State remains client-held, so the
   per-idea limit guides an honest page and is not an enforcement boundary; the server
-  allowance is the enforced one.
+  allowance is the enforced one. Review follow-up: the idea is charged only after the
+  process was spawned; input the server rejects returns a failure with no Retry; the
+  page refuses a new submission while an earlier one is kept, and a late export
+  cannot enable Download for an outdated result.
 
 ## Open choices
 
