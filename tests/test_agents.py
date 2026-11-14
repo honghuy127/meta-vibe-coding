@@ -74,7 +74,7 @@ def test_three_wrappers_share_state_and_delegate_models(configured, monkeypatch,
             assert "--safe-mode" in args and "--bare" not in args
             assert args[args.index("--mcp-config") + 1] == '{"mcpServers":{}}'
             assert args[args.index("--append-system-prompt") + 1] == module.PROMPT
-            assert args[args.index("--json-schema") + 1] == module.SCHEMA
+            assert args[args.index("--json-schema") + 1] == module.CLAUDE_SCHEMA
         else:
             assert args[args.index("--sandbox") + 1] == "read-only"
             assert "shell_tool" in args and "code_mode_host" in args

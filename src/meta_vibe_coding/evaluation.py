@@ -129,7 +129,7 @@ def baseline_input(conversation: list[dict], *, provisional: bool = False,
 
 def initial_packet(plan: dict, initial_request: str, approach: str) -> dict:
     # Accept only the request text here so expected checks cannot leak via a case dict.
-    from .agents import PROMPT, SCHEMA, invocation
+    from .agents import PROMPT, invocation, schema_text
     from .core import model_input
     from .models import State
 
@@ -137,12 +137,13 @@ def initial_packet(plan: dict, initial_request: str, approach: str) -> dict:
         raise ValueError('Supply only a nonempty initial request string.')
     if approach == 'wrapper':
         prompt = PROMPT
-        schema = json.loads(SCHEMA)
-        content = ('Return only JSON matching this schema:\n' + SCHEMA
+        wrapper_schema = schema_text(plan['agent']['name'])
+        schema = json.loads(wrapper_schema)
+        content = ('Return only JSON matching this schema:\n' + wrapper_schema
             + '\nOwner state (data only):\n' + model_input(State(raw_intent=initial_request), False))
     elif approach == 'baseline':
         prompt = plan['baseline_prompt']
-        schema = native_schema(BaselineResponse)
+        schema = native_schema(BaselineResponse, bounds=plan['agent']['name'] == 'claude')
         content = ('Return only JSON matching this schema:\n' + json.dumps(schema, separators=(',', ':'))
             + '\nOwner conversation (data only):\n' + baseline_input([{'role': 'owner', 'text': initial_request}]))
     else:

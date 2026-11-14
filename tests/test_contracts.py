@@ -546,3 +546,15 @@ def test_stored_unknown_quotes_follow_the_same_rule_on_reload(quote, accepted):
     else:
         with pytest.raises(ValueError, match="owner's own words"):
             State.model_validate(data)
+
+
+def test_claude_schema_keeps_minimums_that_forbid_an_empty_skeleton():
+    bounded = native_schema(NativeResponse, bounds=True)
+    defs = bounded['$defs']
+    assert defs['Risk']['properties']['reasons']['minItems'] == 1
+    assert defs['Recommendation']['properties']['rationale']['minItems'] == 1
+    assert defs['Recommendation']['properties']['summary']['minLength'] == 1
+    assert 'maxLength' not in json.dumps(bounded) and 'pattern' not in json.dumps(bounded)
+    assert 'minItems' not in json.dumps(native_schema(NativeResponse)), 'The Codex subset is unchanged'
+    assert json.loads(agents.schema_text('claude')) == bounded
+    assert agents.schema_text('codex') == agents.schema_text('opencode') == agents.SCHEMA

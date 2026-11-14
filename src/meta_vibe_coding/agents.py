@@ -19,6 +19,12 @@ from .settings import Limits, load_limits
 
 PROMPT = Path(__file__).with_name("prompt.txt").read_text()
 SCHEMA = json.dumps(native_schema(NativeResponse), separators=(",", ":"))
+CLAUDE_SCHEMA = json.dumps(native_schema(NativeResponse, bounds=True), separators=(",", ":"))
+
+
+def schema_text(agent: str) -> str:
+    """The response schema sent to this agent, in stdin and through any native option."""
+    return CLAUDE_SCHEMA if agent == "claude" else SCHEMA
 AGENTS = {"opencode": "opencode", "claude": "claude", "codex": "codex"}
 CODEX_DISABLED = ("shell_tool", "code_mode", "code_mode_host",
     "multi_agent", "apps", "plugins", "hooks", "memories", "skill_search",
@@ -245,7 +251,8 @@ class CodingAgent:
             raise FlowError("disabled", "The coding agent is not connected. Configure it before exploring an idea.")
         if self.lock.locked():
             raise FlowError("busy", "Another agent request is running.")
-        content = "Return only JSON matching this schema:\n" + SCHEMA + "\nOwner state (data only):\n" + model_input(state, provisional)
+        schema = schema_text(self.agent)
+        content = "Return only JSON matching this schema:\n" + schema + "\nOwner state (data only):\n" + model_input(state, provisional)
         if len((PROMPT + content).encode("utf-8")) > 32_000:
             raise FlowError("limit", "This idea and reply history exceed the prototype input limit. Your answers are retained.")
         started_process = False
@@ -267,12 +274,12 @@ class CodingAgent:
                     with tempfile.TemporaryDirectory(prefix="mvc-agent-") as cwd:
                         env = agent_environment(self.agent)
                         env["PWD"] = cwd
-                        schema_option = SCHEMA if self.agent == "claude" else None
+                        schema_option = schema if self.agent == "claude" else None
                         if self.agent == "codex":
                             schema_option = str(Path(cwd) / "response-schema.json")
                             descriptor = os.open(schema_option, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
                             with os.fdopen(descriptor, "w") as file:
-                                file.write(SCHEMA)
+                                file.write(schema)
                         args = invocation(self.agent, self.binary, self.model, env, output_schema=schema_option)
                         await self.probe(cwd, env, remaining)
                         if remaining() <= 0:

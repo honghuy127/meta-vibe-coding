@@ -42,7 +42,8 @@ def build(tmp_path, agent):
     plan = {'agent': {'name': agent, 'requested_model': 'fictional-model'}, 'limits': LIMITS, 'baseline_prompt': 'Fictional baseline policy.',
         'matrix': [{'case_id': 'C1', 'approaches': ['wrapper', 'baseline']}, {'case_id': 'C2', 'approaches': ['baseline', 'wrapper']}],
         'execution_directory': str(tmp_path / 'evidence'), 'frozen_cases': {'path': str(cases_path), 'sha256': hashlib.sha256(cases_path.read_bytes()).hexdigest()},
-        'native_output': {'wrapper': json.loads(agents.SCHEMA), 'baseline': evaluation.native_schema(evaluation.BaselineResponse)},
+        'native_output': {'wrapper': json.loads(agents.schema_text(agent)),
+            'baseline': evaluation.native_schema(evaluation.BaselineResponse, bounds=agent == 'claude')},
         'harness_sha256': hashlib.sha256(SCRIPT.read_bytes()).hexdigest(), 'live_authority': {'owner': 'fictional'},
         'frozen_runtime': {'wrapper_prompt': agents.PROMPT, 'source_snapshot': evaluation.source_snapshot(REPO),
             'requirements_lock_sha256': hashlib.sha256((REPO / 'requirements.lock').read_bytes()).hexdigest()}}

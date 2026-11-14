@@ -80,13 +80,19 @@ class NativeResponse(Model):
                          owner_unknowns=unknowns, notices=notices)
 
 
-def native_schema(model: type[Model]) -> dict:
-    """Use a conservative schema subset; retain all semantic/bound checks locally."""
+# Claude Code's --json-schema enforces these; the Codex subset leaves them to local validation.
+BOUND_KEYWORDS = ('minItems', 'minLength')
+
+
+def native_schema(model: type[Model], *, bounds: bool = False) -> dict:
+    """Use a conservative schema subset; retain all semantic/bound checks locally.
+    With bounds, also keep minimum lengths so constrained decoding cannot return empty
+    required text or lists (an empty skeleton was observed on 2026-11-15)."""
     def compile_node(node):
         if any(key in node for key in ('oneOf', 'allOf', 'not', 'if', 'then', 'else', 'prefixItems', 'patternProperties')):
             raise ValueError('Unsupported structural native schema keyword')
         result = {}
-        for key in ('$ref', 'type', 'enum', 'description'):
+        for key in ('$ref', 'type', 'enum', 'description') + (BOUND_KEYWORDS if bounds else ()):
             if key in node:
                 result[key] = node[key]
         if 'const' in node:
