@@ -441,5 +441,34 @@ downgrade paths were not exercised live. The advice comparison is noisy: after o
 answer it listed 17 removed and 25 added lines, mostly rewording. No browser was used;
 reload was checked as a state round-trip only. Operator self-review only.
 
-Next action: step 3 of the next-phase plan above, on source `11e8ebc` and the fresh
-[v8 cases](../artifacts/l0-acceptance-cases-v8.json).
+Step 3, matched comparison on 2026-11-15: [plan 8](../artifacts/l0-comparison-plan-v8.json)
+ran the fresh [v8 cases](../artifacts/l0-acceptance-cases-v8.json), written by a separate
+author blind to the source, after a separate pre-launch approval. All fourteen first
+attempts closed in 58 calls with no retry or fallback
+([archive](../artifacts/2026-11-15-claude-sonnet-acceptance-v8.json)). Separate semantic
+review is in the [v8 review](../artifacts/l0-comparison-review-v8.json):
+
+| | Wrapper | Baseline |
+| --- | --- | --- |
+| Phases passed / reached | 8 / 10 | 7 / 10 |
+| Jobs delivering a final result | 6 / 7 | 6 / 7 |
+| Stops | C03, five-question limit | C01, five-question limit |
+| Blocking failures | 0 | 0 |
+| Native calls / counted questions | 33 / 35 | 25 / 26 |
+| Native time / CLI-reported cost | 1,943 s / $4.11 | 788 s / $1.37 |
+
+No wrapper result was refused, unlike plan 7's six continuity stops, and no update was
+weakened, so the D022 downgrade path is still unexercised live. Review found the wrapper
+more specific on unknowns and hidden needs, and the baseline cheaper, faster and better
+hedged on C07's legal advice. The one-phase gap rests on judgment calls and is no
+evidence of superiority. Wrapper views were judged from state and export, not a render.
+Open issues: the advice-change lists are unreadable (up to 76 items after one change);
+the wrapper cannot see how many requests remain, which caused the C03 stop; and the
+C01-baseline stop came from inconsistent operator counting (review OD-1, OD-2), so that
+row needs adjudication. The reviewer is a single agent from the same model family; a
+second contributor should adjudicate the stops, OD-1/OD-2 and the three nonblocking
+failures.
+
+Next action: repository owner decides under the proposal's rule whether the wrapper's
+added specificity justifies about three times the calls' cost and time, or whether to
+ship the simpler workflow with the thin parts; then adjudication and T011 sessions.

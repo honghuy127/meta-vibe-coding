@@ -29,8 +29,12 @@ Since 2026-11-14 the wrapper reports weak updates to the owner instead of refusi
 the whole result, uses a smaller native contract and prompt, and keeps the session
 across a reload ([T037](docs/work-board.md#t037-soft-adoption-smaller-contract-and-failure-feedback)).
 This follows plan 7, where the transcript baseline delivered six of seven jobs and
-the wrapper one. The change is checked with doubles only. The evidence below
-predates it and describes contracts 1–3.
+the wrapper one. On fresh cases, [plan 8](artifacts/2026-11-15-claude-sonnet-acceptance-v8.json)
+then delivered six of seven on each side with no blocking failure and no wrapper
+refusal; [separate agent review](artifacts/l0-comparison-review-v8.json) passed 8 of
+10 wrapper phases and 7 of 10 baseline phases. The wrapper used about three times the
+time and reported cost. This establishes no superiority, Level 0 acceptance or owner
+comprehension. The evidence below predates T037 and describes contracts 1–3.
 
 The [OpenCode pilot](artifacts/2026-10-29-opencode-free-pilot.json) and
 [routing comparison](artifacts/2026-10-30-opencode-routing-verification.json)

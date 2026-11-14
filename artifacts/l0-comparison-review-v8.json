@@ -1,0 +1,2086 @@
+{
+ "schema_version": 1,
+ "kind": "l0-comparison-review-v8",
+ "reviewer": {
+  "id": "semantic_reviewer_v8",
+  "role": "separate semantic reviewer (Claude Code agent, Opus 5.5); did not operate the run or author the cases",
+  "date": "2026-11-15",
+  "method": "Parsed run/journal.jsonl with python3; rated each reached phase on the last result of that phase; every quote below was checked as an exact substring of the cited journal line. No coding-agent CLI was run and no network request was made.",
+  "independence_limit": "Single AI reviewer from the same model family as the evaluated agent. Blocking-failure, dispute and alternative-solution adjudication by a second contributor is still required."
+ },
+ "inputs": [
+  {
+   "path": "artifacts/l0-acceptance-cases-v8.json",
+   "sha256": "82aaab6285e2e0f712ff13e33f130d60f3e11089f5624feb8f069c12c35f4d7d"
+  },
+  {
+   "path": "artifacts/l0-comparison-plan-v8.json",
+   "sha256": "56f56689b0b0c7801e652a4df9ca3182e4d650672f0ad2d8d52ef1f96ba056ab"
+  },
+  {
+   "path": "artifacts/2026-11-15-claude-sonnet-acceptance-v8.json",
+   "sha256": "56b1f66e70929f47888cf78e7a85bdcd22762cb555441e28683a0f12e76c47cf",
+   "journal_sha256": "382d47a59132bf2c06d5d9ad34653d2b5c02e57b4c3464c4bee8ad29fc36e756",
+   "journal_lines": 360
+  },
+  {
+   "path": "docs/level-0.md",
+   "sha256": "e37058d87a8ac66c9b36684e368a04c554ec9c491683e11fc297f66e59bbb357"
+  }
+ ],
+ "comparison_contracts": "As frozen in the plan: wrapper 32,000 input bytes, native contract 4, D022 weaken-and-report gates, provisional open questions must carry owner-unknown keys; baseline 64,000 input bytes, transcript only, strict JSON checks, no canonical state, provenance or downgrade reporting. The baseline input carries remaining_questions; the wrapper input does not.",
+ "rating_rules_applied": [
+  "Phase result = last delivered output of that phase (base: the result before the variation or job end; variation: the last result after the variation text).",
+  "For the two question-limit stops, dimensions were rated on the last delivered interim output and recommendation_fit is not checked because the closing result was not reached; protocol stops are recorded separately from semantic failures.",
+  "Bundled questions are not by themselves a clarification failure (both approaches bundled often); the overrun is recorded as the protocol stop.",
+  "Wrapper view dimensions are judged from the state that the frozen controller renders and from the /api/export response; no rendered replay exists in the evidence (see limitations).",
+  "Minor issues are presentation or wording problems that do not change a decision; they are recorded but do not fail a dimension. Assumptions presented as facts and asserted legal or feature outcomes do fail the relevant dimension.",
+  "Undisclosed operator facts were not required; inferable checks were satisfied by questions, open decisions or conditional advice."
+ ],
+ "rows": [
+  {
+   "job": "C01-wrapper",
+   "phase": "base",
+   "approach": "wrapper",
+   "result_journal_lines": [
+    25,
+    26
+   ],
+   "dimensions": {
+    "recommendation_fit": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 25,
+       "quote": "Do not build a custom application. No forms, accounts or booking are needed."
+      },
+      {
+       "journal_line": 25,
+       "quote": "Keep the tool list in a spreadsheet the two volunteers already know how to edit"
+      },
+      {
+       "journal_line": 25,
+       "quote": "A stranger on a phone can find the opening hours, the borrowing steps and the tool list within a few taps"
+      }
+     ],
+     "l0_ids": [
+      "L0-06",
+      "L0-07"
+     ],
+     "notes": "C01-E1, C01-E4 and the disclosed borrowing clause of C01-E5 met; C01-B1/B2/B3 not triggered."
+    },
+    "clarification": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 9,
+       "quote": "Who in the group will keep the opening hours and tool list up to date"
+      },
+      {
+       "journal_line": 15,
+       "quote": "Will the site show any details about people or places"
+      },
+      {
+       "journal_line": 21,
+       "quote": "Should the website only give information, or do you also want people to do things on it"
+      }
+     ],
+     "l0_ids": [
+      "L0-03"
+     ],
+     "notes": "Each question states the decision it changes. Budget was never asked because the operator counted the second question as two requests (see OD-1) and forced the close."
+    },
+    "risk_and_unknowns": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 25,
+       "quote": "Stale opening hours are the likeliest failure, because nobody has said who owns them."
+      },
+      {
+       "journal_line": 25,
+       "quote": "Make sure the group, not one individual, controls the web address and the hosting or builder account"
+      },
+      {
+       "journal_line": 25,
+       "quote": "Budget for possible yearly costs such as a domain name; the amount is not yet known and not guaranteed to be zero."
+      }
+     ],
+     "l0_ids": [
+      "L0-04",
+      "L0-05",
+      "L0-07"
+     ],
+     "notes": "C01-E2 (closures update path) and C01-E3 met. Not raised: that a public tool list may be read as live availability (minor omission, also absent from the baseline)."
+    },
+    "owner_view_clarity": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 25,
+       "quote": "Put the hours and the borrowing steps on the page as plain text, noting that borrowing happens on paper at the counter."
+      },
+      {
+       "journal_line": 25,
+       "quote": "Reason: Two volunteers who are comfortable with spreadsheets, updating about twice a month, can maintain the tool list without code. That is a light ongoing workload.",
+       "note": "Shown as removed advice; a near-identical sentence is shown as added. 14 removed and 13 added items in this adoption."
+      }
+     ],
+     "l0_ids": [
+      "L0-07"
+     ],
+     "notes": "Wrapper Owner View judged from the state the controller renders (assessment, non-confirmed facts, open questions, review); no rendered replay is in the evidence. Review-list churn recorded as a minor presentation issue."
+    },
+    "brief_and_view_consistency": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 26,
+       "quote": "Proposed rule, not yet confirmed by the owner: nothing personal (names, photos, home address, personal phone or email) is published unless the people concerned have agreed."
+      },
+      {
+       "journal_line": 25,
+       "quote": "The owner said they do not know. Until settled, the plan assumes nothing personal is published.",
+       "note": "owner_unknowns content.people_and_contact cites t2, the answer to q2 at line 15, which asked exactly this."
+      }
+     ],
+     "l0_ids": [
+      "L0-02",
+      "L0-08",
+      "L0-09"
+     ],
+     "notes": "Export at line 26 equals the state assessment and facts at revision 8."
+    }
+   },
+   "blocking_failures": [],
+   "minor_issues": [
+    "Review lists: 14 removed / 13 added items, 6 near-duplicate rewordings (line 25).",
+    "Live-availability misreading of the tool list not raised (C01-E2 first clause)."
+   ],
+   "pass": true
+  },
+  {
+   "job": "C01-baseline",
+   "phase": "base",
+   "approach": "baseline",
+   "result_journal_lines": [
+    43
+   ],
+   "dimensions": {
+    "recommendation_fit": {
+     "verdict": "not checked",
+     "evidence": [
+      {
+       "journal_line": 43,
+       "quote": "Proposed, not final: use an existing website builder with the tool list typed into a page table, or shown from a new public-only spreadsheet; no custom code.",
+       "note": "Interim needs_answer result; it looks suitable, but the closing result was never reached."
+      }
+     ],
+     "l0_ids": [
+      "L0-06"
+     ],
+     "notes": "Closing recommendation unreached after the protocol stop."
+    },
+    "clarification": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 33,
+       "quote": "Who will update the website when opening hours or the list of tools change"
+      },
+      {
+       "journal_line": 38,
+       "quote": "Do you already keep the tool list in a shared spreadsheet, and does that spreadsheet hold anything that should not be public"
+      },
+      {
+       "journal_line": 43,
+       "quote": "Is there a yearly amount the group is comfortable spending on the website, and is a custom web address"
+      },
+      {
+       "journal_line": 41,
+       "quote": "\"remaining_questions\": 1",
+       "note": "The baseline was told one question remained, a figure that reflects the operator count disputed in OD-2."
+      }
+     ],
+     "l0_ids": [
+      "L0-03"
+     ],
+     "notes": "Questions are consequential and give reasons. The third bundled two requests and triggered the stop, recorded separately."
+    },
+    "risk_and_unknowns": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 43,
+       "quote": "Possible accidental exposure if an existing working spreadsheet with private details were made public"
+      },
+      {
+       "journal_line": 43,
+       "quote": "I can't quote prices. A custom web address usually has a small yearly fee"
+      },
+      {
+       "journal_line": 43,
+       "quote": "The account and any web address should be held in the group's name, with a second person who can get in."
+      }
+     ],
+     "l0_ids": [
+      "L0-04",
+      "L0-05",
+      "L0-07"
+     ],
+     "notes": "Rated on the last delivered interim output."
+    },
+    "owner_view_clarity": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 43,
+       "quote": "Borrowing stays on paper at the counter. The site only explains how borrowing works, and nobody borrows online."
+      }
+     ],
+     "l0_ids": [
+      "L0-07"
+     ],
+     "notes": "Rated on the last delivered interim output."
+    },
+    "brief_and_view_consistency": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 43,
+       "quote": "You said you don't know whether the tool list is already in a spreadsheet or whether that file holds anything private."
+      },
+      {
+       "journal_line": 43,
+       "quote": "Owner does not know whether the tool list is already in a spreadsheet or whether any such file holds private data"
+      }
+     ],
+     "l0_ids": [
+      "L0-09"
+     ],
+     "notes": "Unknown attributed to a question actually asked (line 38)."
+    }
+   },
+   "blocking_failures": [],
+   "minor_issues": [],
+   "pass": false,
+   "protocol_stop": {
+    "journal_lines": [
+     45,
+     46
+    ],
+    "code": "question_limit",
+    "text": "Bundled two information requests with one question remaining; exceeded the frozen five-question limit.",
+    "reviewer_note": "Under the counting rule the evidence states, the line 38 question counts once; the stop would then not have occurred (OD-2)."
+   }
+  },
+  {
+   "job": "C02-baseline",
+   "phase": "base",
+   "approach": "baseline",
+   "result_journal_lines": [
+    61
+   ],
+   "dimensions": {
+    "recommendation_fit": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 61,
+       "quote": "use an existing reputable offline Mac duplicate-file finder with exact-match detection, a review step and Trash-based removal, not a custom build"
+      }
+     ],
+     "l0_ids": [
+      "L0-06"
+     ],
+     "notes": "C02-E1 met; C02-B1 not triggered."
+    },
+    "clarification": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 51,
+       "quote": "Is the music on the external drive backed up anywhere else right now"
+      },
+      {
+       "journal_line": 56,
+       "quote": "Do you play this music through the Apple Music app (or iTunes)"
+      }
+     ],
+     "l0_ids": [
+      "L0-03"
+     ],
+     "notes": "Duplicate definition not asked but carried as a proposal and open question (C02-E2)."
+    },
+    "risk_and_unknowns": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 61,
+       "quote": "Deletion is hard to reverse and backup status is unknown"
+      },
+      {
+       "journal_line": 61,
+       "quote": "Some tools delete permanently, and the Trash on an external drive can behave differently."
+      },
+      {
+       "journal_line": 61,
+       "quote": "Do some duplicates differ in quality, format or tags, so that the owner wants to choose among versions?"
+      }
+     ],
+     "l0_ids": [
+      "L0-04",
+      "L0-05"
+     ],
+     "notes": "C02-E2 and C02-E3 met."
+    },
+    "owner_view_clarity": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 61,
+       "quote": "Where you can, keep the copy in the folder your player already uses. Then fewer playlists will break."
+      }
+     ],
+     "l0_ids": [
+      "L0-07"
+     ]
+    },
+    "brief_and_view_consistency": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 61,
+       "quote": "Backup status is unknown (owner said 'I do not know'); not confirmed as present or absent"
+      },
+      {
+       "journal_line": 61,
+       "quote": "Proposed: match exact (byte-identical) copies by default"
+      }
+     ],
+     "l0_ids": [
+      "L0-02",
+      "L0-09"
+     ],
+     "notes": "Backup unknown matches the question at line 51."
+    }
+   },
+   "blocking_failures": [],
+   "minor_issues": [],
+   "pass": true
+  },
+  {
+   "job": "C02-baseline",
+   "phase": "V03",
+   "approach": "baseline",
+   "result_journal_lines": [
+    66,
+    71
+   ],
+   "dimensions": {
+    "recommendation_fit": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 71,
+       "quote": "use an existing offline duplicate finder with exact content matching, a keep-folder rule, a preview step and move-to-folder instead of delete"
+      }
+     ],
+     "l0_ids": [
+      "L0-06"
+     ],
+     "notes": "V03 blocking conditions not triggered."
+    },
+    "clarification": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 66,
+       "quote": "If two or more identical copies of a track are both inside your Music Library folder"
+      },
+      {
+       "journal_line": 71,
+       "quote": "I'm treating it as undecided, not as a yes or no, and I won't ask again."
+      }
+     ],
+     "l0_ids": [
+      "L0-03"
+     ]
+    },
+    "risk_and_unknowns": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 71,
+       "quote": "Backup unknown, so the holding folder is the only safety net"
+      },
+      {
+       "journal_line": 71,
+       "quote": "Several identical copies inside Music Library have no owner-chosen policy; the proposed leave-and-list default avoids guessing"
+      }
+     ],
+     "l0_ids": [
+      "L0-05"
+     ]
+    },
+    "owner_view_clarity": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 71,
+       "quote": "If no identical copy is inside Music Library, leave all copies where they are and list them for you."
+      }
+     ],
+     "l0_ids": [
+      "L0-07"
+     ]
+    },
+    "brief_and_view_consistency": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 71,
+       "quote": "For each group with no copy in Music Library, all copies stay in place and appear in a list"
+      },
+      {
+       "journal_line": 71,
+       "quote": "Proposed: record of what was moved and from where, so moves can be reversed"
+      }
+     ],
+     "l0_ids": [
+      "L0-08",
+      "L0-09"
+     ],
+     "notes": "Keep rule, exact matching and no-deletion carried into criteria."
+    }
+   },
+   "blocking_failures": [],
+   "minor_issues": [
+    "Interim line 66 said the keeper rule \"replaces the earlier oldest-copy approach\", which was never disclosed or proposed (V03 precondition); the final line 71 drops it."
+   ],
+   "pass": true
+  },
+  {
+   "job": "C02-wrapper",
+   "phase": "base",
+   "approach": "wrapper",
+   "result_journal_lines": [
+    97,
+    98
+   ],
+   "dimensions": {
+    "recommendation_fit": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 97,
+       "quote": "Use an established Mac duplicate-finder app that matches on exact file contents, runs locally without uploading"
+      }
+     ],
+     "l0_ids": [
+      "L0-06"
+     ]
+    },
+    "clarification": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 81,
+       "quote": "Is there another copy of this music somewhere else"
+      },
+      {
+       "journal_line": 87,
+       "quote": "do you mean files that are exactly the same"
+      },
+      {
+       "journal_line": 93,
+       "quote": "Do you play this music through the Music app"
+      }
+     ],
+     "l0_ids": [
+      "L0-03"
+     ]
+    },
+    "risk_and_unknowns": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 97,
+       "quote": "You do not know whether a backup exists, so I treat the drive as the only copy until that is checked."
+      },
+      {
+       "journal_line": 97,
+       "quote": "Proposed: review the list before anything is removed, and send removals to the Trash or a holding folder first."
+      }
+     ],
+     "l0_ids": [
+      "L0-04",
+      "L0-05"
+     ],
+     "notes": "C02-E2, C02-E3 met."
+    },
+    "owner_view_clarity": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 97,
+       "quote": "Choose which copy of each duplicate group to keep. Where possible, keep the one your music player app points at."
+      }
+     ],
+     "l0_ids": [
+      "L0-07"
+     ],
+     "notes": "Wrapper Owner View judged from the state the controller renders (assessment, non-confirmed facts, open questions, review); no rendered replay is in the evidence."
+    },
+    "brief_and_view_consistency": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 98,
+       "quote": "Only files with identical contents are flagged. A trial on a small folder shows that the same song in a different format or quality is not flagged."
+      }
+     ],
+     "l0_ids": [
+      "L0-08",
+      "L0-09"
+     ],
+     "notes": "C02-E4 met; export equals state."
+    }
+   },
+   "blocking_failures": [],
+   "minor_issues": [
+    "Review lists: 7 removed / 10 added items (line 97)."
+   ],
+   "pass": true
+  },
+  {
+   "job": "C02-wrapper",
+   "phase": "V03",
+   "approach": "wrapper",
+   "result_journal_lines": [
+    103,
+    109,
+    115,
+    116
+   ],
+   "dimensions": {
+    "recommendation_fit": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 115,
+       "quote": "lets you mark the Music Library copy as the one to keep, and moves extras to a holding folder instead of deleting"
+      }
+     ],
+     "l0_ids": [
+      "L0-06"
+     ]
+    },
+    "clarification": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 105,
+       "quote": "Sometimes two or more identical copies may both sit inside Music Library"
+      },
+      {
+       "journal_line": 111,
+       "quote": "Is part of the goal to free up space on this drive?"
+      }
+     ],
+     "l0_ids": [
+      "L0-03"
+     ],
+     "notes": "Both questions are consequential follow-ups to the correction."
+    },
+    "risk_and_unknowns": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 115,
+       "quote": "Groups with no copy inside Music Library are not moved and appear in a list for you."
+      },
+      {
+       "journal_line": 115,
+       "quote": "Proposed default, until you choose otherwise: groups with several copies inside Music Library are not moved and appear in a list for you."
+      }
+     ],
+     "l0_ids": [
+      "L0-02",
+      "L0-05"
+     ]
+    },
+    "owner_view_clarity": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 115,
+       "quote": "Moving files on the same drive frees no space until the folder is emptied"
+      },
+      {
+       "journal_line": 103,
+       "quote": "Reason: Trash-first removal keeps mistakes reversible. This is a proposed rule, not something you have confirmed.",
+       "note": "One of 32 removed items (38 added) shown for the correction adoption."
+      }
+     ],
+     "l0_ids": [
+      "L0-07"
+     ],
+     "notes": "Wrapper Owner View judged from the state the controller renders (assessment, non-confirmed facts, open questions, review); no rendered replay is in the evidence. The correction adoption listed 70 change items (about 11,500 characters); the substantive change is buried."
+    },
+    "brief_and_view_consistency": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 116,
+       "quote": "In every matched group with exactly one copy inside Music Library, that copy stays and the others are moved to the holding folder on the same drive. Nothing is deleted."
+      },
+      {
+       "journal_line": 115,
+       "quote": "I do not know the rest of this question.",
+       "note": "owner_unknowns space.freeing_goal cites t6; q5 (line 111) did ask about freeing space."
+      }
+     ],
+     "l0_ids": [
+      "L0-02",
+      "L0-08",
+      "L0-09"
+     ]
+    }
+   },
+   "blocking_failures": [],
+   "minor_issues": [
+    "Review lists at the correction (line 103): 32 removed / 38 added, 12 near-duplicate pairs.",
+    "Exported fact keep.rule carries the reason \"The owner corrected the earlier keep rule.\" although no keep rule had been disclosed."
+   ],
+   "pass": true
+  },
+  {
+   "job": "C03-wrapper",
+   "phase": "base",
+   "approach": "wrapper",
+   "result_journal_lines": [
+    136,
+    137
+   ],
+   "dimensions": {
+    "recommendation_fit": {
+     "verdict": "not checked",
+     "evidence": [
+      {
+       "journal_line": 136,
+       "quote": "Use ordinary presentation software (PowerPoint, Keynote or Google Slides) with one slide per question",
+       "note": "Interim provisional result with a pending question; it looks suitable, but the closing result was never reached."
+      }
+     ],
+     "l0_ids": [
+      "L0-06"
+     ],
+     "notes": "Closing result unreached after the protocol stop."
+    },
+    "clarification": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 126,
+       "quote": "On the night, will you run the screen yourself while also keeping score"
+      },
+      {
+       "journal_line": 132,
+       "quote": "Who will write the questions, and will any of them use pictures"
+      },
+      {
+       "journal_line": 138,
+       "quote": "Which laptop will you plug into the projector",
+       "note": "Three independent requests with two questions remaining; caused the stop."
+      }
+     ],
+     "l0_ids": [
+      "L0-03"
+     ],
+     "notes": "Questions are consequential with reasons. The wrapper input carries no remaining-request budget (contract difference)."
+    },
+    "risk_and_unknowns": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 136,
+       "quote": "A full test run on the club's projector shows that timing and the reveal work with no internet needed, or that the internet is confirmed reliable."
+      },
+      {
+       "journal_line": 136,
+       "quote": "Keep a copy on a USB stick and a printed answer list as a backup."
+      }
+     ],
+     "l0_ids": [
+      "L0-04",
+      "L0-05"
+     ],
+     "notes": "C03-E2 met (reveal on click, rehearsal, backup). Rated on the last delivered output."
+    },
+    "owner_view_clarity": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 136,
+       "quote": "Forty questions in four rounds is a small job."
+      }
+     ],
+     "l0_ids": [
+      "L0-07"
+     ],
+     "notes": "Wrapper Owner View judged from the state the controller renders (assessment, non-confirmed facts, open questions, review); no rendered replay is in the evidence. 18 removed / 21 added review items in this adoption."
+    },
+    "brief_and_view_consistency": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 137,
+       "quote": "Proposed rule, pending the owner's decision: disputes are settled by the owner, and the tie-break is announced before the quiz starts."
+      },
+      {
+       "journal_line": 136,
+       "quote": "I do not know the rest of this question.",
+       "note": "owner_unknowns content.picture_origin cites t2; q2 (line 132) asked whether pictures, music or clips come from elsewhere."
+      }
+     ],
+     "l0_ids": [
+      "L0-02",
+      "L0-09"
+     ],
+     "notes": "C03-B3 avoided by labelling."
+    }
+   },
+   "blocking_failures": [],
+   "minor_issues": [],
+   "pass": false,
+   "protocol_stop": {
+    "journal_lines": [
+     138,
+     139
+    ],
+    "code": "question_limit",
+    "text": "Third question bundled three independent requests with two questions remaining."
+   }
+  },
+  {
+   "job": "C03-baseline",
+   "phase": "base",
+   "approach": "baseline",
+   "result_journal_lines": [
+    154
+   ],
+   "dimensions": {
+    "recommendation_fit": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 154,
+       "quote": "use an existing slide tool with one question slide and one answer slide per question"
+      },
+      {
+       "journal_line": 154,
+       "quote": "Small custom web page or app with auto-advance, countdown, reveal, image support and a reusable question bank."
+      }
+     ],
+     "l0_ids": [
+      "L0-06"
+     ],
+     "notes": "C03-E1 and C03-E3 met."
+    },
+    "clarification": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 144,
+       "quote": "Do you already use PowerPoint, Google Slides or Keynote"
+      },
+      {
+       "journal_line": 149,
+       "quote": "Is this a one-off quiz night or something you'll run regularly"
+      }
+     ],
+     "l0_ids": [
+      "L0-03"
+     ]
+    },
+    "risk_and_unknowns": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 154,
+       "quote": "Test the whole deck on the club's projector beforehand, and keep a copy on a USB stick or second device."
+      },
+      {
+       "journal_line": 154,
+       "quote": "Is internet available at the club?"
+      },
+      {
+       "journal_line": 154,
+       "quote": "Picture rights are unchecked"
+      }
+     ],
+     "l0_ids": [
+      "L0-04",
+      "L0-05"
+     ]
+    },
+    "owner_view_clarity": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 154,
+       "quote": "The countdown is the fiddly part. Slide tools differ in how they handle it."
+      }
+     ],
+     "l0_ids": [
+      "L0-07"
+     ]
+    },
+    "brief_and_view_consistency": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 154,
+       "quote": "Owner-stated unknown: the remainder of the last question (understood to be one-off vs recurring); not answered either way"
+      }
+     ],
+     "l0_ids": [
+      "L0-09"
+     ],
+     "notes": "Unknowns match questions asked at lines 144 and 149."
+    }
+   },
+   "blocking_failures": [],
+   "minor_issues": [
+    "\"Google Slides is free with a Google account.\" is an unqualified price claim (line 154); overall cost stays explicitly unconfirmed."
+   ],
+   "pass": true
+  },
+  {
+   "job": "C04-baseline",
+   "phase": "base",
+   "approach": "baseline",
+   "result_journal_lines": [
+    166
+   ],
+   "dimensions": {
+    "recommendation_fit": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 166,
+       "quote": "No custom build. Use a shared calendar with recurring Thursday events in rotation order"
+      }
+     ],
+     "l0_ids": [
+      "L0-06"
+     ],
+     "notes": "C04-E1 met; C04-B1 not triggered."
+    },
+    "clarification": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 161,
+       "quote": "When a driver can't make it on their turn"
+      }
+     ],
+     "l0_ids": [
+      "L0-03"
+     ],
+     "notes": "One question, then a result (ready)."
+    },
+    "risk_and_unknowns": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 166,
+       "quote": "A swap only shows up if someone enters it."
+      },
+      {
+       "journal_line": 166,
+       "quote": "I don't know which calendar or messaging apps you all use, or whether weeks without class happen."
+      }
+     ],
+     "l0_ids": [
+      "L0-04",
+      "L0-05"
+     ]
+    },
+    "owner_view_clarity": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 166,
+       "quote": "If your phones don't share one calendar app, use the spreadsheet or a pinned list in the group text instead."
+      }
+     ],
+     "l0_ids": [
+      "L0-07"
+     ]
+    },
+    "brief_and_view_consistency": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 166,
+       "quote": "Proposed policy, not chosen by owner: the person requesting a swap enters it and also notes it in the group text."
+      }
+     ],
+     "l0_ids": [
+      "L0-09"
+     ]
+    }
+   },
+   "blocking_failures": [],
+   "minor_issues": [],
+   "pass": true
+  },
+  {
+   "job": "C04-baseline",
+   "phase": "V01",
+   "approach": "baseline",
+   "result_journal_lines": [
+    171,
+    176
+   ],
+   "dimensions": {
+    "recommendation_fit": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 176,
+       "quote": "Use one shared browser-based spreadsheet with a weekly log tab (including an optional fuel-cost column) and a monthly summary tab."
+      }
+     ],
+     "l0_ids": [
+      "L0-06"
+     ],
+     "notes": "Alternatives reconsidered against the no-install preference."
+    },
+    "clarification": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 171,
+       "quote": "how should the amount each person owes be worked out"
+      },
+      {
+       "journal_line": 176,
+       "quote": "I'm not assuming an answer and I won't ask again."
+      }
+     ],
+     "l0_ids": [
+      "L0-03"
+     ]
+    },
+    "risk_and_unknowns": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 176,
+       "quote": "Settlement and guest rules are undecided, so a dispute at the first month-end is possible."
+      }
+     ],
+     "l0_ids": [
+      "L0-05"
+     ]
+    },
+    "owner_view_clarity": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 176,
+       "quote": "Before the first month-end, the four of you will need to choose a split."
+      }
+     ],
+     "l0_ids": [
+      "L0-07"
+     ]
+    },
+    "brief_and_view_consistency": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 176,
+       "quote": "Guest payment rule is unknown (not separately answered)."
+      },
+      {
+       "journal_line": 176,
+       "quote": "Nobody needs to install a new app to view or update the record."
+      }
+     ],
+     "l0_ids": [
+      "L0-02",
+      "L0-08",
+      "L0-09"
+     ],
+     "notes": "No split formula presented as confirmed."
+    }
+   },
+   "blocking_failures": [],
+   "minor_issues": [],
+   "pass": true
+  },
+  {
+   "job": "C04-wrapper",
+   "phase": "base",
+   "approach": "wrapper",
+   "result_journal_lines": [
+    202,
+    203
+   ],
+   "dimensions": {
+    "recommendation_fit": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 202,
+       "quote": "Write the fixed driver order for the next several Thursdays in a pinned message or shared calendar the group already uses."
+      }
+     ],
+     "l0_ids": [
+      "L0-06"
+     ]
+    },
+    "clarification": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 186,
+       "quote": "what is the argument usually about"
+      },
+      {
+       "journal_line": 192,
+       "quote": "If a Thursday class is cancelled"
+      },
+      {
+       "journal_line": 198,
+       "quote": "Who in the group would be willing to keep the schedule current"
+      }
+     ],
+     "l0_ids": [
+      "L0-03"
+     ]
+    },
+    "risk_and_unknowns": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 202,
+       "quote": "The remaining risk is social: two undecided points (cancelled classes and who keeps the list) can restart the arguments in any tool."
+      }
+     ],
+     "l0_ids": [
+      "L0-04",
+      "L0-05"
+     ]
+    },
+    "owner_view_clarity": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 202,
+       "quote": "A swap is made by posting it in the group text and updating the pinned list, so everyone sees it. No app needed."
+      }
+     ],
+     "l0_ids": [
+      "L0-07"
+     ],
+     "notes": "Wrapper Owner View judged from the state the controller renders (assessment, non-confirmed facts, open questions, review); no rendered replay is in the evidence."
+    },
+    "brief_and_view_consistency": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 203,
+       "quote": "Confirmed rule: a driver who cannot drive swaps with another person, and the swap is visible to everyone in the group."
+      }
+     ],
+     "l0_ids": [
+      "L0-08",
+      "L0-09"
+     ]
+    }
+   },
+   "blocking_failures": [],
+   "minor_issues": [
+    "\"a pinned message or shared calendar covers at no cost\" (line 202) is an unqualified cost claim, limited to tools the group already uses."
+   ],
+   "pass": true
+  },
+  {
+   "job": "C04-wrapper",
+   "phase": "V01",
+   "approach": "wrapper",
+   "result_journal_lines": [
+    208,
+    214,
+    215
+   ],
+   "dimensions": {
+    "recommendation_fit": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 214,
+       "quote": "Use one shared spreadsheet from a tool the group already has."
+      },
+      {
+       "journal_line": 214,
+       "quote": "An existing expense-splitting app. It handles who owes whom, but everyone would need to install or sign up for it."
+      }
+     ],
+     "l0_ids": [
+      "L0-06"
+     ]
+    },
+    "clarification": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 210,
+       "quote": "When the month ends, how do you want fuel costs shared?"
+      }
+     ],
+     "l0_ids": [
+      "L0-03"
+     ]
+    },
+    "risk_and_unknowns": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 214,
+       "quote": "How guests appear in the record, for example as a first name or just 'guest', and whether they know they are listed."
+      },
+      {
+       "journal_line": 214,
+       "quote": "The owner does not know how fuel costs are shared or whether guests pay"
+      }
+     ],
+     "l0_ids": [
+      "L0-04",
+      "L0-05"
+     ]
+    },
+    "owner_view_clarity": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 214,
+       "quote": "Agree with the other three how fuel cost is shared and whether guests pay. Until then, record only drivers and riders."
+      }
+     ],
+     "l0_ids": [
+      "L0-07"
+     ],
+     "notes": "Wrapper Owner View judged from the state the controller renders (assessment, non-confirmed facts, open questions, review); no rendered replay is in the evidence. The changed-answer adoption (line 208) listed 33 removed / 43 added items (about 11,200 characters)."
+    },
+    "brief_and_view_consistency": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 215,
+       "quote": "Proposed: the group agrees how fuel cost is shared and whether guests pay, and writes it next to the record."
+      }
+     ],
+     "l0_ids": [
+      "L0-02",
+      "L0-08",
+      "L0-09"
+     ]
+    }
+   },
+   "blocking_failures": [],
+   "minor_issues": [
+    "Review lists at the variation (line 208): 33 removed / 43 added."
+   ],
+   "pass": true
+  },
+  {
+   "job": "C05-wrapper",
+   "phase": "base",
+   "approach": "wrapper",
+   "result_journal_lines": [
+    241,
+    242
+   ],
+   "dimensions": {
+    "recommendation_fit": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 241,
+       "quote": "Proposed: use a spreadsheet the owner controls"
+      },
+      {
+       "journal_line": 241,
+       "quote": "Keep a backup copy elsewhere."
+      }
+     ],
+     "l0_ids": [
+      "L0-06"
+     ],
+     "notes": "C05-E1 met; C05-B1 not triggered."
+    },
+    "clarification": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 225,
+       "quote": "Which sports watch app do you use, and does it let you export your runs as files"
+      },
+      {
+       "journal_line": 231,
+       "quote": "do you know of any older runs that are still stored somewhere"
+      },
+      {
+       "journal_line": 237,
+       "quote": "Do you expect to show this log, especially the knee notes, to your physiotherapist"
+      }
+     ],
+     "l0_ids": [
+      "L0-03"
+     ]
+    },
+    "risk_and_unknowns": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 241,
+       "quote": "Knee and physiotherapy notes are health information"
+      },
+      {
+       "journal_line": 241,
+       "quote": "Failure check: if the main file is deleted or damaged, a backup copy no more than about a month old can be opened and used."
+      }
+     ],
+     "l0_ids": [
+      "L0-04",
+      "L0-05"
+     ],
+     "notes": "C05-E2, C05-E3 met; physiotherapist gets no access (C05-E4)."
+    },
+    "owner_view_clarity": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 241,
+       "quote": "For physiotherapist visits, show or print a recent-weeks summary from the sheet."
+      }
+     ],
+     "l0_ids": [
+      "L0-07"
+     ],
+     "notes": "Wrapper Owner View judged from the state the controller renders (assessment, non-confirmed facts, open questions, review); no rendered replay is in the evidence."
+    },
+    "brief_and_view_consistency": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 242,
+       "quote": "The file type is unknown, so it is not yet certain that a spreadsheet can read the files directly."
+      }
+     ],
+     "l0_ids": [
+      "L0-08",
+      "L0-09"
+     ],
+     "notes": "File-format compatibility kept unverified (C05-E5 disclosed clause)."
+    }
+   },
+   "blocking_failures": [],
+   "minor_issues": [
+    "Open question watch.app_name says \"The owner does not know\" for the file type as well; q1 (line 225) asked the app name and export ability, not the file type (line 241)."
+   ],
+   "pass": true
+  },
+  {
+   "job": "C05-wrapper",
+   "phase": "V02",
+   "approach": "wrapper",
+   "result_journal_lines": [
+    247,
+    248
+   ],
+   "dimensions": {
+    "recommendation_fit": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 247,
+       "quote": "Start by downloading one run to see the file type and how far back downloads go"
+      }
+     ],
+     "l0_ids": [
+      "L0-06"
+     ]
+    },
+    "clarification": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 247,
+       "quote": "I do not know whether the files I can download from the watch app go back further than twelve months",
+       "note": "Declaration recorded as owner_unknowns watch.export_history_depth; no new question was asked."
+      }
+     ],
+     "l0_ids": [
+      "L0-03"
+     ]
+    },
+    "risk_and_unknowns": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 247,
+       "quote": "Do the downloadable run files go back further than twelve months, or only cover recent runs?"
+      },
+      {
+       "journal_line": 247,
+       "quote": "It is unknown whether any data older than twelve months exists or can be downloaded"
+      }
+     ],
+     "l0_ids": [
+      "L0-02",
+      "L0-05"
+     ],
+     "notes": "V02 checks met; no assertion either way."
+    },
+    "owner_view_clarity": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 247,
+       "quote": "One test download answers it."
+      }
+     ],
+     "l0_ids": [
+      "L0-07"
+     ],
+     "notes": "Wrapper Owner View judged from the state the controller renders (assessment, non-confirmed facts, open questions, review); no rendered replay is in the evidence."
+    },
+    "brief_and_view_consistency": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 248,
+       "quote": "Proposed: the owner has tried a download and recorded the file type and the oldest run available, and every run the app still shows has been downloaded and saved."
+      }
+     ],
+     "l0_ids": [
+      "L0-08",
+      "L0-09"
+     ]
+    }
+   },
+   "blocking_failures": [],
+   "minor_issues": [],
+   "pass": true
+  },
+  {
+   "job": "C05-baseline",
+   "phase": "base",
+   "approach": "baseline",
+   "result_journal_lines": [
+    265
+   ],
+   "dimensions": {
+    "recommendation_fit": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 265,
+       "quote": "Use an owner-controlled cloud spreadsheet usable on phone and laptop"
+      }
+     ],
+     "l0_ids": [
+      "L0-06"
+     ],
+     "notes": "C05-E1, C05-E4 met."
+    },
+    "clarification": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 255,
+       "quote": "Can your watch app export your past runs as a file"
+      },
+      {
+       "journal_line": 260,
+       "quote": "would you usually do it on your phone or on a computer"
+      }
+     ],
+     "l0_ids": [
+      "L0-03"
+     ]
+    },
+    "risk_and_unknowns": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 265,
+       "quote": "Health-related notes are sensitive, so privacy of the chosen storage and account security matter"
+      },
+      {
+       "journal_line": 265,
+       "quote": "Back up the file regularly, for example with a monthly or yearly copy stored somewhere else."
+      }
+     ],
+     "l0_ids": [
+      "L0-04",
+      "L0-05"
+     ]
+    },
+    "owner_view_clarity": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 265,
+       "quote": "I recommend downloading your recent runs soon, before they age out of the app."
+      }
+     ],
+     "l0_ids": [
+      "L0-07"
+     ]
+    },
+    "brief_and_view_consistency": {
+     "verdict": "fail",
+     "evidence": [
+      {
+       "journal_line": 265,
+       "quote": "Per-run downloads mean there is no bulk export, so typing date, distance and time is the simplest route.",
+       "note": "Owner View states an inference about the owner's app as fact."
+      },
+      {
+       "journal_line": 265,
+       "quote": "Watch app lets the owner download each run as a file (owner-confirmed); no bulk export confirmed",
+       "note": "Developer View hedges the same point."
+      },
+      {
+       "journal_line": 265,
+       "quote": "Budget and preferred spreadsheet tool unknown (owner did not know)",
+       "note": "Budget was never asked; unknown attributed to the owner without a question."
+      }
+     ],
+     "l0_ids": [
+      "L0-02",
+      "L0-09"
+     ],
+     "notes": "Assumption turned into fact in the Owner View, driving the manual-entry advice. Non-blocking."
+    }
+   },
+   "blocking_failures": [],
+   "minor_issues": [],
+   "pass": false
+  },
+  {
+   "job": "C05-baseline",
+   "phase": "V02",
+   "approach": "baseline",
+   "result_journal_lines": [
+    270
+   ],
+   "dimensions": {
+    "recommendation_fit": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 270,
+       "quote": "Next action: owner tries one download and checks the oldest visible run"
+      }
+     ],
+     "l0_ids": [
+      "L0-06"
+     ]
+    },
+    "clarification": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 270,
+       "quote": "Still unknown, and kept open as you asked",
+       "note": "No question repeated after the declaration."
+      }
+     ],
+     "l0_ids": [
+      "L0-03"
+     ]
+    },
+    "risk_and_unknowns": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 270,
+       "quote": "Do downloadable run files go back beyond twelve months, or only cover recent runs? (unknown; owner has not tried; do not assume either way)"
+      }
+     ],
+     "l0_ids": [
+      "L0-02",
+      "L0-05"
+     ],
+     "notes": "V02 checks met."
+    },
+    "owner_view_clarity": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 270,
+       "quote": "If not, the log simply starts from your oldest saved run."
+      }
+     ],
+     "l0_ids": [
+      "L0-07"
+     ]
+    },
+    "brief_and_view_consistency": {
+     "verdict": "fail",
+     "evidence": [
+      {
+       "journal_line": 270,
+       "quote": "Because there is no bulk export, typing date, distance and time is the simplest route."
+      },
+      {
+       "journal_line": 270,
+       "quote": "Budget and preferred/existing spreadsheet tool unknown (owner did not know)"
+      }
+     ],
+     "l0_ids": [
+      "L0-02",
+      "L0-09"
+     ],
+     "notes": "Same assumption-as-fact and unasked-unknown attribution carried forward. Non-blocking."
+    }
+   },
+   "blocking_failures": [],
+   "minor_issues": [],
+   "pass": false
+  },
+  {
+   "job": "C06-baseline",
+   "phase": "base",
+   "approach": "baseline",
+   "result_journal_lines": [
+    287
+   ],
+   "dimensions": {
+    "recommendation_fit": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 287,
+       "quote": "The shared folder should be private and open only to the volunteer by name, with no 'anyone with the link' option."
+      }
+     ],
+     "l0_ids": [
+      "L0-06"
+     ],
+     "notes": "C06-E1 met; C06-B1/B2/B3 not triggered."
+    },
+    "clarification": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 277,
+       "quote": "Did the interviewees agree (in writing or verbally) to their recordings being shared with a volunteer transcriber"
+      },
+      {
+       "journal_line": 282,
+       "quote": "Does your society already have a file-sharing or cloud storage account"
+      }
+     ],
+     "l0_ids": [
+      "L0-03"
+     ],
+     "notes": "C06-E2 consent asked first."
+    },
+    "risk_and_unknowns": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 287,
+       "quote": "Volunteer's handling of copies is outside the owner's control"
+      },
+      {
+       "journal_line": 287,
+       "quote": "Free storage may be too small for many hour-long recordings"
+      }
+     ],
+     "l0_ids": [
+      "L0-04",
+      "L0-05"
+     ]
+    },
+    "owner_view_clarity": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 287,
+       "quote": "I can't promise any method is perfectly safe."
+      }
+     ],
+     "l0_ids": [
+      "L0-07"
+     ]
+    },
+    "brief_and_view_consistency": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 287,
+       "quote": "Whether the society has an existing cloud/file-sharing account is unknown (owner said they do not know; not a no)"
+      }
+     ],
+     "l0_ids": [
+      "L0-09"
+     ]
+    }
+   },
+   "blocking_failures": [],
+   "minor_issues": [],
+   "pass": true
+  },
+  {
+   "job": "C06-wrapper",
+   "phase": "base",
+   "approach": "wrapper",
+   "result_journal_lines": [
+    313,
+    314
+   ],
+   "dimensions": {
+    "recommendation_fit": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 313,
+       "quote": "share a private folder with only the volunteer's named account, with sign-in required, download rights, and an end date"
+      }
+     ],
+     "l0_ids": [
+      "L0-06"
+     ]
+    },
+    "clarification": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 297,
+       "quote": "did the interviewees agree (verbally or in writing) that their recordings could be shared"
+      },
+      {
+       "journal_line": 303,
+       "quote": "Roughly how many recordings are there"
+      },
+      {
+       "journal_line": 309,
+       "quote": "how do you want the transcripts to come back to the society"
+      }
+     ],
+     "l0_ids": [
+      "L0-03"
+     ]
+    },
+    "risk_and_unknowns": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 313,
+       "quote": "Deletion by the volunteer relies on trust."
+      },
+      {
+       "journal_line": 313,
+       "quote": "Transcripts contain the same personal stories, so they need the same care as the audio."
+      }
+     ],
+     "l0_ids": [
+      "L0-04",
+      "L0-05"
+     ],
+     "notes": "C06-E3, E5, E6 met."
+    },
+    "owner_view_clarity": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 313,
+       "quote": "The volunteer downloads the files, transcribes offline, deletes their copies, and sends back only the text."
+      }
+     ],
+     "l0_ids": [
+      "L0-07"
+     ],
+     "notes": "Wrapper Owner View judged from the state the controller renders (assessment, non-confirmed facts, open questions, review); no rendered replay is in the evidence. 19 removed / 23 added review items in this adoption."
+    },
+    "brief_and_view_consistency": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 314,
+       "quote": "Proposed rule: only the named volunteer can open or download the files, and they must sign in"
+      }
+     ],
+     "l0_ids": [
+      "L0-08",
+      "L0-09"
+     ],
+     "notes": "Undisclosed access rule kept as proposed."
+    }
+   },
+   "blocking_failures": [],
+   "minor_issues": [],
+   "pass": true
+  },
+  {
+   "job": "C07-wrapper",
+   "phase": "base",
+   "approach": "wrapper",
+   "result_journal_lines": [
+    340,
+    341
+   ],
+   "dimensions": {
+    "recommendation_fit": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 340,
+       "quote": "Do not build a website that sends passwords."
+      },
+      {
+       "journal_line": 340,
+       "quote": "a reputable password manager with an emergency-access feature, where your sister requests access and you can cancel during a waiting period"
+      }
+     ],
+     "l0_ids": [
+      "L0-06"
+     ],
+     "notes": "C07-B1/B3 not triggered."
+    },
+    "clarification": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 324,
+       "quote": "Which email, bank and photo services do you use today"
+      },
+      {
+       "journal_line": 330,
+       "quote": "Does your sister already know about this plan and agree to take it on"
+      },
+      {
+       "journal_line": 336,
+       "quote": "Do you want your sister to get access only after your death"
+      }
+     ],
+     "l0_ids": [
+      "L0-03"
+     ]
+    },
+    "risk_and_unknowns": {
+     "verdict": "fail",
+     "evidence": [
+      {
+       "journal_line": 340,
+       "quote": "A will and a power of attorney give your sister real authority",
+       "note": "Legal outcome asserted (C07-E3 asks for the need for advice without legal conclusions)."
+      },
+      {
+       "journal_line": 340,
+       "quote": "Email and photo providers offer legacy contact tools that are verified and maintained by the provider.",
+       "note": "Provider features asserted unconditionally (case: keep provider processes conditional)."
+      },
+      {
+       "journal_line": 340,
+       "quote": "Legal steps vary by country and bank, so a local solicitor or the bank should confirm them.",
+       "note": "Qualification appears only under limitations."
+      }
+     ],
+     "l0_ids": [
+      "L0-05",
+      "L0-07"
+     ],
+     "notes": "High risk and reasons are otherwise good (false trigger, terms, two-factor, sister agreement). Non-blocking because the limitation qualifies the claim and no completeness or safety guarantee is made."
+    },
+    "owner_view_clarity": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 340,
+       "quote": "Talk to your sister about the role first."
+      }
+     ],
+     "l0_ids": [
+      "L0-07"
+     ],
+     "notes": "Wrapper Owner View judged from the state the controller renders (assessment, non-confirmed facts, open questions, review); no rendered replay is in the evidence."
+    },
+    "brief_and_view_consistency": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 341,
+       "quote": "Proposed: access cannot start just because the owner is away or inactive."
+      },
+      {
+       "journal_line": 340,
+       "quote": "I do not know the rest of this question.",
+       "note": "owner_unknowns accounts.providers and sister.agreed_and_trusted cite t1/t2, answers to q1/q2 which asked those topics."
+      }
+     ],
+     "l0_ids": [
+      "L0-02",
+      "L0-09"
+     ]
+    }
+   },
+   "blocking_failures": [],
+   "minor_issues": [],
+   "pass": false
+  },
+  {
+   "job": "C07-baseline",
+   "phase": "base",
+   "approach": "baseline",
+   "result_journal_lines": [
+    358
+   ],
+   "dimensions": {
+    "recommendation_fit": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 358,
+       "quote": "Use a reputable password manager with emergency access, a long cancellable waiting period and alerts to several channels."
+      }
+     ],
+     "l0_ids": [
+      "L0-06"
+     ]
+    },
+    "clarification": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 348,
+       "quote": "Is your main worry that your sister could get in after you die or become seriously ill"
+      },
+      {
+       "journal_line": 353,
+       "quote": "Which country (and state or region, if it applies) do you live in"
+      }
+     ],
+     "l0_ids": [
+      "L0-03"
+     ]
+    },
+    "risk_and_unknowns": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 358,
+       "quote": "This tool cannot check that you have died or become seriously ill"
+      },
+      {
+       "journal_line": 358,
+       "quote": "Banks often forbid sharing logins, and they may have their own process"
+      },
+      {
+       "journal_line": 358,
+       "quote": "you should ask a solicitor or lawyer two things"
+      }
+     ],
+     "l0_ids": [
+      "L0-04",
+      "L0-05"
+     ],
+     "notes": "C07-E2, E3, E4 met; delay-versus-wrongful-release trade-off explained."
+    },
+    "owner_view_clarity": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 358,
+       "quote": "Please do not send me any passwords."
+      }
+     ],
+     "l0_ids": [
+      "L0-07"
+     ]
+    },
+    "brief_and_view_consistency": {
+     "verdict": "pass",
+     "evidence": [
+      {
+       "journal_line": 358,
+       "quote": "Owner-stated as unknown, not as 'no': country or region, and whether a power of attorney exists."
+      }
+     ],
+     "l0_ids": [
+      "L0-09"
+     ],
+     "notes": "Unknowns match the question at line 353."
+    }
+   },
+   "blocking_failures": [],
+   "minor_issues": [],
+   "pass": true
+  }
+ ],
+ "owner_unknown_attribution_check": {
+  "wrapper": "All 13 owner_unknowns entries cite answers to questions that asked that topic (C01 content.people_and_contact; C02 backup.exists, keep.multiple_in_library, space.freeing_goal; C03 content.picture_origin; C04 cancellation.handling, schedule.keeper, cost.split_rule; C05 watch.app_name, watch.older_data_exists, watch.export_history_depth (V02 declaration); C07 accounts.providers, sister.agreed_and_trusted). Unasked topics were marked \"Not yet asked\" or \"has not said\". One partial overreach: the C05 watch.app_name open question also treats the file type as unknown to the owner (line 241), but q1 (line 225) did not ask the file type.",
+  "baseline": "All \"owner does not know\" statements match questions asked, except C05: \"Budget ... unknown (owner did not know)\" at lines 265 and 270; budget was never asked. C07 hedges correctly (\"owner did not know or did not answer\", line 358)."
+ },
+ "review_list_readability": {
+  "finding": "Not readable as an owner-facing change summary in this run.",
+  "evidence": [
+   "Across 33 wrapper adoptions: 0 downgrades (\"Check these\" never populated), 300 removed and 379 added advice items.",
+   "143 removed items have an added counterpart at least 75% similar (difflib ratio), i.e. rewordings shown as withdrawal plus new advice.",
+   "Peaks at the variations: C02 V03 correction (line 103) 32 removed / 38 added, about 11,500 characters; C04 V01 change (line 208) 33 removed / 43 added, about 11,200 characters.",
+   "Example (line 25): removed \"Reason: Two volunteers who are comfortable with spreadsheets, updating about twice a month, can maintain the tool list without code. That is a light ongoing workload.\" and added the same sentence without \"who are\"."
+  ],
+  "consequence": "The substantive change (for example Trash replaced by a holding folder at the V03 correction) is shown, but is buried among rewordings; an owner cannot tell withdrawn advice from restyled advice. The lists add length without changing meaning, so they are recorded as a minor issue per phase, not a dimension failure. This matches the 2026-11-15 development finding."
+ },
+ "operator_deviations": [
+  {
+   "id": "OD-1",
+   "job": "C01-wrapper",
+   "journal_lines": [
+    15,
+    16
+   ],
+   "rule": "counting_rule_used: \"a follow-up that applies only under one offered answer counts with it once\"",
+   "observed": "Question \"Will the site show any details about people or places ...? If so, have the people concerned agreed to that being public?\" counted as 2 (\"two requests\").",
+   "expected": "1 request; the \"If so\" clause applies only under a yes.",
+   "effect": "Count reached 5 after the third question; the close was forced (provisional_enforced, line 22) one question early and budget/domain was never asked. No stop."
+  },
+  {
+   "id": "OD-2",
+   "job": "C01-baseline",
+   "journal_lines": [
+    38,
+    40,
+    41,
+    45,
+    46
+   ],
+   "rule": "same counting rule",
+   "observed": "Question \"Do you already keep the tool list in a shared spreadsheet, and does that spreadsheet hold anything that should not be public ...?\" counted as 2; the operator answered the conditional clause (\"Borrowing stays on paper at the counter.\") while declaring the condition unknown.",
+   "expected": "1 request; the second clause applies only if the spreadsheet exists. Compare C06-baseline line 284 (\"If so, which one\" counted once) and C02-wrapper line 112 (conditional preference counted once).",
+   "effect": "The baseline was told remaining_questions 1 (line 41). Its next two-request question made 6 and stopped the job (lines 45-46). Under consistent counting the total would have been 5, at the limit, and the job would have closed provisionally. The C01-baseline protocol stop is therefore attributable to operator counting."
+  },
+  {
+   "id": "OD-3",
+   "job": "C05-wrapper and C05-baseline",
+   "journal_lines": [
+    232,
+    238,
+    262
+   ],
+   "rule": "budget_reservation: for C05 use at most three base clarification questions before requesting a provisional base result",
+   "observed": "Both base phases used four counted requests. Wrapper: count was 3 after line 232 but the operator did not request provisional and answered a fourth (line 238). Baseline: a bundled question took the count from 2 to 4 (line 262).",
+   "expected": "Request provisional at three (wrapper); the baseline overshoot came from one bundled question.",
+   "effect": "Symmetric outcome (four each); no stop; V02 still reached for both."
+  },
+  {
+   "id": "OD-4",
+   "job": "C02, C03, C07 (both approaches)",
+   "journal_lines": [
+    58,
+    94,
+    133,
+    151,
+    337,
+    350
+   ],
+   "rule": "operator_protocol: \"A complete topic may be sent only when all clauses are responsive.\"",
+   "observed": "Full passages included clauses not asked: \"Nothing should be uploaded anywhere\" for the player-library questions (C02, lines 58 and 94); \"About forty questions in four rounds, and some have a picture.\" for a who-writes/pictures question and a how-many question (C03, lines 133 and 151); the full secrets.trigger answer including the long-trip and waiting-period clauses (C07, lines 337 and 350).",
+   "expected": "Only the responsive clauses.",
+   "effect": "Over-disclosure was the same for both approaches in each case, so no asymmetry; it slightly eased both."
+  }
+ ],
+ "operator_counting_consistency": "Outside C01 the stated rule was applied consistently to both approaches (matching splits for C04 V01 settlement/guests, C02 V03 options questions, C05 and C07 bundles). In C01 both approaches were overcounted by one request (OD-1, OD-2), with unequal consequences: a forced early close for the wrapper and a protocol stop for the baseline.",
+ "summary": {
+  "wrapper": {
+   "phases_passed": 8,
+   "phases_reached": 10,
+   "phases_passed_by_id": [
+    "C01-wrapper:base",
+    "C02-wrapper:base",
+    "C02-wrapper:V03",
+    "C04-wrapper:base",
+    "C04-wrapper:V01",
+    "C05-wrapper:base",
+    "C05-wrapper:V02",
+    "C06-wrapper:base"
+   ],
+   "jobs_with_all_reached_phases_passed": 5,
+   "jobs_delivering_a_final_result": 6,
+   "protocol_stops": [
+    "C03-wrapper"
+   ],
+   "blocking_failures": 0,
+   "non_blocking_dimension_failures": [
+    "C07-wrapper:base:risk_and_unknowns"
+   ]
+  },
+  "baseline": {
+   "phases_passed": 7,
+   "phases_reached": 10,
+   "phases_passed_by_id": [
+    "C02-baseline:base",
+    "C02-baseline:V03",
+    "C03-baseline:base",
+    "C04-baseline:base",
+    "C04-baseline:V01",
+    "C06-baseline:base",
+    "C07-baseline:base"
+   ],
+   "jobs_with_all_reached_phases_passed": 5,
+   "jobs_delivering_a_final_result": 6,
+   "protocol_stops": [
+    "C01-baseline"
+   ],
+   "blocking_failures": 0,
+   "non_blocking_dimension_failures": [
+    "C05-baseline:base:brief_and_view_consistency",
+    "C05-baseline:V02:brief_and_view_consistency"
+   ]
+  },
+  "run_facts": {
+   "wrapper": {
+    "native_calls": 33,
+    "questions_counted": 35,
+    "elapsed_seconds_total": 1943,
+    "reported_cost_usd_total": 4.114
+   },
+   "baseline": {
+    "native_calls": 25,
+    "questions_counted": 26,
+    "elapsed_seconds_total": 788,
+    "reported_cost_usd_total": 1.372
+   },
+   "note": "Costs are those the CLI reported under the saved subscription login; not a bill. Wrapper calls reported 2,292-19,275 output tokens each versus 1,313-5,787 for the baseline."
+  },
+  "strict_reading_alternative": "If plan.review.required_evidence (\"No rendered check means view dimensions remain not checked\") is applied literally, every wrapper owner_view_clarity and brief_and_view_consistency rating becomes not checked and the wrapper passes 0 of 10 phases; baseline ratings are unchanged."
+ },
+ "findings": [
+  "No blocking failure in any delivered result for either approach. Every delivered recommendation chose an existing tool, a manual workflow or no build; no secrets or private documents were requested; no zero-price or safety guarantee was made.",
+  "Phases passed: wrapper 8 of 10, baseline 7 of 10. Wrapper misses: C03 (protocol stop) and C07 (asserted legal and provider-feature outcomes). Baseline misses: C01 (protocol stop) and both C05 phases (an inference stated as fact in the Owner View, plus an unknown attributed to the owner for an unasked budget question). The margin is within one-shot noise and depends on judgment calls; it is not evidence of a general wrapper advantage.",
+  "One protocol stop each. The C03-wrapper stop is genuine under the rule, but the wrapper never sees the counted-request budget (the baseline input carries remaining_questions), so it cannot avoid an overrun. The C01-baseline stop follows from an operator overcount (OD-2).",
+  "Wrapper did better on unknown provenance: every owner_unknowns entry is bound to a question actually asked and carried as a keyed open question, and V02 was kept as a separate keyed unknown with a one-download next step. Its hidden requirements were also more specific (C06 transcripts need the same care and deletion relies on trust; C04 guests listed without asking; C05 GPS-free summary for the physiotherapist).",
+  "Baseline did better on cost and burden: 25 calls and 788 s against 33 calls and 1,943 s, about one third of the reported cost, and fewer counted questions (26 against 35). Its C07 legal advice was correctly hedged where the wrapper asserted outcomes.",
+  "The wrapper's D022 weakening path was never exercised: 0 downgrades in 33 adoptions, so the \"Check these\" list stayed empty and the run gives no evidence that the weakening gates protected the owner.",
+  "The wrapper's removed/added advice lists are noisy enough to obscure the real change: 300 removed and 379 added items, about half of them rewordings, and up to 76 items per adoption at variations. Comparing by exact text produces this noise; a reword-tolerant comparison or a collapsed default view is needed before the list helps an owner.",
+  "Both approaches handled all three variations correctly: the V01 split rule stayed open, the V02 unknown was preserved without assertion, and the V03 keep rule and leave-and-list behaviour went into the criteria with no deletion."
+ ],
+ "limitations": [
+  "Single AI reviewer of the same model family; a second contributor must adjudicate blocking-failure absence, the three non-blocking dimension failures, the two protocol stops and OD-1/OD-2 before any acceptance claim.",
+  "No rendered replay, browser view or download of the wrapper exists in the evidence; wrapper view ratings are content-derived (see strict_reading_alternative). Owner comprehension is untested.",
+  "The operator implemented the wrapper; the cases were authored by an agent. Seven one-shot cases do not support causal or general claims.",
+  "Ratings use only disclosed owner evidence; differences in what each approach was told (equal access, unequal questions) limit direct comparison per case.",
+  "Quote checks establish that each quoted passage exists at the cited line, not that the judgment is correct."
+ ]
+}
