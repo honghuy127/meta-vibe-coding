@@ -9,8 +9,8 @@ from pydantic import ValidationError
 from starlette.middleware.trustedhost import TrustedHostMiddleware
 
 from .agents import AGENTS, Agent, CodingAgent
-from .core import FlowError, adopt, export_brief, prepare, reserve_call
-from .models import AdvanceRequest, Model, State, Text
+from .core import FlowError, adopt, charge, check_allowance, export_brief, prepare
+from .models import IDEA_ASSESSMENTS, AdvanceRequest, Model, State, Text
 from .settings import load_limits
 
 
@@ -57,9 +57,10 @@ def create_app(agent: Agent | None = None) -> FastAPI:
         return {"agent": getattr(adapter, "agent", "test-double"),
                 "requested_model": getattr(adapter, "model", None),
                 "enabled": getattr(adapter, "enabled", True), "implemented_agents": list(AGENTS),
-                "limits": {"request_seconds": limits.request_seconds, "session_seconds": limits.session_seconds},
+                "limits": {"request_seconds": limits.request_seconds, "session_seconds": limits.session_seconds,
+                           "idea_assessments": IDEA_ASSESSMENTS, "server_calls": getattr(adapter, "max_calls", None)},
                 "data_notice": "Your idea and replies go through this coding agent to its configured model. That may be local or remote. The agent and provider may retain transcripts; use fictional inputs during prototype review.",
-                "allowance_notice": f"At most {getattr(adapter, 'max_calls', 7)} agent invocations per server run. Model usage and billing belong to the selected agent; this app does not enforce a dollar budget."}
+                "allowance_notice": f"Each idea can be assessed up to {IDEA_ASSESSMENTS} times. Separately, this server allows at most {getattr(adapter, 'max_calls', IDEA_ASSESSMENTS)} agent calls in total until it is restarted; a new idea does not reset that. Model usage and billing belong to the selected agent; this app does not enforce a dollar budget."}
 
     @app.post("/api/start")
     async def start(body: StartRequest):
@@ -71,16 +72,24 @@ def create_app(agent: Agent | None = None) -> FastAPI:
             state = prepare(body)
         except FlowError as exc:
             return JSONResponse({"code": exc.code, "error": exc.message}, status_code=422)
+
+        def reply(state: State, usage=None, error: FlowError | None = None) -> dict:
+            return {"request_id": body.request_id, "state": state.model_dump(),
+                    "usage": usage.model_dump() if usage else None, "error": error.payload() if error else None,
+                    "server_calls_left": getattr(adapter, "calls_left", None)}
+
         try:
-            state = reserve_call(state, limits)
+            check_allowance(state, limits)
             candidate, usage = await adapter.assess(state, body.provisional)
-            updated = adopt(state, candidate, allow_question=not body.provisional)
-            return {"request_id": body.request_id, "state": updated.model_dump(), "usage": usage.model_dump(), "error": None}
-        except (FlowError, ValidationError) as exc:
-            code = exc.code if isinstance(exc, FlowError) else "invalid_output"
-            message = exc.message if isinstance(exc, FlowError) else "The agent result failed state validation. Your answers are retained."
-            return {"request_id": body.request_id, "state": state.model_dump(), "usage": None,
-                    "error": {"code": code, "message": message}}
+        except FlowError as exc:
+            return reply(charge(state) if exc.charged() else state, error=exc)
+        state = charge(state)
+        try:
+            return reply(adopt(state, candidate, allow_question=not body.provisional), usage)
+        except FlowError as exc:
+            return reply(state, error=exc)
+        except ValidationError:
+            return reply(state, error=FlowError("invalid_output", "The agent result failed state validation. Your answers are retained."))
 
     @app.post("/api/export")
     async def export(state: State):

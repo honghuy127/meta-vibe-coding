@@ -45,37 +45,28 @@ before it can proceed. Never fabricate an answer to finish the flow.
 Use JSON with `schema_version: 1` for state and exported briefs. This defines the
 logical contract, implemented by strict Pydantic models and application validators.
 [D008](decisions.md#d008-wrap-coding-agents-only) defines the agent boundary. State
-is scoped to one idea. Persistence and import are not implied by export support.
+is scoped to one idea. The browser keeps the current idea across a reload
+([D023](decisions.md#d023-keep-the-session-in-the-browser-and-count-only-started-calls)); server persistence and import are not implied by export support.
 
-Native contract 3 is separate from this canonical state. It returns only fact
-updates and explicit removals, with evidence attached to each update and questions
-referencing resulting fact keys. Untouched facts carry forward locally. Evidence
-supplies source citations and explicit-unknown markers together; confirmed updates
-need exact owner quotes. Adoption still validates against the original state.
-Native contract 3 also returns `assessment_changes`. Adoption requires explicit
-accounting for changed prior assessment list items under
-[D018](decisions.md#d018-account-explicitly-for-changed-assessment-items): risk reasons,
-hidden requirements, recommendation rationale/alternatives/owner responsibilities,
-acceptance criteria, open questions and limitations. References use `field/index`
-with zero-based indices. Exact unchanged items can move within their list without
-a record. Other prior items each need one record with `previous`, `current`,
-`basis`, `reason` and `evidence`; replacements must exist in the same list.
-`reworded` needs replacements; `owner_update` quotes substantive owner turns after
-`assessed_turn_count`; `advice_withdrawn` explains correction of prior agent advice.
-Only owner updates carry evidence. No prior assessment permits only an empty
-change list. Failed requests retain the same anchor and evidence boundary.
-[D021](decisions.md#d021-tolerate-unambiguous-continuity-references-and-surface-sharing-authority)
-allows the exact shorthand fields `rationale`, `alternatives` and
-`owner_responsibilities` for their `recommendation.` paths, plus outer spaces.
-Normalization precedes duplicate checks. Valid optional records for unchanged
-items still obey every reference/reason/evidence rule; every changed item still
-needs accounting. The sharing prompt also calls for contextual clarification of
-represented people and authority to share, without inventing owner facts.
-These checks establish accounting, not semantic equivalence, justified withdrawal,
-complete extraction, correct corrections or alias detection. Scalar summary,
-recommendation kind and risk level remain outside this list guard. Existing fact,
-unknown and readiness guards still apply. Earlier native responses are rejected;
-canonical state and exported briefs remain schema 1.
+Native contract 4 is separate from this canonical state. It returns fact updates
+and explicit removals, with evidence attached to each update, the assessment, and
+at most one question naming a resulting fact key. Untouched facts carry forward
+locally. Evidence supplies source citations; quoted owner words on an unknown fact
+record the owner's own declaration, unless the same reply asks about that fact.
+Under [D022](decisions.md#d022-weaken-and-report-instead-of-refusing), adoption
+validates against the original state and refuses only what would break it: a wrong
+revision, no usable goal, a dropped confirmed fact or declared unknown, a ready
+result with a question, a suppressed question missing from the open decisions, and
+a provisional result without its open questions and limitations. Other unsupported
+content is weakened and reported in runtime `review`: a confirmed update without
+matching quotes becomes an assumption; an unsupported confirmation, change to a
+confirmed fact or resolution of a declared unknown keeps the earlier record; a
+question about a settled, answered or over-limit topic is left out. `review` also
+lists advice removed and added since the previous result, compared by exact text
+across the assessment lists, risk level and recommendation. This shows change, not
+semantic equivalence, complete extraction, correct corrections or alias detection.
+Earlier native responses are rejected; canonical state and exported briefs remain
+schema 1.
 
 | State field | Type and meaning |
 | --- | --- |
@@ -87,8 +78,11 @@ canonical state and exported briefs remain schema 1.
 | `assessment` | Null until a valid current result is available; otherwise the assessment below with matching `based_on_revision`. The UI may retain the previous snapshot as visibly stale. |
 
 Runtime state also carries `agent_calls` (assessment attempts), `started_at` (Unix
-seconds), `assessed_turn_count` (covered owner replies), `owner_unknowns`, and an
-optional `previous_assessment`. These fields are not exported. A retry cannot turn
+seconds), `assessed_turn_count` (covered owner replies), `owner_unknowns`, an
+optional `previous_assessment`, and `review` (what the wrapper weakened or left
+out, and advice removed or added, for the latest adoption). These fields are not
+exported, and `review` is not sent to the agent. `agent_calls` counts only requests
+that started an agent process. A retry cannot turn
 an already assessed reply into new confirmation; new input retained after failure
 can still be assessed.
 
@@ -102,8 +96,8 @@ advice may be wrong or obsolete, so the wrapper does not merge it into new resul
 `owner_unknowns` maps a fact key to `source_turn_id` and a nonempty exact `quote`
 of at most 500 characters from that owner source. The fact must remain unknown
 and cite that source. The “I don’t know” button records this before inference,
-using its fact-bound question; free-text declarations are proposed by the selected
-agent. Quotes prove source presence, not meaning or relevance. Semantic review
+using its fact-bound question; a free-text declaration is an unknown fact update
+whose evidence quotes the owner. Quotes prove source presence, not meaning or relevance. Semantic review
 must check those claims. Older states default to an empty map; older in-flight
 clients and unbound questions are not automatically migrated. Brief schema 1 is
 unchanged.
@@ -116,7 +110,8 @@ control, not semantic alias detection. Retire unanswered questions when a new
 result supersedes them, while preserving history. Reopening an answered topic
 requires `conflict_turn_id` citing a later owner reply, with the conflict explained
 in `decision`. New proposed questions must target unknown or assumed facts, even
-when clarification would be suppressed. A confirmed capability to request a change
+when clarification would be suppressed; a question that does not is left out
+and reported. A confirmed capability to request a change
 does not encode an undecided approval policy; that policy needs its own unresolved
 property. Conflict reopening first makes the same target unresolved using newer
 owner evidence under the confirmation guards. Source IDs alone do not establish a
@@ -220,8 +215,9 @@ conditions. Neither disposition is permission to start implementation.
    labeled outdated and disable its export while the new result is being prepared.
 5. **Hand off or recover.** Enable JSON download only for a valid current result.
    A provisional export must carry its unresolved questions; it is not ready to
-   implement. On failure, retain owner answers, explain the failed step, and offer
-   an explicit retry. A late response for an older revision must never replace
+   implement. On failure, retain owner answers, say that the agent has stopped,
+   show the retained input and the next action, and offer an explicit retry where
+   one can help. A late response for an older revision must never replace
    the current result. For the same revision, accept only the latest requested
    assessment using a request ID controlled outside model output. Starting a new
    idea requires an explicit reset.
@@ -318,9 +314,10 @@ an account and spending cap are authorized. Do not grant extra retries to one
 approach; retain technical failures and identify any diagnostic rerun separately.
 
 Before the next run, freeze and disclose the different contracts. Only the wrapper
-requires a declared unknown's fact key in provisional open questions and explicit
-accounting for changed assessment list items; the transcript baseline receives no
-canonical state or validator feedback. Apply the same semantic review of retained
+requires a declared unknown's fact key in provisional open questions, and only the
+wrapper weakens unsupported updates and reports them to the owner; the transcript
+baseline receives no canonical state or validator feedback. Review what the owner
+is shown, including the wrapper's “Check these” list. Apply the same semantic review of retained
 uncertainty and requirements to both, and report wrapper validation stops separately
 from omissions in delivered results. Set `baseline_input_bytes` to 64,000 explicitly;
 the wrapper retains 32,000 bytes. Report both limits and any exhaustion separately.

@@ -81,10 +81,11 @@ function failed(payload) {
   state.assessment = null;
   state.agent_calls += 1;
   return {request_id: payload.request_id, state, usage: null,
-    error: {code: 'timeout', message: 'Fictional test timeout.'}};
+    error: {code: 'timeout', message: 'Fictional test timeout.', next_action: 'Press Retry.', retry: true},
+    server_calls_left: 3};
 }
 
-async function page(configOverrides = {}, initialTurns = []) {
+async function page(configOverrides = {}, initialTurns = [], storage = new Map()) {
   const elements = new Map(ids.map((id) => [id, new Element()]));
   const advances = [];
   const exports = [];
@@ -108,7 +109,9 @@ async function page(configOverrides = {}, initialTurns = []) {
     }
     throw new Error(`Unexpected path: ${path}`);
   };
-  const context = {structuredClone, crypto: webcrypto, fetch, confirm: () => true, Blob,
+  const localStorage = {getItem: (key) => storage.get(key) ?? null, setItem: (key, value) => storage.set(key, value),
+    removeItem: (key) => storage.delete(key)};
+  const context = {structuredClone, crypto: webcrypto, fetch, confirm: () => true, Blob, localStorage,
     setTimeout, URL: {createObjectURL: (blob) => { downloads.push(blob); return 'blob:test'; }, revokeObjectURL() {}},
     document: {getElementById: (id) => elements.get(id), createElement: () => {
       const element = new Element(); element.click = () => {}; return element;
@@ -116,7 +119,7 @@ async function page(configOverrides = {}, initialTurns = []) {
   vm.runInNewContext(script, context, {filename: 'app.js'});
   await settle();
   const el = (id) => elements.get(id);
-  return {el, advances, exports, calls, downloads,
+  return {el, advances, exports, calls, downloads, storage,
     async start(idea) { el('idea').value = idea; await el('idea-form').fire('submit'); },
     async correct(text) { el('correction').value = text; await el('correction-form').fire('submit'); }};
 }
@@ -136,11 +139,16 @@ for (const networkFailure of [false, true]) {
     assert.equal(ui.el('retry').hidden, false);
     assert.match(ui.el('disposition').textContent, /Outdated/);
     assert.equal(ui.el('download').disabled, true);
+    assert.match(ui.el('status').textContent, /^Stopped, not running\./);
+    assert.equal(ui.el('status').className, 'stopped');
     ui.advances.push((body) => {
-      assert.equal(body.state.assessment, null);
-      assert.deepEqual(body.state.previous_assessment, previous);
-      assert.equal(body.state.previous_assessment.based_on_revision, body.state.revision,
-        'No-answer provisional requests may retain equal snapshot revisions');
+      if (networkFailure) {
+        // Nothing was acknowledged, so the page resends the unchanged state.
+        assert.deepEqual(body.state.assessment, previous);
+      } else {
+        assert.equal(body.state.assessment, null);
+        assert.deepEqual(body.state.previous_assessment, previous);
+      }
       return assessed(body, 'Retried conditional result.');
     });
     await ui.el('retry').fire('click');
@@ -158,20 +166,19 @@ test('An unknown declaration survives a lost response and retry without becoming
   ui.advances.push(() => { throw new Error('Fictional lost response.'); });
   await ui.el('unknown').fire('click');
   assert.equal(ui.el('retry').hidden, false);
-  ui.advances.push((body) => {
-    assert.equal(body.answer, null);
-    assert.equal(body.declares_unknown, false);
-    assert.equal(body.state.turns.length, 1);
-    assert.equal(body.state.questions[0].answer_turn_id, 't1');
-    assert.equal(body.state.facts.usage.value, null);
-    assert.equal(body.state.facts.usage.status, 'unknown');
-    assert.deepEqual(body.state.owner_unknowns.usage, {source_turn_id: 't1', quote: "I don't know."});
-    return assessed(body, 'Conditional result with uncertainty.');
-  });
+  assert.match(ui.el('submitted').textContent, /I don't know\./);
+  assert.equal(ui.el('download').disabled, true, 'An unacknowledged input makes the shown result outdated');
+  let retried;
+  ui.advances.push((body) => { retried = body; return assessed(body, 'Conditional result with uncertainty.'); });
   await ui.el('retry').fire('click');
-  const calls = ui.calls.filter((call) => call.path === '/api/advance');
-  assert.equal(calls[1].body.declares_unknown, true);
+  // The server owns the transition: the page resends the same action and edits no state itself.
+  assert.equal(retried.answer, "I don't know.");
+  assert.equal(retried.declares_unknown, true);
+  assert.equal(retried.state.turns.length, 0);
+  assert.equal(retried.state.questions[0].answer_turn_id, null);
+  assert.match(ui.el('owner').textContent, /Conditional result with uncertainty/);
   assert.match(ui.el('owner').textContent, /usage: unknown/);
+  assert.equal(ui.el('submitted').hidden, true);
 });
 
 test('A suppressed unknown question still leaves the provisional action reachable', async () => {
@@ -199,7 +206,7 @@ test('A suppressed unknown question still leaves the provisional action reachabl
   assert.equal(ui.el('download').disabled, false);
 });
 
-test('A lost reply response retains owner evidence once when retrying', async () => {
+test('A lost reply is resent once with the unchanged state', async () => {
   const ui = await page();
   ui.advances.push((body) => assessed(body, 'Initial result.', 'Where will you use it?'));
   await ui.start('Fictional idea');
@@ -208,20 +215,18 @@ test('A lost reply response retains owner evidence once when retrying', async ()
   ui.advances.push((body) => { previous = body.state.assessment; throw new Error('Fictional lost response.'); });
   await ui.el('reply-form').fire('submit');
   assert.equal(ui.el('retry').hidden, false);
-  ui.advances.push((body) => {
-    assert.equal(body.state.assessment, null);
-    assert.deepEqual(body.state.previous_assessment, previous);
-    assert.ok(body.state.previous_assessment.based_on_revision < body.state.revision);
-    return assessed(body, 'Current result.');
-  });
+  assert.match(ui.el('submitted').textContent, /On my phone and laptop\./);
+  assert.match(ui.el('disposition').textContent, /Outdated/);
+  ui.advances.push((body) => assessed(body, 'Current result.'));
   await ui.el('retry').fire('click');
   const requests = ui.calls.filter((call) => call.path === '/api/advance');
   const retry = requests[2].body;
-  assert.equal(retry.answer, null);
-  assert.equal(retry.state.turns.length, 1);
-  assert.equal(retry.state.turns[0].text, 'On my phone and laptop.');
-  assert.equal(retry.state.questions[0].answer_turn_id, retry.state.turns[0].id);
+  assert.equal(retry.answer, 'On my phone and laptop.', 'The reply is sent again, once');
+  assert.equal(retry.question_id, requests[1].body.question_id);
+  assert.deepEqual(retry.state, requests[1].body.state);
+  assert.deepEqual(retry.state.assessment, previous);
   assert.notEqual(retry.request_id, requests[1].body.request_id);
+  assert.match(ui.el('owner').textContent, /Current result/);
   assert.equal(ui.el('download').disabled, false);
 });
 
@@ -323,7 +328,7 @@ test('Disabled agent keeps exploration unavailable and sends no idea', async () 
   assert.match(ui.el('status').textContent, /not connected/);
 });
 
-test('A lost correction retains a unique source ID with nonsequential history', async () => {
+test('A lost correction is resent as text and the page allocates no source ID', async () => {
   const ui = await page({}, [{id: 't2', text: 'Earlier owner reply.'}]);
   ui.advances.push((body) => assessed(body, 'Original result.'));
   await ui.start('Fictional idea');
@@ -332,8 +337,9 @@ test('A lost correction retains a unique source ID with nonsequential history', 
   ui.advances.push((body) => assessed(body, 'Revised result.'));
   await ui.el('retry').fire('click');
   const retry = ui.calls.filter((call) => call.path === '/api/advance')[2].body;
-  assert.deepEqual(retry.state.turns.map((turn) => turn.id), ['t2', 't3']);
-  assert.equal(retry.state.turns[1].text, 'Only the members should have access.');
+  // Source IDs are allocated by the server only; the page never invents one.
+  assert.deepEqual(retry.state.turns.map((turn) => turn.id), ['t2']);
+  assert.equal(retry.answer, 'Only the members should have access.');
 });
 
 test('Unknown goals and inapplicable facts use readable owner-facing text', async () => {
@@ -383,3 +389,65 @@ for (const knownStatus of ['confirmed', 'not_applicable']) {
     assert.match(ui.el('owner').textContent, /Fresh provisional result/);
   });
 }
+
+test('A server-reported failure says it stopped, shows the kept input and separates the two counters', async () => {
+  const ui = await page({limits: {request_seconds: 300, idea_assessments: 7}});
+  ui.advances.push((body) => ({...assessed(body, 'Original result.'), server_calls_left: 3}));
+  await ui.start('Fictional idea');
+  assert.equal(ui.el('status').className, 'done');
+  assert.match(ui.el('usage').textContent, /Assessment 1 of 7 for this idea · 3 agent calls left on this server/);
+  ui.advances.push((body) => {
+    const reply = failed(body);
+    reply.state.turns.push({id: 't1', text: body.answer});
+    reply.state.revision += 1;
+    reply.error = {code: 'server_limit', message: 'This server has used its whole agent-call allowance.',
+      next_action: 'Retry and a new idea cannot help.', retry: false};
+    reply.server_calls_left = 0;
+    return reply;
+  });
+  await ui.correct('Members only.');
+  assert.match(ui.el('status').textContent, /^Stopped, not running\. .*allowance\. Retry and a new idea cannot help\./);
+  assert.equal(ui.el('retry').hidden, true, 'No Retry is offered when it cannot help');
+  assert.match(ui.el('submitted').textContent, /Members only\./);
+  assert.match(ui.el('usage').textContent, /0 agent calls left on this server/);
+  assert.match(ui.el('disposition').textContent, /Outdated/);
+  assert.equal(ui.el('download').disabled, true);
+});
+
+test('The owner sees what the wrapper did not accept and what advice changed', async () => {
+  const ui = await page();
+  ui.advances.push((body) => {
+    const reply = assessed(body, 'Revised result.');
+    reply.state.review = {downgrades: ['Recorded “access.public” as an assumption: the agent did not quote your words for it.'],
+      removed_advice: ['Limit: An earlier caveat.'], added_advice: ['Limit: A new caveat.']};
+    return reply;
+  });
+  await ui.start('Fictional idea');
+  const owner = ui.el('owner').textContent;
+  assert.match(owner, /not accepted as given/);
+  assert.match(owner, /did not quote your words/);
+  assert.match(owner, /removed or reworded.*An earlier caveat/s);
+  assert.match(owner, /added.*A new caveat/s);
+});
+
+test('A reload restores the idea, and New idea deletes the stored copy', async () => {
+  const ui = await page();
+  ui.advances.push((body) => assessed(body, 'Stored result.', 'Where is it used?'));
+  await ui.start('Fictional idea');
+  ui.advances.push(() => { throw new Error('Fictional lost response.'); });
+  await ui.correct('Members only.');
+  assert.equal(ui.storage.size, 1);
+  const reloaded = await page({}, [], ui.storage);
+  await settle();
+  assert.equal(reloaded.el('workspace').hidden, false);
+  assert.equal(reloaded.el('original').textContent, 'Fictional idea');
+  assert.match(reloaded.el('owner').textContent, /Stored result/);
+  assert.match(reloaded.el('submitted').textContent, /Members only\./);
+  assert.equal(reloaded.el('retry').hidden, false);
+  assert.equal(reloaded.el('download').disabled, true);
+  reloaded.advances.push((body) => { assert.equal(body.answer, 'Members only.'); return assessed(body, 'After reload.'); });
+  await reloaded.el('retry').fire('click');
+  assert.match(reloaded.el('owner').textContent, /After reload/);
+  await reloaded.el('reset').fire('click');
+  assert.equal(ui.storage.size, 0);
+});

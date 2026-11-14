@@ -13,7 +13,7 @@ from meta_vibe_coding.contracts import NativeResponse, native_schema
 from meta_vibe_coding.core import FlowError, adopt, export_brief, prepare
 from meta_vibe_coding.evaluation import BaselineResponse
 from meta_vibe_coding.models import AdvanceRequest, Fact, Model, State
-from test_flow import native_result, result
+from test_flow import native_result, result, weakened
 
 
 def payload(state=None, candidate=None):
@@ -21,9 +21,9 @@ def payload(state=None, candidate=None):
     return json.loads(native_result(state, candidate))
 
 
-def update(key, *, value=None, status='unknown', evidence=None, owner_unknown=False):
+def update(key, *, value=None, status='unknown', evidence=None):
     return {'key': key, 'value': value, 'status': status, 'reason': 'Scripted fixture.',
-        'evidence': evidence or [], 'owner_unknown': owner_unknown}
+        'evidence': evidence or []}
 
 
 def exposed_continuity_response(stage):
@@ -39,20 +39,26 @@ def exposed_continuity_response(stage):
 
 
 @pytest.mark.parametrize('stage', ['scoped_sharing', 'download_access'])
-def test_exposed_settled_question_is_rejected_without_claiming_semantic_omissions_are_detected(stage):
+def migrated(body):
+    # Diagnostic migration of old output to contract 4, never a repair of the archived run.
+    return {**{k: v for k, v in body.items() if k != 'assessment_changes'}, 'contract_version': 4,
+        'fact_updates': [{k: v for k, v in row.items() if k != 'owner_unknown'} for row in body['fact_updates']]}
+
+
+@pytest.mark.parametrize('stage', ['scoped_sharing', 'download_access'])
+def test_exposed_settled_question_is_left_out_without_claiming_semantic_omissions_are_detected(stage):
     state, body = exposed_continuity_response(stage)
     before = state.model_dump()
     with pytest.raises(ValidationError): NativeResponse.model_validate(body)
-    # Diagnostic migration of old output, never a repair of the archived run.
-    body = {**body, 'contract_version': 3, 'assessment_changes': []}
+    body = migrated(body)
     candidate = NativeResponse.model_validate(body).candidate(state)
-    with pytest.raises(FlowError, match='settled detail'): adopt(state, candidate)
+    updated = weakened(state, candidate)
     assert state.model_dump() == before and state.assessment is None
-    with pytest.raises(FlowError, match='current recommendation'): export_brief(state)
-    # Removing the bad question only diagnoses the remaining guard limit. It does
-    # not repair or reclassify the historical response as an accepted result.
-    candidate.question = None
-    with pytest.raises(FlowError, match='earlier assessment'): adopt(state, candidate)
+    assert 'already settled' in ' '.join(updated.review.downgrades)
+    assert not [q for q in updated.questions if q.answer_turn_id is None and not q.retired]
+    # The owner now sees what changed, but the stale access fact below is still adopted:
+    # nothing here detects a semantic omission.
+    assert updated.review.removed_advice or updated.review.added_advice
     assert candidate.facts['access.catalogue_and_files'].value == 'Only the owner can see the catalogue and files for now.'
     assert candidate.facts['access.performer_clip_visibility'].status == 'confirmed'
     if stage == 'download_access':
@@ -64,7 +70,7 @@ def test_scripted_correction_updates_existing_access_and_separates_approval_from
     state, body = exposed_continuity_response('scoped_sharing')
     # A new supplied response carries prior advice and corrects the facts. This
     # does not migrate the historical result or establish live extraction.
-    body = {**body, 'contract_version': 3, 'assessment_changes': [],
+    body = {**migrated(body),
         'assessment': result(state, facts=state.facts, disposition='provisional').assessment.model_dump()}
     policy = 'workflow.title_correction_approval'
     body['question']['topic'] = policy
@@ -126,7 +132,7 @@ def test_native_schemas_are_closed_required_and_keep_local_bounds_separate():
     with pytest.raises(ValueError, match='closed objects'): native_schema(ArbitraryMap)
 
 
-@pytest.mark.parametrize('version', [True, 3.0, '3', 1, 2, 99])
+@pytest.mark.parametrize('version', [True, 4.0, '4', 1, 2, 3, 99])
 def test_native_contract_version_is_an_exact_supported_integer(version):
     body = payload(); body['contract_version'] = version
     with pytest.raises(ValidationError): NativeResponse.model_validate(body)
@@ -151,11 +157,7 @@ def test_question_references_one_fact_without_copying_it():
 def test_question_target_and_goal_must_exist_in_result():
     state = State(raw_intent='A household buzzer.')
     body = payload(state)
-    body['question'] = {'topic': 'missing.fact', 'text': 'Where?',
-        'decision': 'Changes portability.', 'conflict_turn_id': None}
-    with pytest.raises(ValueError, match='Question target'):
-        NativeResponse.model_validate(body).candidate(state)
-    body['question'] = None; body['fact_updates'] = []
+    body['fact_updates'] = []
     with pytest.raises(ValueError, match='goal'):
         NativeResponse.model_validate(body).candidate(state)
 
@@ -166,8 +168,11 @@ def test_duplicate_operation_keys_never_use_last_wins(collection):
     body = payload(state)
     if collection == 'fact_updates': body[collection].append(copy.deepcopy(body[collection][0]))
     else: body[collection] = ['use.power', 'use.power']
-    with pytest.raises(ValueError, match='Duplicate native'):
-        NativeResponse.model_validate(body).candidate(state)
+    if collection == 'fact_updates':
+        with pytest.raises(ValueError, match='more than one native operation'):
+            NativeResponse.model_validate(body).candidate(state)
+    else:  # Repeating a removal of something absent changes nothing.
+        assert NativeResponse.model_validate(body).candidate(state).notices == []
 
 
 @pytest.mark.parametrize('change', ['missing', 'quote', 'whitespace', 'source'])
@@ -178,15 +183,20 @@ def test_confirmed_updates_need_attached_exact_owner_evidence(change):
     if change == 'quote': row['evidence'][0]['quote'] = 'Never said by the owner.'
     if change == 'whitespace': row['evidence'][0]['quote'] = ' '
     if change == 'source': row['evidence'][0]['source_turn_id'] = 't99'
-    with pytest.raises(ValueError): NativeResponse.model_validate(body).candidate(state)
+    candidate = NativeResponse.model_validate(body).candidate(state)
+    # Without the owner's words it is the agent's reading, and the owner is told so.
+    assert candidate.facts['goal'].status == 'assumed' and candidate.facts['goal'].source_turn_ids == []
+    assert 'did not quote your words' in candidate.notices[0]
+    with pytest.raises(ValidationError, match='confirmed goal'): adopt(state, candidate)
 
 
 def test_other_facts_evidence_does_not_confirm_an_unsupported_update():
     state = State(raw_intent='A household buzzer.')
     body = payload(state)
     body['fact_updates'].append(update('use.power', value='mains', status='confirmed'))
-    with pytest.raises(ValidationError, match='owner sources'):
-        NativeResponse.model_validate(body).candidate(state)
+    candidate = NativeResponse.model_validate(body).candidate(state)
+    assert candidate.facts['use.power'].status == 'assumed' and candidate.facts['goal'].status == 'confirmed'
+    assert adopt(state, candidate).review.downgrades
 
 
 def test_source_ids_are_derived_once_in_stable_order():
@@ -208,7 +218,7 @@ def test_aggregate_evidence_keeps_source_coverage_a_semantic_review_responsibili
     candidate = NativeResponse.model_validate(payload(state,
         result(state, facts={'goal': aggregate}, disposition='provisional'))).candidate(state)
     if sources == ['t0']:
-        with pytest.raises(FlowError, match='new owner reply'): adopt(state, candidate)
+        weakened(state, candidate, 'goal')
     else:
         exported = export_brief(adopt(state, candidate))
         assert exported['facts']['goal']['source_turn_ids'] == sources
@@ -256,15 +266,16 @@ def test_unchanged_facts_need_no_updates_and_input_is_not_mutated_or_aliased():
 
 
 @pytest.mark.parametrize('key', ['goal', 'use.power', 'missing.fact'])
-def test_protected_and_missing_removals_are_rejected(key):
+def test_protected_and_missing_removals_are_ignored_and_protected_ones_reported(key):
     state = State(raw_intent='A buzzer. I do not know its power source.', facts={
         'goal': Fact(value='A buzzer.', status='confirmed', source_turn_ids=['t0']),
         'use.power': Fact(value=None, status='unknown', source_turn_ids=['t0'])},
         owner_unknowns={'use.power': {'source_turn_id': 't0', 'quote': 'I do not know its power source.'}})
     body = payload(state, result(state, facts=state.facts, disposition='provisional'))
     body['remove_fact_keys'] = [key]
-    with pytest.raises(ValueError, match='Cannot remove'):
-        NativeResponse.model_validate(body).candidate(state)
+    candidate = NativeResponse.model_validate(body).candidate(state)
+    assert candidate.facts == state.facts
+    assert bool(candidate.notices) == (key != 'missing.fact')
 
 
 def test_obsolete_assumption_can_be_removed_but_not_also_updated():
@@ -276,7 +287,7 @@ def test_obsolete_assumption_can_be_removed_but_not_also_updated():
     candidate = NativeResponse.model_validate(body).candidate(state)
     assert 'use.power' not in adopt(state, candidate).facts and 'use.power' in state.facts
     body['fact_updates'] = [update('use.power')]
-    with pytest.raises(ValueError, match='updated and removed'):
+    with pytest.raises(ValueError, match='more than one native operation'):
         NativeResponse.model_validate(body).candidate(state)
 
 
@@ -299,7 +310,7 @@ def declared_state():
 def test_declaration_builds_fact_and_marker_from_the_same_evidence():
     state = State(raw_intent='A buzzer. I do not know its power source.')
     body = payload(state)
-    body['fact_updates'].append(update('use.power', owner_unknown=True,
+    body['fact_updates'].append(update('use.power',
         evidence=[{'source_turn_id': 't0', 'quote': 'I do not know its power source.'}]))
     updated = adopt(state, NativeResponse.model_validate(body).candidate(state))
     assert updated.facts['use.power'].source_turn_ids == ['t0']
@@ -307,16 +318,17 @@ def test_declaration_builds_fact_and_marker_from_the_same_evidence():
 
 
 @pytest.mark.parametrize('change', ['no_evidence', 'two_evidence', 'assumed'])
-def test_declaration_cannot_be_an_inference_or_an_ambiguous_quote(change):
+def test_only_quoted_owner_words_on_an_unknown_fact_make_a_declaration(change):
     state = State(raw_intent='A buzzer. I do not know its power source.')
     body = payload(state)
-    row = update('use.power', owner_unknown=True,
+    row = update('use.power',
         evidence=[{'source_turn_id': 't0', 'quote': 'I do not know its power source.'}])
     if change == 'no_evidence': row['evidence'] = []
     if change == 'two_evidence': row['evidence'] *= 2
     if change == 'assumed': row.update(value='battery', status='assumed')
     body['fact_updates'].append(row)
-    with pytest.raises(ValueError, match='owner unknown'): NativeResponse.model_validate(body).candidate(state)
+    candidate = NativeResponse.model_validate(body).candidate(state)
+    assert ('use.power' in candidate.owner_unknowns) == (change == 'two_evidence')
 
 
 @pytest.mark.parametrize('quote, accepted', [
@@ -329,24 +341,24 @@ def test_declaration_cannot_be_an_inference_or_an_ambiguous_quote(change):
 def test_quotes_match_the_owner_words_whatever_the_line_breaks(quote, accepted):
     state = State(raw_intent='A buzzer.\nI do not know its power source.')
     body = payload(state)
-    body['fact_updates'].append(update('use.power', owner_unknown=True, evidence=[{'source_turn_id': 't0', 'quote': quote}]))
+    body['fact_updates'].append(update('use.power', evidence=[{'source_turn_id': 't0', 'quote': quote}]))
     if accepted:
         updated = adopt(state, NativeResponse.model_validate(body).candidate(state))
         assert updated.owner_unknowns['use.power'].quote == quote
         State.model_validate(updated.model_dump())
     else:
-        with pytest.raises(ValueError):
-            NativeResponse.model_validate(body).candidate(state)
+        candidate = NativeResponse.model_validate(body).candidate(state)
+        assert candidate.owner_unknowns == {} and candidate.facts['use.power'].source_turn_ids == []
 
 
-def test_retained_unknown_is_carried_and_cannot_be_cleared_by_a_false_flag():
+def test_retained_unknown_is_carried_and_keeps_its_source_through_an_uncited_update():
     state = declared_state()
     body = payload(state, result(state, facts=state.facts, disposition='provisional'))
     assert not body['fact_updates']
     assert adopt(state, NativeResponse.model_validate(body).candidate(state)).owner_unknowns == state.owner_unknowns
     body['fact_updates'] = [update('use.power')]
-    with pytest.raises(ValueError, match='keep its cited source'):
-        NativeResponse.model_validate(body).candidate(state)
+    uncited = adopt(state, NativeResponse.model_validate(body).candidate(state))
+    assert uncited.owner_unknowns == state.owner_unknowns and uncited.facts['use.power'].source_turn_ids == ['t0']
     body['fact_updates'][0]['evidence'] = [state.owner_unknowns['use.power'].model_dump()]
     assert adopt(state, NativeResponse.model_validate(body).candidate(state)).owner_unknowns == state.owner_unknowns
 
@@ -370,22 +382,24 @@ def test_later_explicit_unknown_can_replace_a_marker_but_older_or_same_changed_e
     state = prepare(AdvanceRequest(state=original, request_id='still-unknown',
         answer='I still do not know its power source.'))
     body = payload(state, result(state, facts=state.facts, disposition='provisional'))
-    body['fact_updates'] = [update('use.power', owner_unknown=True,
+    body['fact_updates'] = [update('use.power',
         evidence=[{'source_turn_id': 't1', 'quote': state.turns[-1].text}])]
     updated = adopt(state, NativeResponse.model_validate(body).candidate(state))
     assert updated.owner_unknowns['use.power'].source_turn_id == 't1'
     assert updated.facts['use.power'].source_turn_ids == ['t1']
     body = payload(updated, result(updated, facts=updated.facts, disposition='provisional'))
     for source, quote in [('t0', original.raw_intent), ('t1', 'do not know')]:
-        body['fact_updates'] = [update('use.power', owner_unknown=True,
+        body['fact_updates'] = [update('use.power',
             evidence=[{'source_turn_id': source, 'quote': quote}])]
-        with pytest.raises(FlowError, match='changed the source'):
-            adopt(updated, NativeResponse.model_validate(body).candidate(updated))
+        kept = adopt(updated, NativeResponse.model_validate(body).candidate(updated))
+        assert kept.owner_unknowns == updated.owner_unknowns
 
 
-@pytest.mark.parametrize('flag', [1, 'true', None])
-def test_unknown_declaration_flag_is_a_strict_boolean(flag):
-    body = payload(); body['fact_updates'][0]['owner_unknown'] = flag
+@pytest.mark.parametrize('field', ['owner_unknown', 'assessment_changes'])
+def test_contract_3_bookkeeping_fields_are_no_longer_accepted(field):
+    body = payload()
+    if field == 'owner_unknown': body['fact_updates'][0][field] = False
+    else: body[field] = []
     with pytest.raises(ValidationError): NativeResponse.model_validate(body)
 
 
@@ -399,8 +413,7 @@ def test_updates_do_not_bypass_original_state_unknown_promotion_guards(reply):
     candidate = NativeResponse.model_validate(body).candidate(state)
     before = state.model_dump()
     if reply == 'Use a battery.': assert not adopt(state, candidate).owner_unknowns
-    else:
-        with pytest.raises(FlowError): adopt(state, candidate)
+    else: weakened(state, candidate, 'use.power')
     assert state.model_dump() == before
 
 
@@ -412,8 +425,7 @@ def test_typed_confirmed_changes_still_require_fresh_owner_evidence(value):
     body = payload(state, result(state, facts=state.facts))
     body['fact_updates'] = [update('device.option', value=value, status='confirmed',
         evidence=[{'source_turn_id': 't0', 'quote': state.raw_intent}])]
-    with pytest.raises(FlowError, match='changed confirmed'):
-        adopt(state, NativeResponse.model_validate(body).candidate(state))
+    weakened(state, NativeResponse.model_validate(body).candidate(state), 'device.option')
 
 
 def test_partial_context_can_be_followed_by_a_distinct_preference_but_not_same_topic():
@@ -429,8 +441,7 @@ def test_partial_context_can_be_followed_by_a_distinct_preference_but_not_same_t
     assert updated.facts['use.location'].value == 'kitchen counter'
     assert updated.questions[-1].topic == 'use.alert_preference'
     body['question']['topic'] = 'use.location'
-    with pytest.raises(FlowError, match='settled detail'):
-        adopt(state, NativeResponse.model_validate(body).candidate(state))
+    assert len(weakened(state, NativeResponse.model_validate(body).candidate(state)).questions) == 1
 
 
 def test_old_native_and_canonical_json_are_not_fallbacks():
@@ -467,7 +478,7 @@ def test_fresh_handoff_and_automation_fixtures_preserve_supplied_consequences(id
 
 
 @pytest.mark.parametrize('failure', ['refusal', 'truncation', 'wire', 'grounding', 'target_missing', 'target_settled'])
-def test_bad_native_reply_retains_owner_input_and_closes_export(monkeypatch, failure):
+def test_bad_native_reply_retains_owner_input_and_only_unusable_ones_close_export(monkeypatch, failure):
     from pathlib import Path
     from fastapi.testclient import TestClient
     from meta_vibe_coding.app import create_app
@@ -506,11 +517,19 @@ def test_bad_native_reply_retains_owner_input_and_closes_export(monkeypatch, fai
     with TestClient(create_app(adapter)) as client:
         failed = client.post('/api/advance', json={'state': state.model_dump(), 'request_id': 'fresh-reply',
             'answer': 'On my kitchen counter.'}).json()
-        assert failed['error']['code'] == 'invalid_output'
         assert failed['state']['turns'] == [{'id': 't1', 'text': 'On my kitchen counter.'}]
-        assert failed['state']['assessment'] is None
-        assert failed['state']['previous_assessment'] == state.assessment.model_dump()
-        assert client.post('/api/export', json=failed['state']).status_code == 409
+        assert failed['state']['agent_calls'] == state.agent_calls + 1 and failed['server_calls_left'] == 0
+        if failure in {'refusal', 'truncation', 'wire'}:
+            assert failed['error']['code'] == 'invalid_output' and failed['error']['retry'] is True
+            assert failed['state']['assessment'] is None
+            assert failed['state']['previous_assessment'] == state.assessment.model_dump()
+            assert client.post('/api/export', json=failed['state']).status_code == 409
+        else:
+            # One weak citation or misplaced question no longer discards the whole result.
+            assert failed['error'] is None and failed['state']['review']['downgrades']
+            assert not [q for q in failed['state']['questions'] if not q['retired']]
+            if failure == 'grounding': assert failed['state']['facts']['use.location']['status'] == 'assumed'
+            assert client.post('/api/export', json=failed['state']).status_code == 200
     assert len(calls) == adapter.calls == 1
     assert not Path(calls[0]).exists(), 'Private schema and workspace must be removed on failure'
 

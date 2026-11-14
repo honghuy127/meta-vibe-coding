@@ -4,9 +4,10 @@
 <body>
 <header><span class="eyebrow">META VIBE CODING · LEVEL 0</span><h1>Start with what you need.</h1><p>A thinking space for your software idea. Understand the choices before you build.</p></header>
 <main>
-<section class="notice"><strong id="agent">Checking coding agent…</strong><p id="data-notice">Waiting for agent information before sending an idea.</p><p id="allowance-notice"></p><p>This app keeps your session in memory: reloading or closing the tab loses the session. Download a brief to keep a copy. No software is built or deployed.</p></section>
+<section class="notice"><strong id="agent">Checking coding agent…</strong><p id="data-notice">Waiting for agent information before sending an idea.</p><p id="allowance-notice"></p><p>Your current idea is kept in this browser only, so a reload does not lose it. “New idea” deletes it. Download a brief to keep a copy elsewhere. No software is built or deployed.</p></section>
 <section id="entry"><form id="idea-form"><label for="idea">What would you like to accomplish?</label><textarea id="idea" rows="4" maxlength="8000" required placeholder="Describe your goal in your own words."></textarea><button id="start" disabled>Explore my idea</button></form></section>
 <div id="status" role="status" aria-live="polite"></div>
+<p id="submitted" class="muted" hidden></p>
 <section id="workspace" hidden>
 <div class="toolbar"><h2>Your idea</h2><button id="reset" class="secondary">New idea</button></div><p id="original"></p>
 <section id="clarification" hidden><h2>One thing that could change the solution</h2><p id="question"></p><p id="why" class="muted"></p>

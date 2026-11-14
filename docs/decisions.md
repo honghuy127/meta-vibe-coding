@@ -354,7 +354,7 @@ no model-quality result or actual live UI flow.
 
 ## D018: Account explicitly for changed assessment items
 
-- Date: 2026-11-03; status: accepted implementation design; separate Codex design review passed
+- Date: 2026-11-03; status: superseded by [D022](#d022-weaken-and-report-instead-of-refusing); was accepted implementation design; separate Codex design review passed
   in T033 before implementation.
 - Context: D017 rejects empty provisional results but permits silent loss of
   material content from nonempty replacements. Prose length and list size cannot
@@ -428,7 +428,7 @@ no model-quality result or actual live UI flow.
 
 ## D021: Tolerate unambiguous continuity references and surface sharing authority
 
-- Date: 2026-11-04; status: implemented and separately reviewed under T035;
+- Date: 2026-11-04; status: accounting superseded by [D022](#d022-weaken-and-report-instead-of-refusing); was implemented and separately reviewed under T035;
   366 Python tests and 14 UI checks pass. The 2026-11-05 browser check asked a
   sharing-permission question, then stopped on an unaccounted reason rewrite.
   A later prompt example has 52 focused checks. One fresh exposed browser run
@@ -468,6 +468,61 @@ no model-quality result or actual live UI flow.
   A bare unknown is not substantive owner evidence or resolution. The accounting
   guard is unchanged. This is a prompt hypothesis requiring a new bounded check;
   the failed attempt is not retried or reclassified.
+
+## D022: Weaken and report instead of refusing
+
+- Date: 2026-11-14; status: accepted; decision owner: repository owner, who asked for
+  the 2026-11-14 review's proposals to be implemented. Supersedes D018 and D021's
+  accounting, and the refusals in D009, D011 and D013; their state rules stay.
+- Context: in plan 7 six of seven wrapper jobs stopped on change accounting while
+  review found the meaning mostly kept, and the transcript baseline delivered six of
+  seven. S01 lost two of five tasks the same way. The guards could not check meaning,
+  so they refused sound results and still let semantic omissions through. Prompt and
+  schema used 16,784 of 32,000 input bytes.
+- Choice: native contract 4 returns fact updates, removals, the assessment and one
+  question. It has no `assessment_changes` and no `owner_unknown` flag; quoted owner
+  words on an unknown fact are the declaration, unless the same reply asks about that
+  fact. The wrapper compares the new advice with the previous result by exact text,
+  including risk level and recommendation kind, and shows the owner what was removed
+  and added. Adoption refuses only what would break the state: a wrong revision, no
+  usable goal, a dropped confirmed fact or declared unknown, a ready result with a
+  question, a suppressed question missing from the open decisions, and the D017
+  provisional rule. Otherwise it weakens and reports: a confirmed update without
+  matching quotes becomes an assumption; an unsupported change to a confirmed fact,
+  an unsupported confirmation and an unsupported resolution of a declared unknown
+  keep the earlier record; a question about a settled, answered or over-limit topic
+  is left out; a protected removal is ignored. The reports live in runtime `review`,
+  which is neither exported nor sent to the agent. State and brief stay schema 1.
+- The prompt is rewritten around stewardship behavior and a short format section.
+  Examples taken from development and acceptance cases are removed.
+- Consequences: no confirmed fact exists without owner sources, as before. A weakened
+  result can now pair kept facts with advice written for the rejected update; the
+  owner is told which facts were kept, and nothing reconciles the prose. The advice
+  comparison shows change, not loss of meaning. All of this is checked with doubles
+  only. Plans 1–7 cannot run on this source, and their cases are exposed. A new
+  matched comparison on new cases decides whether the wrapper is kept; see the work
+  board.
+
+## D023: Keep the session in the browser and count only started calls
+
+- Date: 2026-11-14; status: accepted; decision owner: repository owner, as for D022.
+- Context: S01's participant read two failures as the agent still running, could not
+  see the submitted correction, and printed the page when export was disabled. A
+  reload lost the session. A refusal that started no agent still used one of the
+  idea's seven assessments, and one number on the page mixed two limits.
+- Choice: the page saves the current idea's state in the browser's local storage and
+  restores it on load; “New idea” deletes it. Nothing is stored on the server, and
+  the page works when storage is unavailable. The browser sends the owner's input and
+  the unchanged state, and the server alone applies transitions; a lost request is
+  resent with the same input. An idea is charged an assessment only when an agent
+  process was started. The page shows the idea's assessments and the server's
+  remaining calls separately. Each failure carries what the owner can do next, and
+  Retry is hidden when it cannot help.
+- Consequences: the idea, replies and results stay on the owner's device until “New
+  idea” or the browser's own clearing, on a shared computer too; the page says so.
+  This is still fictional-input prototype use. State remains client-held, so the
+  per-idea limit guides an honest page and is not an enforcement boundary; the server
+  allowance is the enforced one.
 
 ## Open choices
 

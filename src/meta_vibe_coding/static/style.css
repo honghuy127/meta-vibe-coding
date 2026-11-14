@@ -180,3 +180,18 @@ summary {
     width:100%;
   }
 }
+#status.running {
+  font-weight:600;
+}
+#status.running::before {
+  content:"⏳ ";
+}
+#status.stopped {
+  border-left:4px solid #a4442c;
+  padding-left:12px;
+  font-weight:600;
+}
+#submitted {
+  border-left:4px solid var(--line);
+  padding-left:12px;
+}

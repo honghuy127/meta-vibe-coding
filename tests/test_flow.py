@@ -10,7 +10,7 @@ from pydantic import ValidationError
 
 from meta_vibe_coding.app import create_app
 from meta_vibe_coding.core import FlowError, adopt, export_brief, model_input, prepare, reserve_call
-from meta_vibe_coding.models import AdvanceRequest, AssessmentChange, Candidate, Fact, Question, State, Turn, Usage
+from meta_vibe_coding.models import AdvanceRequest, Candidate, Fact, Question, State, Turn, Usage
 
 
 def result(state, *, question=None, facts=None, disposition="ready"):
@@ -38,8 +38,7 @@ def result(state, *, question=None, facts=None, disposition="ready"):
                 "owner_responsibilities": ["Preview changes and retain originals."]},
             "acceptance_criteria": ["A dry run shows proposed names."], "open_questions": open_questions,
             "limitations": ["Test-double output."]}, "question": question})
-    # This double carries old advice by default. Tests changing it must account
-    # for that change explicitly, as a real native contract 3 response must.
+    # This double carries old advice by default, so a test that changes advice does so on purpose.
     previous = state.previous_assessment or state.assessment
     if previous:
         new_questions = candidate.assessment.open_questions
@@ -51,6 +50,15 @@ def result(state, *, question=None, facts=None, disposition="ready"):
             q for q in new_questions if q.topic not in topics)
     return candidate
 
+
+
+def weakened(state, candidate, key=None, **options):
+    """An unsupported update keeps the earlier record and is reported to the owner (D022)."""
+    updated = adopt(state, candidate, **options)
+    assert updated.review.downgrades
+    if key:
+        assert updated.facts[key] == state.facts[key]
+    return updated
 
 
 def native_result(state, candidate=None):
@@ -65,14 +73,14 @@ def native_result(state, candidate=None):
                 == json.dumps(state.facts[key].model_dump(), sort_keys=True)):
             continue
         declaration = candidate.owner_unknowns.get(key)
-        evidence = ([declaration.model_dump()] if declaration else
+        # In contract 4, quoted owner words on an unknown fact are the declaration itself.
+        evidence = ([declaration.model_dump()] if declaration else [] if fact.status == "unknown" else
             [{"source_turn_id": source, "quote": sources[source][:500]} for source in fact.source_turn_ids])
         records.append({"key": key, "value": fact.value, "status": fact.status, "reason": fact.reason,
-            "evidence": evidence, "owner_unknown": declaration is not None})
-    return json.dumps({"contract_version": 3, "fact_updates": records,
+            "evidence": evidence})
+    return json.dumps({"contract_version": 4, "fact_updates": records,
         "remove_fact_keys": sorted(state.facts.keys() - candidate.facts.keys()),
-        "assessment": body["assessment"], "question": body["question"],
-        "assessment_changes": body["assessment_changes"]})
+        "assessment": body["assessment"], "question": body["question"]})
 
 
 def test_false_unknown_empty_and_strict_types():
@@ -112,7 +120,7 @@ def test_correction_invalidates_export_and_requires_fresh_source():
     with pytest.raises(FlowError): export_brief(revised)
     bad = result(revised)
     bad.facts["goal"].value = "Rename by filename date"
-    with pytest.raises(FlowError): adopt(revised, bad)
+    weakened(revised, bad, "goal")
     bad.facts["goal"].source_turn_ids = ["t1"]
     updated = adopt(revised, bad)
     assert updated.revision > revised.revision
@@ -137,9 +145,11 @@ def test_previous_assessment_is_stale_context_until_successful_adoption(answer):
     # A supplied replacement may revise old advice; the wrapper does not merge it.
     candidate = result(pending, facts=pending.facts, disposition="provisional")
     candidate.assessment.limitations = ["Fresh scripted limitation."]
-    candidate.assessment_changes = [AssessmentChange(previous="limitations/0", current=["limitations/0"],
-        basis="advice_withdrawn", reason="Scripted withdrawal of earlier advice; semantic justification is not validated.", evidence=[])]
     updated = adopt(pending, candidate)
+    # The owner is shown what went and what came; no accounting is asked of the agent.
+    assert updated.review.removed_advice == ["Limit: Revoking future access cannot retrieve existing copies."]
+    assert updated.review.added_advice == ["Limit: Fresh scripted limitation."]
+    assert "review" not in json.loads(model_input(updated, False))["state"]
     exported = export_brief(updated)
     assert updated.previous_assessment is None
     assert "previous_assessment" not in exported
@@ -173,7 +183,8 @@ def test_previous_advice_does_not_confirm_an_assumed_policy():
     assert pending.previous_assessment.acceptance_criteria == candidate.assessment.acceptance_criteria
     confirmation = result(pending, facts={**pending.facts, "loan.approval": Fact(
         value=True, status="confirmed", source_turn_ids=["t0"])})
-    with pytest.raises(FlowError, match="substantive owner confirmation"): adopt(pending, confirmation)
+    confirmation.assessment.disposition = "provisional"
+    weakened(pending, confirmation, "loan.approval")
 
 
 def test_http_failures_retain_one_snapshot_through_retry_and_later_correction():
@@ -227,7 +238,8 @@ def test_unknown_answer_and_question_retirement():
     updated = adopt(state, result(state, facts=facts, disposition="provisional"))
     assert updated.facts["data.sensitive"].value is None
     assert updated.questions[0].answer_turn_id == "t1"
-    with pytest.raises(FlowError): adopt(updated, result(updated, question=question, disposition="provisional"))
+    again = adopt(updated, result(updated, question=question, disposition="provisional"))
+    assert len(again.questions) == 1 and again.review.downgrades
     pending = adopt(State(raw_intent="Files"), result(State(raw_intent="Files"), question=question, disposition="provisional"))
     final = adopt(pending, result(pending))
     assert final.questions[0].retired
@@ -327,9 +339,9 @@ def test_http_origin_host_and_invalid_state_do_not_echo_input():
 def test_bare_continue_does_not_confirm_assumptions():
     state = State(raw_intent="A tool", facts={"goal": Fact(value="Organize records", status="assumed", source_turn_ids=["t0"], reason="Inferred")})
     state = prepare(AdvanceRequest(state=state, request_id="next", answer="Continue."))
-    candidate = result(state)
+    candidate = result(state, disposition="provisional")
     candidate.facts["goal"] = Fact(value="Organize records", status="confirmed", source_turn_ids=["t1"])
-    with pytest.raises(FlowError): adopt(state, candidate)
+    weakened(state, candidate, "goal")
 
 
 @pytest.mark.parametrize("allow_question", [True, False])
@@ -344,7 +356,7 @@ def test_reassessment_cannot_rewrite_confirmed_fact_without_new_owner_input():
     state = adopt(base, result(base))
     candidate = result(state)
     candidate.facts["goal"].value = "Upload files to a server"
-    with pytest.raises(FlowError): adopt(state, candidate)
+    weakened(state, candidate, "goal")
 
 
 @pytest.mark.parametrize("before,after", [(False, 0), ([False], [0]), (1, 1.0)])
@@ -354,7 +366,7 @@ def test_fact_type_change_requires_evidence_and_advances_revision(before, after)
     candidate.facts["data.example"] = Fact(value=before, status="confirmed", source_turn_ids=["t0"])
     state = adopt(base, candidate)
     changed = result(state, facts={**state.facts, "data.example": Fact(value=after, status="confirmed", source_turn_ids=["t0"])})
-    with pytest.raises(FlowError): adopt(state, changed)
+    weakened(state, changed, "data.example")
     revised = prepare(AdvanceRequest(state=state, request_id="type-change", answer="Use the revised value."))
     changed.assessment.based_on_revision = revised.revision
     changed.facts["data.example"].source_turn_ids = ["t1"]
@@ -370,15 +382,15 @@ def test_question_can_reopen_only_with_new_owner_conflict_source():
     state = prepare(AdvanceRequest(state=state, request_id="answer", question_id="q1", answer="Everyone can see it."))
     state = adopt(state, result(state, disposition="provisional"))
     repeated = {**question, "conflict_turn_id": "t1"}
-    with pytest.raises(FlowError): adopt(state, result(state, question=repeated, disposition="provisional"))
+    assert len(weakened(state, result(state, question=repeated, disposition="provisional")).questions) == 1
     state = prepare(AdvanceRequest(state=state, request_id="correction", answer="Only part should be public; the linked content may be private."))
     repeated["conflict_turn_id"] = "t2"
     repeated["decision"] = "Your new mixed-access request conflicts with public-only sharing; clarify which content is private."
     updated = adopt(state, result(state, question=repeated, disposition="provisional"))
     assert updated.questions[-1].conflict_turn_id == "t2"
     assert updated.questions[-1].answer_turn_id is None
-    with pytest.raises(FlowError):
-        adopt(state, result(state, question={**repeated, "conflict_turn_id": "missing"}, disposition="provisional"))
+    refused = weakened(state, result(state, question={**repeated, "conflict_turn_id": "missing"}, disposition="provisional"))
+    assert len(refused.questions) == 1 and "Who can see it?" in refused.review.downgrades[0]
 
 
 @pytest.mark.parametrize("sources", [[], ["t0"]])
@@ -388,7 +400,7 @@ def test_retry_cannot_confirm_an_assumption_without_new_owner_input(sources):
     state = adopt(base, result(base, facts={"goal": assumed}, disposition="provisional"))
     retry = prepare(AdvanceRequest(state=state, request_id="retry"))
     confirmation = Fact(value="Organize events", status="confirmed", source_turn_ids=["t0"])
-    with pytest.raises(FlowError): adopt(retry, result(retry, facts={"goal": confirmation}))
+    weakened(retry, result(retry, facts={"goal": confirmation}, disposition="provisional"), "goal")
     answered = prepare(AdvanceRequest(state=state, request_id="answer", answer="Yes, I want to organize events."))
     # A failed request has no adopted assessment yet: retry may use the retained new reply.
     retry = prepare(AdvanceRequest(state=answered, request_id="retry-retained-reply"))
@@ -407,10 +419,10 @@ def test_already_assessed_reply_cannot_reconfirm_or_rewrite_facts_on_retry():
     state = adopt(state, candidate)
     retry = prepare(AdvanceRequest(state=state, request_id="retry"))
     candidate = result(retry, facts={**state.facts, "users.primary": Fact(value="One organizer", status="confirmed", source_turn_ids=["t1"])})
-    with pytest.raises(FlowError): adopt(retry, candidate)
+    weakened(retry, candidate, "users.primary")
     candidate = result(retry, facts=state.facts.copy())
     candidate.facts["goal"] = Fact(value="Build a mobile app", status="confirmed", source_turn_ids=["t1"])
-    with pytest.raises(FlowError): adopt(retry, candidate)
+    weakened(retry, candidate, "goal")
 
 
 def test_retired_question_cannot_receive_a_late_answer():
@@ -459,7 +471,7 @@ def test_an_empty_provisional_result_is_refused_and_the_fuller_one_stays_outdate
     pending = prepare(AdvanceRequest(state=fuller, request_id="r1", answer="More detail."))
     empty = result(pending, disposition="provisional").model_dump()
     empty["assessment"].update(acceptance_criteria=[], open_questions=[], limitations=[])
-    with pytest.raises(FlowError, match="earlier assessment"):
+    with pytest.raises(ValidationError, match="open questions and limitations"):
         adopt(pending, Candidate.model_validate(empty))
     assert pending.assessment is None and pending.previous_assessment == fuller.assessment
     with pytest.raises(FlowError):
@@ -494,3 +506,34 @@ def test_an_owner_unknown_topic_matches_whatever_its_case_or_spacing():
     body = result(state, facts=state.facts, disposition="provisional").model_dump()
     body["assessment"]["open_questions"][0]["topic"] = "  Operations.Budget "
     adopt(state, Candidate.model_validate(body))
+
+
+def test_a_refusal_before_any_agent_process_does_not_use_an_assessment():
+    class Refusing(FakeAgent):
+        def __init__(self, code): self.code = code
+        async def assess(self, state, provisional):
+            raise FlowError(self.code, "Scripted refusal, no agent process.")
+    for code, charged in [("busy", False), ("disabled", False), ("server_limit", False), ("timeout", True)]:
+        with TestClient(create_app(Refusing(code))) as client:
+            state = client.post('/api/start', json={"idea": "A fictional desk timer."}).json()
+            response = client.post('/api/advance', json={"state": state, "request_id": "r"}).json()
+            assert response["state"]["agent_calls"] == (1 if charged else 0), code
+            assert response["error"]["next_action"] and response["error"]["retry"] is (code in {"busy", "timeout"})
+    explicit = FlowError("timeout", "Stopped before the process started.")
+    explicit.invoked = False
+    assert not explicit.charged()
+
+
+def test_review_reports_changed_scalars_and_stays_out_of_the_export():
+    base = State(raw_intent="Fictional idea")
+    state = adopt(base, result(base, disposition="provisional"))
+    assert state.review.removed_advice == state.review.added_advice == []
+    candidate = result(state, facts=state.facts, disposition="provisional")
+    candidate.assessment.risk.level = "high"
+    candidate.assessment.recommendation.kind = "do_not_build"
+    updated = adopt(state, candidate)
+    assert "Risk level: unknown" in updated.review.removed_advice
+    assert "Risk level: high" in updated.review.added_advice
+    assert any(line.startswith("Recommendation (do not build)") for line in updated.review.added_advice)
+    assert "review" not in export_brief(updated)
+    assert prepare(AdvanceRequest(state=updated, request_id="next")).review is None

@@ -7,7 +7,7 @@ from pydantic import ValidationError
 from meta_vibe_coding.app import create_app
 from meta_vibe_coding.core import FlowError, adopt, export_brief, prepare
 from meta_vibe_coding.models import AdvanceRequest, Candidate, Fact, Question, State, Usage
-from test_flow import result
+from test_flow import result, weakened
 
 
 def declared_state():
@@ -43,6 +43,10 @@ def test_agent_can_annotate_a_verbatim_explicit_unknown_from_the_initial_idea():
     state = State(raw_intent=known.raw_intent)
     candidate = questioning(known)
     candidate.owner_unknowns = known.owner_unknowns.copy()
+    # An agent that asks about the detail is not treating it as the owner's declaration.
+    asked = adopt(state, candidate)
+    assert asked.owner_unknowns == {} and asked.questions[-1].topic == "operations.budget"
+    candidate.question = None
     updated = adopt(state, candidate)
     assert updated.owner_unknowns == known.owner_unknowns and updated.questions == []
 
@@ -96,7 +100,7 @@ def test_unknown_cannot_be_resolved_by_its_own_unassessed_declaration():
         question_id="q1", declares_unknown=True))
     candidate = result(state, facts={**state.facts,
         "operations.budget": Fact(value=20, status="confirmed", source_turn_ids=["t1"])})
-    with pytest.raises(FlowError): adopt(state, candidate)
+    assert "operations.budget" in weakened(state, candidate, "operations.budget").owner_unknowns
 
 
 @pytest.mark.parametrize("reply", [None, "Continue.", "I don't know.", "The budget is 20 per month."])
@@ -109,7 +113,7 @@ def test_only_a_later_substantive_answer_can_resolve_a_retained_unknown(reply):
         resolved = adopt(state, candidate)
         assert resolved.owner_unknowns == {} and resolved.facts["operations.budget"].value == 20
     else:
-        with pytest.raises(FlowError): adopt(state, candidate)
+        assert weakened(state, candidate, "operations.budget").owner_unknowns == state.owner_unknowns
 
 
 def test_later_not_applicable_answer_resolves_uncertainty_but_a_model_guess_does_not():
@@ -121,7 +125,7 @@ def test_later_not_applicable_answer_resolves_uncertainty_but_a_model_guess_does
     assert adopt(state, candidate).owner_unknowns == {}
     candidate.facts["operations.budget"] = Fact(value=20, status="assumed", source_turn_ids=["t1"],
         reason="A model estimate, not an owner answer.")
-    with pytest.raises(FlowError): adopt(state, candidate)
+    weakened(state, candidate, "operations.budget")
 
 
 def test_declared_unknown_cannot_be_dropped_or_reanchored_and_suppression_keeps_open_decision():
@@ -131,7 +135,7 @@ def test_declared_unknown_cannot_be_dropped_or_reanchored_and_suppression_keeps_
     body = questioning(state).model_dump()
     body["owner_unknowns"] = {"operations.budget": {"source_turn_id": "t0", "quote": "budget"}}
     reanchored = Candidate.model_validate(body)
-    with pytest.raises(FlowError): adopt(state, reanchored)
+    assert adopt(state, reanchored).owner_unknowns == state.owner_unknowns
     omitted_decision = questioning(state)
     omitted_decision.assessment.open_questions = []
     with pytest.raises(FlowError): adopt(state, omitted_decision)
@@ -146,21 +150,21 @@ def test_goal_and_question_binding_are_canonical_and_legacy_marker_default_is_em
     with pytest.raises(FlowError): adopt(state, alias)
     candidate = questioning(declared_state())
     candidate.facts.pop("operations.budget")
-    with pytest.raises(FlowError): adopt(state, candidate)
+    assert weakened(state, candidate).questions == []
     with pytest.raises(ValidationError):
         AdvanceRequest(state=state, request_id="bad-action", declares_unknown=True)
 
 
 @pytest.mark.parametrize("status", ["confirmed", "not_applicable"])
 @pytest.mark.parametrize("allow_question", [True, False])
-def test_settled_question_targets_fail_even_when_the_question_would_be_suppressed(status, allow_question):
+def test_questions_about_settled_targets_are_left_out_and_reported(status, allow_question):
     state = State(raw_intent="Editors may request changes.", facts={
         "goal": Fact(value="Track editorial requests.", status="confirmed", source_turn_ids=["t0"]),
         "workflow.requests": Fact(value=True if status == "confirmed" else None, status=status,
             source_turn_ids=["t0"], reason="Scripted applicability decision.")})
     before = state.model_dump()
-    with pytest.raises(FlowError, match="settled detail"):
-        adopt(state, questioning(state, "workflow.requests"), allow_question=allow_question)
+    updated = weakened(state, questioning(state, "workflow.requests"), "workflow.requests", allow_question=allow_question)
+    assert updated.questions == [] and "already settled" in updated.review.downgrades[0]
     assert state.model_dump() == before
 
 
@@ -196,15 +200,15 @@ def test_a_confirmed_fact_can_reopen_only_after_a_later_sourced_conflict_makes_i
     assert state.facts["access.visibility"].status == "confirmed"
     repeated = {**question, "conflict_turn_id": "t1"}
     unresolved = Fact(value=None, status="unknown", source_turn_ids=["t1"], reason="Conflicting access needs.")
-    with pytest.raises(FlowError, match="new owner reply"):
-        adopt(state, result(state, facts={**state.facts, "access.visibility": unresolved},
-            question=repeated, disposition="provisional"))
+    kept = weakened(state, result(state, facts={**state.facts, "access.visibility": unresolved},
+        question=repeated, disposition="provisional"), "access.visibility")
+    assert len(kept.questions) == 1
 
     changed = prepare(AdvanceRequest(state=state, request_id="mixed", answer="Let reviewers see part, but keep the rest private."))
     repeated.update(conflict_turn_id="t2", decision="Your later mixed-access request needs a boundary for public and private sketches.")
-    with pytest.raises(FlowError, match="new owner reply"):
-        adopt(changed, result(changed, facts={**changed.facts, "access.visibility": unresolved},
-            question=repeated, disposition="provisional"))
+    kept = weakened(changed, result(changed, facts={**changed.facts, "access.visibility": unresolved},
+        question=repeated, disposition="provisional"), "access.visibility")
+    assert len(kept.questions) == 1
     unresolved.source_turn_ids = ["t2"]
     updated = adopt(changed, result(changed, facts={**changed.facts, "access.visibility": unresolved},
         question=repeated, disposition="provisional"))

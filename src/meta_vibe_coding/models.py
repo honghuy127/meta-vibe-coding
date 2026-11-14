@@ -9,6 +9,8 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 Text = Annotated[str, Field(min_length=1, max_length=8000)]
 Scalar = str | bool | int | float
 FACT_KEY_PATTERN = r"^[a-z][a-z0-9_]*(\.[a-z][a-z0-9_]*)*$"
+# Assessment requests one idea may start. The server keeps its own invocation allowance.
+IDEA_ASSESSMENTS = 7
 
 
 def quoted_in(quote: str, source: str) -> bool:
@@ -107,12 +109,12 @@ class Assessment(Model):
     limitations: list[Text]
 
 
-class AssessmentChange(Model):
-    previous: Text
-    current: list[Text] = Field(max_length=100)
-    basis: Literal["reworded", "owner_update", "advice_withdrawn"]
-    reason: Text
-    evidence: list[UnknownEvidence] = Field(max_length=30)
+class Review(Model):
+    """What the wrapper noticed while adopting the latest result. Shown to the owner;
+    never exported, sent to the agent or treated as owner evidence."""
+    downgrades: list[Text] = Field(default_factory=list, max_length=200)
+    removed_advice: list[Text] = Field(default_factory=list, max_length=500)
+    added_advice: list[Text] = Field(default_factory=list, max_length=500)
 
 
 class State(Model):
@@ -125,10 +127,11 @@ class State(Model):
     assessment: Assessment | None = None
     # One stale result for reassessment, never an exportable current assessment.
     previous_assessment: Assessment | None = None
-    agent_calls: int = Field(default=0, ge=0, le=7)
+    agent_calls: int = Field(default=0, ge=0, le=IDEA_ASSESSMENTS)
     started_at: float = Field(default_factory=time.time, gt=0)
     assessed_turn_count: int = Field(default=0, ge=0)
     owner_unknowns: dict[FactKey, UnknownEvidence] = Field(default_factory=dict, max_length=100)
+    review: Review | None = None
 
     @model_validator(mode="after")
     def check_consistency(self) -> Self:
@@ -192,7 +195,8 @@ class Candidate(Model):
     assessment: Assessment
     question: ProposedQuestion | None
     owner_unknowns: dict[FactKey, UnknownEvidence] = Field(default_factory=dict, max_length=100)
-    assessment_changes: list[AssessmentChange] = Field(default_factory=list, max_length=500)
+    # Updates the wrapper weakened while decoding, in owner-readable words.
+    notices: list[Text] = Field(default_factory=list, max_length=200)
 
 
 class AdvanceRequest(Model):

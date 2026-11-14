@@ -228,13 +228,7 @@ def rehearse() -> dict:
                 'open_questions': [{'topic': 'usage.environment', 'text': 'Where the timer is used is still open.',
                     'blocks_recommendation': False, 'reason': 'It changes which devices need to run it.'}] if question else [],
                 'limitations': ['No model inference or semantic assessment.']}
-            changes = []
-            if state.previous_assessment and state.previous_assessment.open_questions and state.turns:
-                changes = [{'previous': 'open_questions/0', 'current': [], 'basis': 'owner_update',
-                    'reason': 'The supplied fixture owner answered the environment question.',
-                    'evidence': [{'source_turn_id': state.turns[-1].id, 'quote': state.turns[-1].text}]}]
-            return Candidate.model_validate({'facts': facts, 'assessment': assessment, 'question': question,
-                'assessment_changes': changes}), Usage(
+            return Candidate.model_validate({'facts': facts, 'assessment': assessment, 'question': question}), Usage(
                 agent='test-double', elapsed_seconds=0.0)
 
     exchanges = []

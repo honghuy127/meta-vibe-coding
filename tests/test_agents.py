@@ -97,7 +97,9 @@ def test_three_wrappers_share_state_and_delegate_models(configured, monkeypatch,
     assert wrapper.calls == 1 and len(calls) == 3
     assert not os.path.exists(calls[-1][1]["cwd"])
     with pytest.raises(FlowError) as error: asyncio.run(wrapper.assess(State(raw_intent="New tab"), False))
-    assert error.value.code == "limit" and len(calls) == 3
+    # The server allowance is separate from the idea's, and a refusal starts no process.
+    assert error.value.code == "server_limit" and error.value.invoked is False and len(calls) == 3
+    assert wrapper.calls_left == 0
 
 
 def test_oversized_previous_assessment_stops_before_any_process_and_is_retained(configured, monkeypatch):
@@ -113,8 +115,9 @@ def test_oversized_previous_assessment_stops_before_any_process_and_is_retained(
     with TestClient(create_app(wrapper)) as client:
         response = client.post('/api/advance', json={"state": state.model_dump(),
             "request_id": "oversized-context", "answer": "Only coworkers should see records."}).json()
-        assert response["error"]["code"] == "limit"
+        assert response["error"]["code"] == "limit" and response["error"]["retry"] is False
         retained = State.model_validate(response["state"])
+        assert retained.agent_calls == state.agent_calls, "No process started, so no assessment is used"
         assert retained.assessment is None and retained.previous_assessment.model_dump() == snapshot
         assert retained.turns[-1].text == "Only coworkers should see records."
         assert len(model_input(retained, False).encode()) > 32_000

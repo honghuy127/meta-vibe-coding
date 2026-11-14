@@ -4,7 +4,7 @@ from typing import Literal
 
 from pydantic import Field, field_validator
 
-from .models import (Assessment, AssessmentChange, Candidate, Fact, FactKey, Model, ProposedQuestion,
+from .models import (Assessment, Candidate, Fact, FactKey, Model, ProposedQuestion,
                      Scalar, State, UnknownEvidence, quoted_in)
 
 
@@ -14,16 +14,14 @@ class NativeFactUpdate(Model):
     status: Literal['confirmed', 'assumed', 'unknown', 'not_applicable']
     reason: str
     evidence: list[UnknownEvidence] = Field(max_length=100)
-    owner_unknown: bool
 
 
 class NativeResponse(Model):
-    contract_version: Literal[3]
+    contract_version: Literal[4]
     fact_updates: list[NativeFactUpdate] = Field(max_length=100)
     remove_fact_keys: list[FactKey] = Field(max_length=100)
     assessment: Assessment
     question: ProposedQuestion | None
-    assessment_changes: list[AssessmentChange] = Field(max_length=500)
 
     @field_validator('contract_version', mode='before')
     @classmethod
@@ -33,44 +31,42 @@ class NativeResponse(Model):
         return value
 
     def candidate(self, state: State) -> Candidate:
-        # Keep the original state intact for adoption's confirmation/revision guards.
+        """Decode against the original state. An update the owner's words do not support is
+        weakened and reported, so one bad citation does not discard the whole result (D022)."""
         facts = {key: fact.model_copy(deep=True) for key, fact in state.facts.items()}
         keys = [row.key for row in self.fact_updates]
-        if len(set(keys)) != len(keys) or len(set(self.remove_fact_keys)) != len(self.remove_fact_keys):
-            raise ValueError('Duplicate native operation key')
-        if set(keys).intersection(self.remove_fact_keys):
-            raise ValueError('A fact cannot be updated and removed together')
-        for key in self.remove_fact_keys:
+        if len(set(keys)) != len(keys) or set(keys).intersection(self.remove_fact_keys):
+            raise ValueError('A fact key appears in more than one native operation')
+        notices = []
+        for key in dict.fromkeys(self.remove_fact_keys):
             if key not in state.facts:
-                raise ValueError('Cannot remove a missing fact')
+                continue
             if state.facts[key].status == 'confirmed' or key in state.owner_unknowns:
-                raise ValueError('Cannot remove a confirmed fact or retained owner unknown')
+                notices.append(f'Kept “{key}”: the agent tried to drop something you confirmed or said you do not know.')
+                continue
             del facts[key]
         sources = {'t0': state.raw_intent, **{turn.id: turn.text for turn in state.turns}}
         unknowns = {}
         for row in self.fact_updates:
-            for evidence in row.evidence:
-                if evidence.source_turn_id not in sources or not quoted_in(evidence.quote, sources[evidence.source_turn_id]):
-                    raise ValueError('Evidence must quote the owner\'s own words')
-            source_ids = list(dict.fromkeys(e.source_turn_id for e in row.evidence))
-            fact = Fact(value=row.value, status=row.status, source_turn_ids=source_ids, reason=row.reason)
-            if row.owner_unknown:
-                if row.status != 'unknown' or len(row.evidence) != 1:
-                    raise ValueError('An owner unknown needs unknown/null and exactly one evidence record')
-                unknowns[row.key] = row.evidence[0]
-            retained = state.owner_unknowns.get(row.key)
-            if (retained and fact.status == 'unknown' and not row.owner_unknown
-                    and retained.source_turn_id not in source_ids):
-                raise ValueError('A retained owner unknown must keep its cited source')
-            facts[row.key] = fact
+            evidence = [e for e in row.evidence
+                        if e.source_turn_id in sources and quoted_in(e.quote, sources[e.source_turn_id])]
+            status, reason = row.status, row.reason
+            if status == 'confirmed' and (not evidence or len(evidence) != len(row.evidence)):
+                # Every cited passage must be the owner's; otherwise this is the agent's reading.
+                status = 'assumed'
+                reason = (reason.strip() + ' ' if reason.strip() else '') + 'Not confirmed: the agent did not quote your words for this.'
+                notices.append(f'Recorded “{row.key}” as an assumption: the agent did not quote your words for it.')
+            source_ids = list(dict.fromkeys(e.source_turn_id for e in evidence))
+            facts[row.key] = Fact(value=row.value, status=status, source_turn_ids=source_ids, reason=reason)
+            if status == 'unknown' and evidence:
+                # Quoted owner words on an unknown fact are the owner's own "I don't know".
+                unknowns[row.key] = evidence[-1]
         if len(facts) > 100:
             raise ValueError('Too many native facts')
         if 'goal' not in facts:
             raise ValueError('The resulting facts need a goal')
-        if self.question and self.question.topic not in facts:
-            raise ValueError('Question target must reference a resulting fact')
         return Candidate(facts=facts, assessment=self.assessment, question=self.question,
-                         owner_unknowns=unknowns, assessment_changes=self.assessment_changes)
+                         owner_unknowns=unknowns, notices=notices)
 
 
 def native_schema(model: type[Model]) -> dict:

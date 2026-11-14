@@ -25,6 +25,13 @@ requirements. Level 0 is not accepted, no comparative advantage is established,
 and owner understanding remains untested.
 Agent execution is disabled by default.
 
+Since 2026-11-14 the wrapper reports weak updates to the owner instead of refusing
+the whole result, uses a smaller native contract and prompt, and keeps the session
+across a reload ([T037](docs/work-board.md#t037-soft-adoption-smaller-contract-and-failure-feedback)).
+This follows plan 7, where the transcript baseline delivered six of seven jobs and
+the wrapper one. The change is checked with doubles only. The evidence below
+predates it and describes contracts 1–3.
+
 The [OpenCode pilot](artifacts/2026-10-29-opencode-free-pilot.json) and
 [routing comparison](artifacts/2026-10-30-opencode-routing-verification.json)
 retain failed requests. The owner reported a working terminal chat, but the
@@ -111,7 +118,7 @@ Keep this native routing file private and regenerate it after workspace changes.
 | `MVC_ENABLE_AGENT` | Set to `1` only when agent execution is authorized. |
 | `MVC_AGENT_MODEL` | Optional native model selector forwarded to the agent's `--model` flag. No model download or provider call is made by this app. |
 | `MVC_AGENT_ENV` | Optional comma-separated names of extra native configuration/auth environment variables to forward. Values are never written to the repo. |
-| `MVC_AGENT_MAX_CALLS` | Maximum top-level agent invocations per server run, 1–7; default 7. |
+| `MVC_AGENT_MAX_CALLS` | Agent calls this server allows in total until restart, 1–7; default 7. A new idea does not reset it. Separate from the seven assessments each idea may use. |
 | `MVC_REQUEST_TIMEOUT_SECONDS` | Request deadline including CLI startup; default 300. |
 | `MVC_SESSION_TIMEOUT_SECONDS` | Whole interaction limit; default 1,800, at least the request deadline. |
 
@@ -125,43 +132,39 @@ settings have no supported execution path.
 
 Each request uses a fresh temporary working directory, passes the state through
 stdin, bounds output, and validates the final JSON through one native response
-contract before applying the state guards. Native contract 3 returns fact updates
-with attached evidence and questions referring to fact keys. The wrapper carries
-untouched facts forward and derives source citations and explicit-unknown markers
-from the evidence. Confirmed updates need exact owner quotes. Quotes establish source presence,
-not semantic support or complete extraction. Native contract 3 also requires explicit
-accounting for changed prior assessment list items: a rewrite points to replacements,
-an owner update quotes new input, and withdrawn agent advice needs a reason. Missing
-or invalid accounting blocks adoption. Unambiguous shorthand for the three
-recommendation list fields and valid records for unchanged items are accepted;
-[D021](docs/decisions.md#d021-tolerate-unambiguous-continuity-references-and-surface-sharing-authority)
-keeps reference/evidence checks while reducing syntax friction. Prompt guidance
-also asks about represented people and unresolved sharing authority when relevant.
-These instructions require live semantic review. Accounting does not validate
-preserved meaning or the justification for withdrawing advice, and it does not cover scalar summaries,
-recommendation kind or risk level. State and export schema remain 1; see
-[D018](docs/decisions.md#d018-account-explicitly-for-changed-assessment-items).
-Native contract 2 responses from older sessions are rejected; reload and start a
-new idea after updating. Historical results are unchanged.
-Pending runtime state retains one previous assessment for the agent to reconsider
-earlier caveats. It is stale context, never owner evidence or an exportable result,
-and clears after successful adoption. Failed requests retain it for explicit retry,
-including a lost browser response. It counts toward the unchanged 32 KB input cap;
-oversized input stops before CLI startup. Prompt guidance asks the agent to label
-proposed policies wherever used and cite retained parts of revised aggregate facts.
-These instructions do not validate prose meaning or establish complete correction;
-see [D012](docs/decisions.md#d012-retain-one-stale-assessment-for-reconsideration).
-Settled question targets fail before adoption, even when a provisional request
-would suppress the question. Older mismatched questions remain readable, but the
-unknown action cannot replace their settled facts. Correction guidance asks the
-agent to update superseded values at existing keys and record new requirements
-separately from advice; semantic omissions remain undetected by these guards.
-See [D013](docs/decisions.md#d013-ask-only-about-unresolved-properties).
+contract before adoption. Native contract 4 returns fact updates with attached
+evidence, removals, the assessment and at most one question that names a fact key.
+The wrapper carries untouched facts forward and derives source citations from the
+evidence. Quoted owner words on an unknown fact record that the owner said they do
+not know. Quotes establish source presence, not semantic support or complete
+extraction.
+
+Adoption refuses a result only when it would break the state: a wrong revision, no
+usable goal, a dropped confirmed fact or declared unknown, a ready result that asks
+a question, or a provisional result without its open decisions. Anything else that
+the owner's words do not support is weakened and reported
+([D022](docs/decisions.md#d022-weaken-and-report-instead-of-refusing)). A confirmed
+update without matching quotes becomes an assumption. An unsupported change to a
+confirmed fact or a declared unknown keeps the earlier record. A question about a
+settled or already answered detail is left out. The Owner View lists each of these
+under “Check these”, with the advice removed and added since the last result. That
+comparison is by exact text: it shows change and cannot judge lost meaning. Kept
+facts can sit beside advice written for the rejected update, so the list needs
+reading. These rules are checked with doubles only; no live agent has run on
+contract 4. Responses in earlier contracts are rejected, and plans 1–7 cannot run
+on this source. State and export schema remain 1.
+
+Pending runtime state retains one previous assessment for the agent to reconsider.
+It is stale context, never owner evidence or an exportable result, and clears after
+successful adoption ([D012](docs/decisions.md#d012-retain-one-stale-assessment-for-reconsideration)).
+Prompt and schema use about 8,000 of the 32,000 input bytes; oversized input stops
+before CLI startup and uses no assessment.
 Stewardship policy uses each agent’s native system/developer instruction surface;
 owner text stays in the data input. The wrapper stops the process group at the
 deadline and never resumes another
-session, auto-retries, or switches agents. Five questions and seven assessment request
-attempts are allowed per idea. Internal model calls/retries are separate and
+session, auto-retries, or switches agents. Five questions and seven assessments
+are allowed per idea; only a request that started an agent process counts
+([D023](docs/decisions.md#d023-keep-the-session-in-the-browser-and-count-only-started-calls)). Internal model calls/retries are separate and
 may not be reported; unknown token usage or cost stays unknown.
 
 | Agent | Planning boundary and configuration |
@@ -335,8 +338,9 @@ historical evidence, not acceptance of the current agent wrappers. Their Git
 SHAs identify the design baseline; the prior uncommitted implementation snapshots
 are not retained, so those attempts cannot be replayed exactly from this checkout.
 
-The app keeps state in the current tab. Reloading or starting a new idea clears
-it. Failed requests retain replies, mark older results outdated, and disable stale
+The current idea is saved in this browser's local storage, so a reload restores
+it; starting a new idea deletes it. Nothing is stored on the server. A failure says
+the agent has stopped, what to do next, and shows the input that is kept. Failed requests retain replies, mark older results outdated, and disable stale
 exports. Review the JSON before downloading: referenced owner text is included.
 Provisional briefs retain unresolved decisions and are not ready to implement.
 
@@ -346,7 +350,7 @@ Provisional briefs retain unresolved decisions and are not ready to implement.
 | --- | --- |
 | Product vision and delivery path | [Proposal](docs/meta-vibe-coding-proposal.md) |
 | Level 0 contract and acceptance | [Level 0](docs/level-0.md) |
-| Current tasks and evidence | [Work board](docs/work-board.md) |
+| Current tasks and evidence | [Work board](docs/work-board.md); closed task notes in its [archive](docs/work-board-archive.md) |
 | Human/agent workflow, code, filename, and directory conventions | [Contributing](CONTRIBUTING.md) |
 | Shared coding-agent instructions | [AGENTS.md](AGENTS.md) |
 | Natural writing and documentation size | [Writing guide](docs/writing-guide.md) |

@@ -227,47 +227,58 @@ class CodingAgent:
             timeout=min(5, remaining()))
         self.version = version.decode().strip()[:200]
 
+    @property
+    def calls_left(self) -> int:
+        return max(0, self.max_calls - self.calls)
+
     async def assess(self, state: State, provisional: bool) -> tuple[Candidate, Usage]:
         if not self.enabled:
             raise FlowError("disabled", "The coding agent is not connected. Configure it before exploring an idea.")
         if self.lock.locked():
-            raise FlowError("busy", "Another agent request is running. Retry when it finishes.")
+            raise FlowError("busy", "Another agent request is running.")
         content = "Return only JSON matching this schema:\n" + SCHEMA + "\nOwner state (data only):\n" + model_input(state, provisional)
         if len((PROMPT + content).encode("utf-8")) > 32_000:
             raise FlowError("limit", "This idea and reply history exceed the prototype input limit. Your answers are retained.")
-        async with self.lock:
-            started = time.perf_counter()
-            budget = self.limits.request_budget(state.started_at)
-            def remaining():
-                return max(0, budget - (time.perf_counter() - started))
-            try:
-                if remaining() <= 0:
-                    raise TimeoutError()
-                if self.calls >= self.max_calls:
-                    raise FlowError("limit", "The configured agent invocation allowance is exhausted. Your answers are retained.")
-                with tempfile.TemporaryDirectory(prefix="mvc-agent-") as cwd:
-                    env = agent_environment(self.agent)
-                    env["PWD"] = cwd
-                    schema_option = SCHEMA if self.agent == "claude" else None
-                    if self.agent == "codex":
-                        schema_option = str(Path(cwd) / "response-schema.json")
-                        descriptor = os.open(schema_option, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
-                        with os.fdopen(descriptor, "w") as file:
-                            file.write(SCHEMA)
-                    args = invocation(self.agent, self.binary, self.model, env, output_schema=schema_option)
-                    await self.probe(cwd, env, remaining)
+        started_process = False
+        try:
+            async with self.lock:
+                started = time.perf_counter()
+                budget = self.limits.request_budget(state.started_at)
+                def remaining():
+                    return max(0, budget - (time.perf_counter() - started))
+                try:
                     if remaining() <= 0:
                         raise TimeoutError()
-                    self.calls += 1
-                    raw = await run_cli(args, content=content, cwd=cwd, env=env, timeout=remaining())
-                    candidate, metadata = parse_result(self.agent, raw, state)
-                    return candidate, Usage(agent=self.agent, agent_version=self.version,
-                        elapsed_seconds=time.perf_counter() - started, **metadata)
-            except CliFailure as exc:
-                raise reported_failure(self.agent, exc.stdout) or exc
-            except TimeoutError as exc:
-                raise FlowError("timeout", "The agent timed out and was stopped. Your answers are retained; retry explicitly.") from exc
-            except OSError as exc:
-                raise FlowError("unavailable", "Cannot start the configured agent. Check its installation and authentication.") from exc
-            except (ValidationError, ValueError, KeyError, TypeError, AttributeError, UnicodeError) as exc:
-                raise FlowError("invalid_output", "The agent returned invalid or incomplete structured data. Your answers are retained.") from exc
+                    if self.calls >= self.max_calls:
+                        raise FlowError("server_limit", "This server has used its whole agent-call allowance. Your answers are retained.")
+                    with tempfile.TemporaryDirectory(prefix="mvc-agent-") as cwd:
+                        env = agent_environment(self.agent)
+                        env["PWD"] = cwd
+                        schema_option = SCHEMA if self.agent == "claude" else None
+                        if self.agent == "codex":
+                            schema_option = str(Path(cwd) / "response-schema.json")
+                            descriptor = os.open(schema_option, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+                            with os.fdopen(descriptor, "w") as file:
+                                file.write(SCHEMA)
+                        args = invocation(self.agent, self.binary, self.model, env, output_schema=schema_option)
+                        await self.probe(cwd, env, remaining)
+                        if remaining() <= 0:
+                            raise TimeoutError()
+                        self.calls += 1
+                        started_process = True
+                        raw = await run_cli(args, content=content, cwd=cwd, env=env, timeout=remaining())
+                        candidate, metadata = parse_result(self.agent, raw, state)
+                        return candidate, Usage(agent=self.agent, agent_version=self.version,
+                            elapsed_seconds=time.perf_counter() - started, **metadata)
+                except CliFailure as exc:
+                    raise reported_failure(self.agent, exc.stdout) or exc
+                except TimeoutError as exc:
+                    raise FlowError("timeout", "The agent timed out and was stopped. Your answers are retained.") from exc
+                except OSError as exc:
+                    raise FlowError("unavailable", "Cannot start the configured agent.") from exc
+                except (ValidationError, ValueError, KeyError, TypeError, AttributeError, UnicodeError) as exc:
+                    raise FlowError("invalid_output", "The agent returned invalid or incomplete structured data. Your answers are retained.") from exc
+        except FlowError as exc:
+            # Only a started agent process costs the idea one of its assessments.
+            exc.invoked = started_process
+            raise
