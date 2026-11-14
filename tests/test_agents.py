@@ -394,3 +394,13 @@ def test_claude_gets_more_structured_output_attempts_and_others_do_not(monkeypat
     assert module.agent_environment("claude")["MAX_STRUCTURED_OUTPUT_RETRIES"] == "10"
     assert "MAX_STRUCTURED_OUTPUT_RETRIES" not in module.agent_environment("codex")
     assert "MAX_STRUCTURED_OUTPUT_RETRIES" not in module.agent_environment("opencode")
+
+
+def test_claude_usage_limit_is_named_instead_of_a_generic_process_failure():
+    # Shape recorded from Claude Code 2.1.325 on 2026-11-14; fictional session values.
+    raw = json.dumps({"type": "result", "subtype": "success", "is_error": True, "terminal_reason": "api_error",
+        "api_error": "usage_limit_reached", "result": "You've hit your 5-hour limit"}).encode()
+    error = module.reported_failure("claude", raw)
+    assert error.code == "usage_limit" and error.payload()["retry"] is True
+    assert "5-hour" not in error.message, "Provider text is not echoed"
+    assert module.reported_failure("claude", b"not json") is None

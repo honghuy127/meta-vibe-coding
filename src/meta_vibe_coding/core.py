@@ -18,6 +18,7 @@ NEXT_ACTIONS = {
     "disabled": "Whoever runs this app must connect the coding agent first.",
     "unavailable": "Check the agent's installation and account, then press Retry.",
     "free_limit": "Wait, or check the agent's workspace settings, then press Retry.",
+    "usage_limit": "Wait until the agent account's usage limit resets, then press Retry.",
     "agent_request": "Check the agent's model settings, then press Retry.",
 }
 NO_RETRY = {"limit", "server_limit", "disabled", "invalid_input"}

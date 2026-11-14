@@ -95,6 +95,15 @@ def invocation(agent: str, binary: str, model: str | None, env: dict[str, str], 
 
 def reported_failure(agent: str, raw: bytes) -> FlowError | None:
     """Translate only recognized native codes; provider messages may contain private data."""
+    if agent == "claude":
+        try:
+            body = json.loads(raw)
+        except (ValueError, UnicodeError):
+            return None
+        if isinstance(body, dict) and body.get("api_error") == "usage_limit_reached":
+            return FlowError("usage_limit", "Claude Code reported that this account's usage limit is reached. "
+                "Your answers are retained.")
+        return None
     if agent != "opencode":
         return None
     for line in raw.splitlines():
